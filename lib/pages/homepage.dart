@@ -337,16 +337,6 @@ class _HomePageState extends State<HomePage> {
             ),
             label: "Calender",
           ),
-          // BottomNavigationBarItem(
-          //   icon: IconButton(
-          //     onPressed: () {
-          //       Get.to(ApprovePage());
-          //     },
-          //     icon: Icon(Icons.history),
-          //     color: Colors.white,
-          //   ),
-          //   label: "History",
-          // ),
         ],
       ),
     );

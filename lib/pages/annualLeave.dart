@@ -107,7 +107,18 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                           SizedBox(
                             height: 10,
                           ),
-                          Text('Enter Reason'),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            // child: Text('Enter reason'),
+                            child: SizedBox(
+                              width: 200,
+                              height: 45,
+                              child: TextField(
+                                maxLines: null,
+                                expands: true,
+                              ),
+                            ),
+                          ),
                         ],
                       )
                     ],
