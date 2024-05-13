@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,10 @@ import 'package:project_ui/pages/calender.dart';
 import 'package:project_ui/pages/leave.dart';
 import 'package:project_ui/pages/profile.dart';
 import 'package:project_ui/pages/sendingrequest.dart';
+
+import '../Controller/locationController.dart';
+import '../Controller/permissionController.dart';
+import '../Controller/timeController.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,10 +24,29 @@ class _HomePageState extends State<HomePage> {
   late DateTime _currentTime;
   late Timer _timer;
   late Stream<DateTime> _timeStream;
+  final Completer<GoogleMapController> _controller = Completer();
+  final PermissionController permissionController=Get.put(PermissionController());
+  final DateTimeController dateTimeController = Get.put(DateTimeController());
+  final LocationController locationController = Get.put(LocationController());
 
+  final Set<Marker> _marker = {
+    const Marker(
+        markerId: MarkerId('Times City'),
+        position: LatLng(16.81605105, 96.12887631),
+        infoWindow: InfoWindow(
+          title: 'Times City',
+          snippet: 'Office Tower',
+        )
+    )
+  };
+  static const CameraPosition kGoogle = CameraPosition(
+    target: LatLng(16.81605105, 96.12887631),
+    zoom: 14.4746,
+  );
   @override
   void initState() {
     super.initState();
+    permissionController.handleLocationPermission(context);
     _currentTime = DateTime.now();
     _timeStream =
         Stream<DateTime>.periodic(Duration(seconds: 1), (_) => DateTime.now());
@@ -286,7 +310,28 @@ class _HomePageState extends State<HomePage> {
               height: screenHeight * .4,
               width: screenWidth,
               color: Colors.greenAccent.withOpacity(0.6),
-              child: Text('Map Container'),
+              child: GoogleMap(
+
+                initialCameraPosition: kGoogle,
+                mapType: MapType.normal,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                compassEnabled: true,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+                markers: _marker,
+
+                circles:{
+                  Circle(
+                    circleId: CircleId("1"),
+                    radius: 789,
+                    strokeColor: Colors.lightBlue,
+                    strokeWidth: 1,
+                    fillColor: Colors.lightBlue.withOpacity(0.5), center:LatLng(16.81605105, 96.12887631),
+
+                  )},
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
@@ -297,13 +342,10 @@ class _HomePageState extends State<HomePage> {
                     width: 150,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _showDialogCheckin(context);
-                        });
-                        // getTime();   // get time and send to api
-                        // getLoc();    // get location and send to api
-                      },
+                      onPressed:DateTime.now().hour>16 ? null :  () {
+
+                      locationController.sendLocationToServer(context);
+                    },
                       child: const Text(
                         'Check in  ',
                         style: TextStyle(
@@ -321,11 +363,11 @@ class _HomePageState extends State<HomePage> {
                     width: 150,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _showDialogCheckout(context);
-                        });
-                      },
+                      onPressed:DateTime.now().hour>16 ? null :  () {
+
+    locationController.sendLocationToServer(context);
+    },
+
                       child: Text(
                         'Check out',
                         style: TextStyle(color: Colors.black, fontSize: 15),

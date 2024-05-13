@@ -41,6 +41,8 @@ dependencies:
   firebase_storage: ^11.7.5
   image_picker: ^1.1.1
   font_awesome_flutter: ^10.7.0
+  google_maps_flutter: ^2.6.1
+  geolocator: ^11.0.0
 
 dev_dependencies:
   flutter_test:
