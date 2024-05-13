@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,12 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+
+  final Completer<GoogleMapController> _controller = Completer();
+  static const CameraPosition kGoogle = CameraPosition(
+    target: LatLng(16.81605105, 96.12887631),
+    zoom: 14.4746,
+  );
 
   @override
   void dispose() {
@@ -286,7 +293,16 @@ class _HomePageState extends State<HomePage> {
               height: screenHeight * .4,
               width: screenWidth,
               color: Colors.greenAccent.withOpacity(0.6),
-              child: Text('Map Container'),
+              child: GoogleMap(
+                initialCameraPosition: kGoogle,
+                mapType: MapType.normal,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                compassEnabled: true,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
