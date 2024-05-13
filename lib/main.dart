@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-// import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:project_ui/pages/sendingrequest.dart';
 
 import 'pages/homepage.dart';
 
 void main() {
   runApp(GetMaterialApp(
-    theme: ThemeData(primaryColor: Colors.purpleAccent),
+    debugShowCheckedModeBanner: false,
     title: 'Project ui',
     home: const HomePage(),
-    // builder: EasyLoading.init(),
   ));
 }

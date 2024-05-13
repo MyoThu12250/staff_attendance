@@ -16,92 +16,49 @@ class _ProfileState extends State<Profile> {
     double screenHeight = size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(left: 30.0),
-          child: Text('Profile'),
-        ),
+        title: Center(child: Text('Profile')),
       ),
       body: MediaQuery(
         data: MediaQuery.of(context),
-        child: Container(
-          // color: Colors.amberAccent.withOpacity(.7),
+        child: SizedBox(
           width: screenWidth,
           height: screenHeight * .7,
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('User Name'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Employee id'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Position'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Phone no'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Email'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Address'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Date of Birth'),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Ag Ag'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('697830011'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('CEO'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('09697830011'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('agag@gmail.com'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('New York'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('12/2/89'),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          width: 100,
+                          height: 40,
+                          child: Center(child: Text('User Name'))),
+                      Text('Employee id'),
+                      Text('Position'),
+                      Text('Phone no'),
+                      Text('Email'),
+                      Text('Address'),
+                      Text('Date of Birth'),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          width: 100,
+                          height: 40,
+                          child: Center(child: Text('Ag Ag'))),
+                      Text('697830011'),
+                      Text('CEO'),
+                      Text('09697830011'),
+                      Text('agag@gmail.com'),
+                      Text('New York'),
+                      Text('12/2/89'),
+                    ],
+                  )
+                ],
               )
             ],
           ),
