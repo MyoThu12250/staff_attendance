@@ -57,6 +57,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  final Completer<GoogleMapController> _controller = Completer();
+  static const CameraPosition kGoogle = CameraPosition(
+    target: LatLng(16.81605105, 96.12887631),
+    zoom: 14.4746,
+  );
+
   @override
   void dispose() {
     _timer.cancel();
@@ -320,6 +326,7 @@ class _HomePageState extends State<HomePage> {
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
+
                 markers: _marker,
 
                 circles:{
@@ -331,6 +338,7 @@ class _HomePageState extends State<HomePage> {
                     fillColor: Colors.lightBlue.withOpacity(0.5), center:LatLng(16.81605105, 96.12887631),
 
                   )},
+
               ),
             ),
             Padding(
