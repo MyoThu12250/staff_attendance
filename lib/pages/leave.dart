@@ -35,184 +35,186 @@ class _LeaveState extends State<Leave> {
           ),
       body: MediaQuery(
         data: MediaQuery.of(context),
-        child: Column(
-          children: [
-            SizedBox(
-              width: screenWidth * 1,
-              height: screenHeight * 0.2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: 130,
-                    height: 60,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Get.to(MedicalLeave());
-                      },
-                      child: Text(
-                        'Medical Leave Request',
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFE1FF3C)),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 130,
-                    height: 60,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Get.to(AnnualLeave());
-                      },
-                      child: Text(
-                        'Annual Leave Request',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFE1FF3C)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Text(
-                  'Leave Request History',
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
-            ),
-            Card(
-              elevation: 8,
-              child: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
                 width: screenWidth * 1,
-                height: screenHeight * 0.540,
-                color: Colors.white,
+                height: screenHeight * 0.2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: 130,
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.to(MedicalLeave());
+                        },
+                        child: Text(
+                          'Medical Leave Request',
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFFE1FF3C)),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 130,
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.to(AnnualLeave());
+                        },
+                        child: Text(
+                          'Annual Leave Request',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFFE1FF3C)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
                 child: Center(
-                  child: ListView.builder(
-                    itemCount: 1,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: screenWidth,
-                              height: 140,
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 8,
-                                child: ListTile(
-                                  title: Text('item 1'),
-                                  subtitle: Text('item 0 for index 0'),
-                                  isThreeLine: true,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: screenWidth,
-                              height: 140,
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 8,
-                                child: ListTile(
-                                  title: Text('item 0'),
-                                  subtitle: Text('item 0 for index 0'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: screenWidth,
-                              height: 140,
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 8,
-                                child: ListTile(
-                                  title: Text('item 0'),
-                                  subtitle: Text('item 0 for index 0'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: screenWidth,
-                              height: 140,
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 8,
-                                child: ListTile(
-                                  title: Text('item 0'),
-                                  subtitle: Text('item 0 for index 0'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: screenWidth,
-                              height: 140,
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 8,
-                                child: ListTile(
-                                  title: Text('item 0'),
-                                  subtitle: Text('item 0 for index 0'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: screenWidth,
-                              height: 140,
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 8,
-                                child: ListTile(
-                                  title: Text('item 0'),
-                                  subtitle: Text('item 0 for index 0'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: screenWidth,
-                              height: 140,
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 8,
-                                child: ListTile(
-                                  title: Text('item 0'),
-                                  subtitle: Text('item 0 for index 0'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                  child: Text(
+                    'Leave Request History',
+                    style: TextStyle(fontSize: 25),
                   ),
                 ),
               ),
-            ),
-          ],
+              Card(
+                elevation: 8,
+                child: Container(
+                  width: screenWidth * 1,
+                  height: screenHeight * 0.540,
+                  color: Colors.white,
+                  child: Center(
+                    child: ListView.builder(
+                      itemCount: 1,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: screenWidth,
+                                height: 140,
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 8,
+                                  child: ListTile(
+                                    title: Text('item 1'),
+                                    subtitle: Text('item 0 for index 0'),
+                                    isThreeLine: true,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: screenWidth,
+                                height: 140,
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 8,
+                                  child: ListTile(
+                                    title: Text('item 0'),
+                                    subtitle: Text('item 0 for index 0'),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: screenWidth,
+                                height: 140,
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 8,
+                                  child: ListTile(
+                                    title: Text('item 0'),
+                                    subtitle: Text('item 0 for index 0'),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: screenWidth,
+                                height: 140,
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 8,
+                                  child: ListTile(
+                                    title: Text('item 0'),
+                                    subtitle: Text('item 0 for index 0'),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: screenWidth,
+                                height: 140,
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 8,
+                                  child: ListTile(
+                                    title: Text('item 0'),
+                                    subtitle: Text('item 0 for index 0'),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: screenWidth,
+                                height: 140,
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 8,
+                                  child: ListTile(
+                                    title: Text('item 0'),
+                                    subtitle: Text('item 0 for index 0'),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: screenWidth,
+                                height: 140,
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 8,
+                                  child: ListTile(
+                                    title: Text('item 0'),
+                                    subtitle: Text('item 0 for index 0'),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
 

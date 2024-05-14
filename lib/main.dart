@@ -9,10 +9,12 @@ import 'pages/homepage.dart';
 
 void main() {
   bool isLogin = true;
-  runApp(GetMaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'Project ui',
-    home: (isLogin == true) ? HomePage() : Login(),
-    // home: HomePage(),
-  ));
+  runApp(
+    GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Project ui',
+      home: (isLogin == true) ? HomePage() : Login(),
+      // home: HomePage(),
+    ),
+  );
 }

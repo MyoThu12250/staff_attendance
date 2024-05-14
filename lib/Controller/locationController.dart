@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
@@ -6,21 +5,20 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:project_ui/Controller/timeController.dart';
+
 // final ClockController clockcontroller = Get.put(ClockController());
 final DateTimeController dateTimeController = Get.put(DateTimeController());
-class LocationController extends GetxController {
 
+class LocationController extends GetxController {
   Rx<Position?> currentLocation = Rx<Position?>(null);
-String status=(DateTime.now().hour<12)? "In"
-    : "Out"
-  ;
+  String status = (DateTime.now().hour < 12) ? "In" : "Out";
+
   void sendLocationToServer(BuildContext context) async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
     currentLocation.value = position;
 
-
-    if (position!= null) {
+    if (position != null) {
       final url = Uri.parse('http://10.103.0.142:8000/api/v1/mapCheck');
       final response = await http.post(
         url,
@@ -32,22 +30,33 @@ String status=(DateTime.now().hour<12)? "In"
       );
 
       if (response.statusCode == 200) {
-        String check=response.body;
+        String check = response.body;
         bool isValid = checkIsValid(check);
         if (isValid) {
-
           showDialog(
-
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("Successful Check "+status),
-                content: Text("Successful."),
+                title: Text(
+                  "Successful Check " + status,
+                  style: TextStyle(color: Colors.green[800]),
+                ),
+                content: Text(
+                  "Successful.",
+                  style: TextStyle(color: Colors.green[400]),
+                ),
                 actions: <Widget>[
                   TextButton(
-                    child: Text("OK"),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                        color: Colors.green,
+                      ),
+                    ),
                     onPressed: () {
-
                       dateTimeController.sendDateTimeToServer();
                       Navigator.of(context).pop();
                     },
@@ -56,21 +65,33 @@ String status=(DateTime.now().hour<12)? "In"
               );
             },
           );
-        }
-
-
-        else{
-
+        } else {
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("Unsuccessful "),
-                content: Text(" Unsuccessful.CheckIn "
-                    "Out of range or Out of time "),
+                title: Text(
+                  "Unsuccessful ",
+                  style: TextStyle(
+                    color: Colors.red[800],
+                  ),
+                ),
+                content: Text(
+                  " Unsuccessful.CheckIn "
+                  "Out of range or Out of time ",
+                  style: TextStyle(
+                    color: Colors.red[400],
+                  ),
+                ),
                 actions: <Widget>[
                   TextButton(
-                    child: Text("OK"),
+                    style: TextButton.styleFrom(backgroundColor: Colors.red),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     onPressed: () {
                       // dateTimeController.sendDateTimeToServer();
                       Navigator.of(context).pop();
@@ -80,7 +101,6 @@ String status=(DateTime.now().hour<12)? "In"
               );
             },
           );
-
 
           // print('out of range');
         }
@@ -94,6 +114,7 @@ String status=(DateTime.now().hour<12)? "In"
     }
   }
 }
+
 bool checkIsValid(String jsonString) {
   // Parse the JSON string into a map
   Map<String, dynamic> responseMap = jsonDecode(jsonString);

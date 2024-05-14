@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:project_ui/pages/calender.dart';
 import 'package:project_ui/pages/leave.dart';
 import 'package:project_ui/pages/profile.dart';
 import 'package:project_ui/pages/sendingrequest.dart';
-
 import '../Controller/locationController.dart';
 import '../Controller/permissionController.dart';
 import '../Controller/timeController.dart';
@@ -25,24 +25,27 @@ class _HomePageState extends State<HomePage> {
   late Timer _timer;
   late Stream<DateTime> _timeStream;
   final Completer<GoogleMapController> _controller = Completer();
-  final PermissionController permissionController=Get.put(PermissionController());
+  final PermissionController permissionController =
+      Get.put(PermissionController());
   final DateTimeController dateTimeController = Get.put(DateTimeController());
   final LocationController locationController = Get.put(LocationController());
 
   final Set<Marker> _marker = {
     const Marker(
-        markerId: MarkerId('Times City'),
-        position: LatLng(16.81605105, 96.12887631),
-        infoWindow: InfoWindow(
-          title: 'Times City',
-          snippet: 'Office Tower',
-        )
+      markerId: MarkerId('Times City'),
+      position: LatLng(16.81605105, 96.12887631),
+      infoWindow: InfoWindow(
+        title: 'Times City',
+        snippet: 'Office Tower',
+      ),
     )
   };
+
   static const CameraPosition kGoogle = CameraPosition(
     target: LatLng(16.81605105, 96.12887631),
     zoom: 14.4746,
   );
+
   @override
   void initState() {
     super.initState();
@@ -57,12 +60,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final Completer<GoogleMapController> _controller = Completer();
-  static const CameraPosition kGoogle = CameraPosition(
-    target: LatLng(16.81605105, 96.12887631),
-    zoom: 14.4746,
-  );
-
   @override
   void dispose() {
     _timer.cancel();
@@ -73,23 +70,15 @@ class _HomePageState extends State<HomePage> {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      // Dialog is dismissible with a tap on the barrier.
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Checking in'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Date : ${DateTime.now().day}' +
-                    '/' +
-                    '${DateTime.now().month}' +
-                    '/' +
-                    '${DateTime.now().year}'),
-                Text('Time :' +
-                    '${DateTime.now().hour}' +
-                    ':' +
-                    '${DateTime.now().minute}'),
-                // Text('Location :'),
+                Text(
+                    'Date : ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}'),
+                Text('Time :${DateTime.now().hour}:${DateTime.now().minute}'),
               ],
             ),
           ),
@@ -97,13 +86,13 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               child: Text('Ok'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog.
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: Text('Close'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog.
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -116,23 +105,15 @@ class _HomePageState extends State<HomePage> {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      // Dialog is dismissible with a tap on the barrier.
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Checking out'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Date : ${DateTime.now().day}' +
-                    '/' +
-                    '${DateTime.now().month}' +
-                    '/' +
-                    '${DateTime.now().year}'),
-                Text('Time :' +
-                    '${DateTime.now().hour}' +
-                    ':' +
-                    '${DateTime.now().minute}'),
-                // Text('Location :'),
+                Text(
+                    'Date : ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}'),
+                Text('Time :${DateTime.now().hour}:${DateTime.now().minute}'),
               ],
             ),
           ),
@@ -140,13 +121,13 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               child: Text('Ok'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog.
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: Text('Close'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog.
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -169,17 +150,13 @@ class _HomePageState extends State<HomePage> {
     Size size = mediaQuery.size;
     double screenWidth = size.width;
     double screenHeight = size.height;
+    double textScaleFactor = mediaQuery.textScaleFactor;
+
     return Scaffold(
       appBar: AppBar(
-        // title: Text(
-        //   'Hi, Miracle James',
-        //   style: TextStyle(fontSize: 20),
-        // ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(
-              right: 10.0,
-            ),
+            padding: EdgeInsets.only(right: 10.0),
             child: CircleAvatar(
               backgroundColor: Colors.black.withOpacity(0.095),
               radius: 30,
@@ -205,18 +182,39 @@ class _HomePageState extends State<HomePage> {
           children: [
             SizedBox(
               width: screenWidth,
-              height: screenHeight * .2,
+              height: screenHeight * 0.23,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30),
-                    child: Text(
-                      "RIGHT NOW, IT'S",
-                      style: TextStyle(
-                        fontSize: 40,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 30),
+                        child: Text(
+                          "RIGHT NOW, IT'S",
+                          style: TextStyle(
+                            fontSize:
+                                screenWidth * 0.089, // Responsive font size
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      CircleAvatar(
+                        backgroundColor: Colors.yellowAccent[400],
+                        radius: 30,
+                        child: Text(
+                          (DateTime.now().hour < 12) ? 'AM' : 'PM',
+                          style: TextStyle(
+                            fontSize:
+                                screenWidth * 0.059, // Responsive font size
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Row(
                     children: [
@@ -228,8 +226,8 @@ class _HomePageState extends State<HomePage> {
                               return Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 30.0, bottom: 10),
+                                    padding:
+                                        EdgeInsets.only(left: 30.0, bottom: 10),
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -237,58 +235,52 @@ class _HomePageState extends State<HomePage> {
                                           MainAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          // color: Colors.red,
-                                          width: 85,
+                                          width: screenWidth * 0.21,
                                           child: Text(
                                             DateFormat('h')
                                                     .format(snapshot.data!) +
                                                 'h',
                                             style: TextStyle(
-                                              // color: Colors.purpleAccent,
-                                              fontSize: 60,
+                                              fontSize: screenWidth * 0.12,
+                                              // Responsive font size
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
                                         Text(
                                           ':',
-                                          style: TextStyle(fontSize: 50),
+                                          style: TextStyle(
+                                              fontSize: screenWidth *
+                                                  0.1), // Responsive font size
                                         ),
                                         SizedBox(
-                                          // color: Colors.greenAccent,
-                                          width: 120,
+                                          width: screenWidth * 0.29,
+                                          // Responsive width
                                           child: Text(
                                             '${snapshot.data!.minute}m',
                                             style: TextStyle(
-                                              // color: Colors.red,
-                                              fontSize: 60,
+                                              fontSize: screenWidth * 0.12,
+                                              // Responsive font size
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
                                         Text(
                                           ':',
-                                          style: TextStyle(fontSize: 50),
+                                          style: TextStyle(
+                                              fontSize: screenWidth *
+                                                  0.1), // Responsive font size
                                         ),
                                         SizedBox(
-                                          // color: Colors.green,
-                                          width: 90,
+                                          width: screenWidth * 0.23,
+                                          // Responsive width
                                           child: Text(
                                             '${snapshot.data!.second}s',
                                             style: TextStyle(
-                                              // color: Colors.red,
-                                              fontSize: 60,
+                                              fontSize: screenWidth * 0.12,
+                                              // Responsive font size
                                               fontWeight: FontWeight.bold,
                                             ),
-                                          ),
-                                        ),
-                                        Text(
-                                          (DateTime.now().hour < 12)
-                                              ? 'AM'
-                                              : 'PM',
-                                          style: TextStyle(
-                                            // color: Colors.lightGreen,
-                                            fontSize: 35,
                                           ),
                                         ),
                                       ],
@@ -300,9 +292,10 @@ class _HomePageState extends State<HomePage> {
                               return Text('Error : ${snapshot.error}');
                             } else {
                               return SizedBox(
-                                  height: 50,
-                                  width: 130,
-                                  child: Center(child: Text('Loading....')));
+                                height: 50,
+                                width: 130,
+                                child: Center(child: Text('Loading....')),
+                              );
                             }
                           },
                         ),
@@ -313,11 +306,10 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              height: screenHeight * .4,
+              height: screenHeight * 0.4,
               width: screenWidth,
               color: Colors.greenAccent.withOpacity(0.6),
               child: GoogleMap(
-
                 initialCameraPosition: kGoogle,
                 mapType: MapType.normal,
                 myLocationEnabled: true,
@@ -326,34 +318,33 @@ class _HomePageState extends State<HomePage> {
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
-
                 markers: _marker,
-
-                circles:{
+                circles: {
                   Circle(
                     circleId: CircleId("1"),
                     radius: 789,
                     strokeColor: Colors.lightBlue,
                     strokeWidth: 1,
-                    fillColor: Colors.lightBlue.withOpacity(0.5), center:LatLng(16.81605105, 96.12887631),
-
-                  )},
-
+                    fillColor: Colors.lightBlue.withOpacity(0.5),
+                    center: LatLng(16.81605105, 96.12887631),
+                  )
+                },
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 40.0),
+              padding: EdgeInsets.only(top: 40.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    width: 150,
-                    height: 50,
+                    width: screenWidth * 0.35, // Responsive width
+                    height: screenHeight * 0.07, // Responsive height
                     child: ElevatedButton(
-                      onPressed:DateTime.now().hour>16 ? null :  () {
-
-                      locationController.sendLocationToServer(context);
-                    },
+                      onPressed: DateTime.now().hour > 16
+                          ? null
+                          : () {
+                              locationController.sendLocationToServer(context);
+                            },
                       child: const Text(
                         'Check in  ',
                         style: TextStyle(
@@ -368,14 +359,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(
-                    width: 150,
-                    height: 50,
+                    width: screenWidth * 0.35, // Responsive width
+                    height: screenHeight * 0.07, // Responsive height
                     child: ElevatedButton(
-                      onPressed:DateTime.now().hour>16 ? null :  () {
-
-    locationController.sendLocationToServer(context);
-    },
-
+                      onPressed: DateTime.now().hour > 16
+                          ? null
+                          : () {
+                              locationController.sendLocationToServer(context);
+                            },
                       child: Text(
                         'Check out',
                         style: TextStyle(color: Colors.black, fontSize: 15),

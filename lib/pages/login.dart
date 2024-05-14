@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:project_ui/pages/homepage.dart';
 
 // add SingleChildScrollView
 
@@ -123,6 +125,7 @@ class _LoginState extends State<Login> {
                         if (isValid) {
                           print('success and do login process');
                         }
+                        Get.to(HomePage());
                       },
                       label: const Text(
                         'Sign in',

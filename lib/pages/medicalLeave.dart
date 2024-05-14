@@ -16,8 +16,6 @@ class _MedicalLeaveState extends State<MedicalLeave> {
   TextEditingController _reasonController = TextEditingController();
   TextEditingController _attatchController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
-  TextEditingController _fromDateController = TextEditingController();
-  TextEditingController _toDateController = TextEditingController();
 
   final List<String> items = ['Medical Leave', 'Annual Leave'];
   String selectedValue = 'Medical Leave'; // Default selected value
