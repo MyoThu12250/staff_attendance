@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class AnnualLeave extends StatefulWidget {
   const AnnualLeave({super.key});
@@ -13,7 +16,32 @@ class _AnnualLeaveState extends State<AnnualLeave> {
   TextEditingController _reasonController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
 
-  void _validate() {
+  Future<void> _sendData() async {
+    final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
+    final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
+    final String reason = _reasonController.text;
+    final String leavetype = 'Annual leave';
+
+    final response = await http.post(
+      Uri.parse('https://663077fcc92f351c03d9ee40.mockapi.io/apitest/myint'),
+      body: {
+        'Reason': reason,
+        'fromday': fromdate,
+        'today': todate,
+        'Leave': leavetype
+      },
+    );
+
+    if (response.statusCode == 201) {
+      // Handle successful response
+      print('Data sent successfully');
+    } else {
+      // Handle error response
+      print('Failed to send data');
+    }
+  }
+
+  bool _validate() {
     String _name = _nameController.text.trim();
     String _fromDate = _selectedDateTimef.toString();
     String _toDate = _selectedDateTimet.toString();
@@ -28,34 +56,11 @@ class _AnnualLeaveState extends State<AnnualLeave> {
         builder: (BuildContext context) {
           return AlertDialog(
             elevation: 8,
-            title: Text('Medical Submit Successful or fail'),
+            title: Text('Annual Leave Submitted Successfully '),
             content: Container(
               width: 300,
-              height: 150,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Text(
-                        'Leave type',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Text(
-                        'Duration',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              height: 60,
+              child: Text("Successfully"),
             ),
             actions: <Widget>[
               TextButton(
@@ -64,16 +69,12 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                   Navigator.of(context).pop(); // Close the dialog.
                 },
               ),
-              TextButton(
-                child: Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog.
-                },
-              ),
             ],
           );
         },
       );
+
+      return true;
     } else {
       showDialog(
           context: context,
@@ -91,6 +92,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
               ],
             );
           });
+      return false;
     }
   }
 
@@ -316,7 +318,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                     width: 130,
                     child: ElevatedButton(
                       onPressed: () {
-                        _validate();
+                        _validate() ? _sendData() : print("error");
                       },
                       child: Text(
                         'Submit',

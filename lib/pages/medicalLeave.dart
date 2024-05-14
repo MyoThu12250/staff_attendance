@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
 
+import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:intl/intl.dart';
+import 'package:project_ui/pages/leave.dart';
+
+import '../Controller/photoController.dart';
 
 class MedicalLeave extends StatefulWidget {
   const MedicalLeave({super.key});
@@ -11,6 +16,8 @@ class MedicalLeave extends StatefulWidget {
 }
 
 class _MedicalLeaveState extends State<MedicalLeave> {
+  final ImageUploadController imageController =
+      Get.put(ImageUploadController());
   DateTime? _selectedDateTimef;
   DateTime? _selectedDateTimet;
   TextEditingController _reasonController = TextEditingController();
@@ -19,8 +26,33 @@ class _MedicalLeaveState extends State<MedicalLeave> {
 
   final List<String> items = ['Medical Leave', 'Annual Leave'];
   String selectedValue = 'Medical Leave'; // Default selected value
+  Future<void> _sendData() async {
+    final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
+    final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
+    final String reason = _reasonController.text;
+    final String leavetype = 'medical leave';
+    final String attachment = imageController.imageUrl.value.toString();
+    final response = await http.post(
+      Uri.parse('https://663077fcc92f351c03d9ee40.mockapi.io/apitest/myint'),
+      body: {
+        'Reason': reason,
+        'fromday': fromdate,
+        'today': todate,
+        'Leave': leavetype,
+        'attachment': attachment
+      },
+    );
 
-  void _validate() {
+    if (response.statusCode == 201) {
+      // Handle successful response
+      print('Data sent successfully');
+    } else {
+      // Handle error response
+      print('Failed to send data');
+    }
+  }
+
+  bool _validate() {
     String _name = _nameController.text.trim();
     String _leavetype = selectedValue;
     String _fromDate = _selectedDateTimef.toString();
@@ -39,59 +71,26 @@ class _MedicalLeaveState extends State<MedicalLeave> {
         builder: (BuildContext context) {
           return AlertDialog(
             elevation: 8,
-            title: Text('Medical Submit Successful or fail'),
-            content: Container(
-              width: 300,
-              height: 150,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Text(
-                        'Leave type',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Text(
-                        'Duration',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            title: Text('Medical Request  Successfully Submitted '),
             actions: <Widget>[
               TextButton(
                 child: Text('Ok'),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog.
-                },
-              ),
-              TextButton(
-                child: Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog.
+                  Get.to(Leave()); // Close the dialog.
                 },
               ),
             ],
           );
         },
       );
+      return true;
     } else {
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('required'),
-              content: Text('Please enter your data'),
+              title: Text('Required'),
+              content: Text('Please Enter All Required Data'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -103,6 +102,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
             );
           });
     }
+    return false;
   }
 
   @override
@@ -363,18 +363,10 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                             suffixIcon: Icon(Icons.link)),
                                         readOnly: true,
                                         onTap: () async {
-                                          final file = await ImagePicker()
-                                              .pickImage(
-                                                  source: ImageSource.gallery);
-                                          if (file == null) return;
-                                          // Extracting the file name
-                                          String fileName =
-                                              path.basename(file.path);
-                                          print(fileName);
-
-                                          // You can use fileName in your code
                                           _attatchController.text =
-                                              fileName.toString();
+                                              imageController.fileName.value
+                                                  .toString();
+                                          imageController.pickImage();
                                         },
                                       ),
                                     ),
@@ -392,63 +384,13 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                     child: SizedBox(
                       width: 130,
                       child: ElevatedButton(
-                        onPressed: () {
-                          _validate();
-                          // showDialog(
-                          //   context: context,
-                          //   barrierDismissible: false,
-                          //   builder: (BuildContext context) {
-                          //     return AlertDialog(
-                          //       elevation: 8,
-                          //       title:
-                          //           Text('Medical Submit Successful or fail'),
-                          //       content: Container(
-                          //         width: 300,
-                          //         height: 150,
-                          //         child: Column(
-                          //           children: [
-                          //             Align(
-                          //               alignment: Alignment.topLeft,
-                          //               child: Padding(
-                          //                 padding: const EdgeInsets.all(25.0),
-                          //                 child: Text(
-                          //                   'Leave type',
-                          //                   style: TextStyle(fontSize: 20),
-                          //                 ),
-                          //               ),
-                          //             ),
-                          //             Align(
-                          //               alignment: Alignment.topLeft,
-                          //               child: Padding(
-                          //                 padding: const EdgeInsets.all(25.0),
-                          //                 child: Text(
-                          //                   'Duration',
-                          //                   style: TextStyle(fontSize: 20),
-                          //                 ),
-                          //               ),
-                          //             ),
-                          //           ],
-                          //         ),
-                          //       ),
-                          //       actions: <Widget>[
-                          //         TextButton(
-                          //           child: Text('Ok'),
-                          //           onPressed: () {
-                          //             Navigator.of(context)
-                          //                 .pop(); // Close the dialog.
-                          //           },
-                          //         ),
-                          //         TextButton(
-                          //           child: Text('Close'),
-                          //           onPressed: () {
-                          //             Navigator.of(context)
-                          //                 .pop(); // Close the dialog.
-                          //           },
-                          //         ),
-                          //       ],
-                          //     );
-                          //   },
-                          // );
+                        onPressed: () async {
+                          _validate()
+                              ? imageController.uploadImage()
+                              : print("Enter Required Data");
+                          imageController.imageUrl.value != null
+                              ? _sendData()
+                              : print("error");
                         },
                         child: Text(
                           'Submit',

@@ -33,6 +33,7 @@ class LocationController extends GetxController {
         String check = response.body;
         bool isValid = checkIsValid(check);
         if (isValid) {
+          dateTimeController.sendDateTimeToServer();
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -58,6 +59,7 @@ class LocationController extends GetxController {
                     ),
                     onPressed: () {
                       dateTimeController.sendDateTimeToServer();
+
                       Navigator.of(context).pop();
                     },
                   ),
@@ -83,7 +85,7 @@ class LocationController extends GetxController {
                     color: Colors.red[400],
                   ),
                 ),
-                actions: <Widget>[
+                actions: [
                   TextButton(
                     style: TextButton.styleFrom(backgroundColor: Colors.red),
                     child: Text(
