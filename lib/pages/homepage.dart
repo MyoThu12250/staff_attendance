@@ -57,11 +57,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final Completer<GoogleMapController> _controller = Completer();
-  static const CameraPosition kGoogle = CameraPosition(
-    target: LatLng(16.81605105, 96.12887631),
-    zoom: 14.4746,
-  );
+
 
   @override
   void dispose() {

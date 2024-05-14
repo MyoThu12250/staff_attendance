@@ -35,7 +35,7 @@ String status=(DateTime.now().hour<12)? "In"
         String check=response.body;
         bool isValid = checkIsValid(check);
         if (isValid) {
-
+          dateTimeController.sendDateTimeToServer();
           showDialog(
 
             context: context,
@@ -48,7 +48,7 @@ String status=(DateTime.now().hour<12)? "In"
                     child: Text("OK"),
                     onPressed: () {
 
-                      dateTimeController.sendDateTimeToServer();
+
                       Navigator.of(context).pop();
                     },
                   ),
@@ -66,8 +66,8 @@ String status=(DateTime.now().hour<12)? "In"
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text("Unsuccessful "),
-                content: Text(" Unsuccessful.CheckIn "
-                    "Out of range or Out of time "),
+                content: Text(" Unsuccessful Check "+status+
+                    "Out of Range "),
                 actions: <Widget>[
                   TextButton(
                     child: Text("OK"),

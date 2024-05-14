@@ -8,7 +8,7 @@ class DateTimeController extends GetxController{
     var formatter = DateFormat('yyyy-MM-dd HH:mm');
     String formattedDateTime = formatter.format(now);
 
-    final url = Uri.parse('http://10.103.1.66:8000/api/v1/mapCheck/sendDateTime');
+    final url = Uri.parse('https://663077fcc92f351c03d9ee40.mockapi.io/apitest/Date');
     final response = await http.post(
       url,
       body: jsonEncode({'dateTime': formattedDateTime,
