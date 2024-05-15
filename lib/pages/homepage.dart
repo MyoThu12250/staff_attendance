@@ -60,8 +60,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
-
   @override
   void dispose() {
     _timer.cancel();
@@ -165,7 +163,7 @@ class _HomePageState extends State<HomePage> {
               child: Center(
                 child: IconButton(
                   onPressed: () {
-                    Get.to(const Profile());
+                    Get.toNamed('/profile');
                   },
                   icon: const Icon(
                     Icons.person,
@@ -182,9 +180,10 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // padding: EdgeInsets.symmetric()
             SizedBox(
-              width: screenWidth,
-              height: screenHeight * 0.23,
+              width: screenWidth, //1.sw // flutter_screenutil
+              // height: screenHeight * 0.23,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

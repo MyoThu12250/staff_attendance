@@ -7,8 +7,10 @@ import 'package:project_ui/pages/homepage.dart';
 import 'package:project_ui/pages/medicalLeave.dart';
 import 'package:project_ui/pages/sendingrequest.dart';
 
+import '../Controller/leaveController.dart';
+
 class Leave extends StatefulWidget {
-  const Leave({super.key});
+  Leave({super.key});
 
   @override
   State<Leave> createState() => _LeaveState();
@@ -17,14 +19,23 @@ class Leave extends StatefulWidget {
 class _LeaveState extends State<Leave> {
   int _selectedIndex = 1;
 
+  LeaveController lontroller = Get.put(LeaveController());
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  void initState() {
+    super.initState();
+    lontroller.Leave();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<dynamic> filteredData = Get.arguments as List<dynamic>;
+    print(filteredData);
     MediaQueryData mediaQuery = MediaQuery.of(context);
     Size size = mediaQuery.size;
     double screenWidth = size.width;
@@ -96,8 +107,9 @@ class _LeaveState extends State<Leave> {
                   color: Colors.white,
                   child: Center(
                     child: ListView.builder(
-                      itemCount: 1,
+                      itemCount: filteredData.length,
                       itemBuilder: (context, index) {
+                        var item = filteredData[index];
                         return Column(
                           children: [
                             Padding(
@@ -109,7 +121,7 @@ class _LeaveState extends State<Leave> {
                                   color: Colors.white,
                                   elevation: 8,
                                   child: ListTile(
-                                    title: Text('item 1'),
+                                    title: Text(item['reasons']),
                                     subtitle: Text('item 0 for index 0'),
                                     isThreeLine: true,
                                   ),

@@ -1,23 +1,39 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:project_ui/pages/homepage.dart';
+import 'package:project_ui/pages/leave.dart';
 import 'package:project_ui/pages/login.dart';
-import 'package:project_ui/pages/profile.dart';
-import 'package:project_ui/pages/sendingrequest.dart';
+import 'package:project_ui/pages/testProfile.dart';
+import 'package:project_ui/test.dart';
 
-import 'pages/homepage.dart';
+import 'Controller/loginController.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  bool isLogin = true;
-  runApp(
-    GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Project ui',
-      home: (isLogin == true) ? HomePage() : Login(),
-      // home: HomePage(),
-    ),
-  );
+void main() async {
+  await GetStorage.init();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  final LoginController controller = Get.put(LoginController());
+
+  @override
+  Widget build(BuildContext context) {
+    final box = GetStorage();
+    final bool isLoggedIn = box.read('isLoggedIn') ?? false;
+
+    return GetMaterialApp(
+      title: 'Flutter Login',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: isLoggedIn ? '/home' : '/',
+      getPages: [
+        GetPage(name: '/', page: () => LoginPage()),
+        GetPage(name: '/profile', page: () => ProfilePage()),
+        GetPage(name: '/home', page: () => HomePage()),
+        GetPage(name: '/leave', page: () => Leave())
+      ],
+    );
+  }
 }

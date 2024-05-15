@@ -80,10 +80,10 @@ class _ProfileState extends State<Profile> {
                                   onPressed: () {
                                     // Get.to(EditPage());
                                   },
-                                  icon: Icon(
-                                    Icons.edit,
-                                    size: 15,
+                                  icon: IconButton(
                                     color: Colors.black,
+                                    onPressed: () {},
+                                    icon: Icon(Icons.edit),
                                   ),
                                 ),
                               ),
