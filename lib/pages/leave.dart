@@ -6,6 +6,7 @@ import 'package:project_ui/pages/calender.dart';
 import 'package:project_ui/pages/homepage.dart';
 import 'package:project_ui/pages/medicalLeave.dart';
 import 'package:project_ui/pages/sendingrequest.dart';
+import 'package:project_ui/pages/splashScreen.dart';
 
 import '../Controller/leaveController.dart';
 
@@ -29,13 +30,14 @@ class _LeaveState extends State<Leave> {
 
   void initState() {
     super.initState();
-    lontroller.Leave();
+    // lontroller.Leave();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> filteredData = Get.arguments as List<dynamic>;
-    print(filteredData);
+    // List<dynamic> filteredData = Get.arguments as List<dynamic>;
+
+    // print(filteredData);
     MediaQueryData mediaQuery = MediaQuery.of(context);
     Size size = mediaQuery.size;
     double screenWidth = size.width;
@@ -68,7 +70,7 @@ class _LeaveState extends State<Leave> {
                               color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFE1FF3C)),
+                            elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
                       ),
                     ),
                     SizedBox(
@@ -84,7 +86,7 @@ class _LeaveState extends State<Leave> {
                               fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFE1FF3C)),
+                            elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
                       ),
                     ),
                   ],
@@ -107,9 +109,10 @@ class _LeaveState extends State<Leave> {
                   color: Colors.white,
                   child: Center(
                     child: ListView.builder(
-                      itemCount: filteredData.length,
+                      // itemCount: filteredData.length,
+                      itemCount: 1,
                       itemBuilder: (context, index) {
-                        var item = filteredData[index];
+                        // var item = filteredData[index];
                         return Column(
                           children: [
                             Padding(
@@ -121,7 +124,7 @@ class _LeaveState extends State<Leave> {
                                   color: Colors.white,
                                   elevation: 8,
                                   child: ListTile(
-                                    title: Text(item['reasons']),
+                                    title: Text("item['reasons']"),
                                     subtitle: Text('item 0 for index 0'),
                                     isThreeLine: true,
                                   ),
@@ -233,42 +236,57 @@ class _LeaveState extends State<Leave> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(HomePage());
+            icon: InkWell(
+              onTap: () {
+                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+                Get.to(
+                  HomePage(),
+                );
               },
-              icon: Icon(Icons.home),
-              color: Colors.black,
+              child: Image.asset(
+                'assets/icons/home.png',
+                width: 30,
+                color: Colors.black,
+              ),
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(Leave());
+            icon: InkWell(
+              onTap: () {
+                Get.to(Leave(), transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.leave_bags_at_home),
-              color: Colors.lightGreenAccent,
+              child: Image.asset(
+                'assets/icons/leave.png',
+                width: 30,
+                color: Colors.black,
+              ),
             ),
             label: 'Leave',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(RequestPage());
+            icon: InkWell(
+              onTap: () {
+                Get.to(RequestPage(),
+                    transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.request_page),
-              color: Colors.black,
+              child: Image.asset(
+                'assets/icons/attendance_history.png',
+                width: 30,
+              ),
             ),
             label: 'Attendance',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(Calender());
+            icon: InkWell(
+              onTap: () {
+                Get.to(Calender(), transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.calendar_today),
-              color: Colors.black,
+              child: Icon(
+                Icons.calendar_month,
+                color: Colors.black,
+                size: 30,
+              ),
             ),
             label: 'Calendar',
           ),
@@ -276,7 +294,7 @@ class _LeaveState extends State<Leave> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         selectedIconTheme: IconThemeData(
-          size: 25,
+          size: 35,
           color: Color(0xFFE1FF3C),
         ),
         onTap: _onItemTapped,

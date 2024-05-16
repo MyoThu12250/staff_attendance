@@ -59,8 +59,9 @@ class LoginPage extends StatelessWidget {
                           onPressed: controller.login,
                           child: Text('Login'),
                           style: ElevatedButton.styleFrom(
+                            elevation: 8,
                             foregroundColor: Colors.black,
-                            backgroundColor: Colors.lightGreenAccent,
+                            backgroundColor: Color(0xFFE1FF3C),
                             textStyle: TextStyle(fontSize: 18),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 32, vertical: 12),

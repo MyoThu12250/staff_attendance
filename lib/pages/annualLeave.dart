@@ -157,34 +157,19 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                             height: screenHeight * .15,
                             width: screenWidth * .29,
                             // color: Colors.red,
-                            child: Center(
-                              child: Text(
-                                'Name',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
+                            child: Icon(Icons.person),
                           ),
                           Container(
                             height: screenHeight * .15,
                             width: screenWidth * .29,
                             // color: Colors.red,
-                            child: Center(
-                              child: Text(
-                                'Duration',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
+                            child: Icon(Icons.access_time),
                           ),
                           Container(
                             height: screenHeight * .15,
                             width: screenWidth * .29,
                             // color: Colors.red,
-                            child: Center(
-                              child: Text(
-                                'Reason',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
+                            child: Icon(Icons.library_books),
                           ),
                         ],
                       ),
@@ -198,6 +183,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                               child: TextField(
                                 controller: _nameController,
                                 decoration: InputDecoration(
+                                  labelText: 'Name',
                                   border: OutlineInputBorder(),
                                   hintText: 'Enter your name',
                                 ),
@@ -230,30 +216,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                                       ),
                                     ),
                                     onTap: () {
-                                      // if (_selectedDateTimef == null) {
-                                      //   showDialog(
-                                      //       context: context,
-                                      //       builder:
-                                      //           (BuildContext context) {
-                                      //         return AlertDialog(
-                                      //           title: Text('Error'),
-                                      //           content:
-                                      //               Text('sekected date'),
-                                      //           actions: [
-                                      //             TextButton(
-                                      //               onPressed: () {
-                                      //                 Navigator.of(
-                                      //                         context)
-                                      //                     .pop();
-                                      //               },
-                                      //               child: Text('Ok'),
-                                      //             )
-                                      //           ],
-                                      //         );
-                                      //       });
-                                      // } else {
                                       _selectedDatef();
-                                      // }
                                     },
                                   ),
                                 ),
@@ -300,6 +263,8 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                                 maxLines: null,
                                 expands: true,
                                 decoration: InputDecoration(
+                                  labelText: 'Reason',
+                                  hintText: 'Enter reason ',
                                   border: OutlineInputBorder(),
                                 ),
                               ),
@@ -325,7 +290,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                         style: TextStyle(color: Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFE1FF3C)),
+                          elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
                     ),
                   )
                 ],

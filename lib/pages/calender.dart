@@ -121,42 +121,57 @@ class _CalenderState extends State<Calender> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(HomePage());
+            icon: InkWell(
+              onTap: () {
+                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+                Get.to(
+                  HomePage(),
+                );
               },
-              icon: Icon(Icons.home),
-              color: Colors.black,
+              child: Image.asset(
+                'assets/icons/home.png',
+                width: 30,
+                color: Colors.black,
+              ),
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(Leave());
+            icon: InkWell(
+              onTap: () {
+                Get.to(Leave(), transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.leave_bags_at_home),
-              color: Colors.black,
+              child: Image.asset(
+                'assets/icons/leave.png',
+                width: 30,
+                color: Colors.black,
+              ),
             ),
             label: 'Leave',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(RequestPage());
+            icon: InkWell(
+              onTap: () {
+                Get.to(RequestPage(),
+                    transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.request_page),
-              color: Colors.black,
+              child: Image.asset(
+                'assets/icons/attendance_history.png',
+                width: 30,
+              ),
             ),
             label: 'Attendance',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(Calender());
+            icon: InkWell(
+              onTap: () {
+                Get.to(Calender(), transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.calendar_today),
-              color: Colors.lightGreenAccent,
+              child: Icon(
+                Icons.calendar_month,
+                color: Colors.black,
+                size: 30,
+              ),
             ),
             label: 'Calendar',
           ),
@@ -164,7 +179,7 @@ class _CalenderState extends State<Calender> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         selectedIconTheme: IconThemeData(
-          size: 25,
+          size: 35,
           color: Color(0xFFE1FF3C),
         ),
         onTap: _onItemTapped,

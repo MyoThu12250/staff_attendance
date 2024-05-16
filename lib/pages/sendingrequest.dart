@@ -32,19 +32,30 @@ class _RequestPageState extends State<RequestPage> {
           Center(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightGreen, elevation: 8),
+                  backgroundColor: Color(0xFFE1FF3C), elevation: 8),
               onPressed: () {
                 Get.to(RequestPageForm());
               },
-              child: Text('Attendance Form'),
+              child: Text(
+                'Attendance Form',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
             ),
           ),
           SizedBox(
             height: 30,
           ),
-          Text('Attendance History'),
+          Text(
+            'Attendance History',
+            style: TextStyle(
+              fontSize: 25,
+            ),
+          ),
           SizedBox(
-            height: 40,
+            height: 30,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -67,6 +78,9 @@ class _RequestPageState extends State<RequestPage> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 20,
+                      ),
                     ],
                   );
                 },
@@ -78,42 +92,57 @@ class _RequestPageState extends State<RequestPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(HomePage());
+            icon: InkWell(
+              onTap: () {
+                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+                Get.to(
+                  HomePage(),
+                );
               },
-              icon: Icon(Icons.home),
-              color: Colors.black,
+              child: Image.asset(
+                'assets/icons/home.png',
+                width: 30,
+                color: Colors.black,
+              ),
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(Leave());
+            icon: InkWell(
+              onTap: () {
+                Get.to(Leave(), transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.leave_bags_at_home),
-              color: Colors.black,
+              child: Image.asset(
+                'assets/icons/leave.png',
+                width: 30,
+                color: Colors.black,
+              ),
             ),
             label: 'Leave',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                // Get.to();
+            icon: InkWell(
+              onTap: () {
+                Get.to(RequestPage(),
+                    transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.request_page),
-              color: Colors.lightGreenAccent,
+              child: Image.asset(
+                'assets/icons/attendance_history.png',
+                width: 30,
+              ),
             ),
-            label: 'Request',
+            label: 'Attendance',
           ),
           BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Get.to(Calender());
+            icon: InkWell(
+              onTap: () {
+                Get.to(Calender(), transition: Transition.rightToLeftWithFade);
               },
-              icon: Icon(Icons.calendar_today),
-              color: Colors.black,
+              child: Icon(
+                Icons.calendar_month,
+                color: Colors.black,
+                size: 30,
+              ),
             ),
             label: 'Calendar',
           ),
@@ -121,7 +150,7 @@ class _RequestPageState extends State<RequestPage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         selectedIconTheme: IconThemeData(
-          size: 25,
+          size: 35,
           color: Color(0xFFE1FF3C),
         ),
         onTap: _onItemTapped,
