@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:project_ui/Controller/userController.dart';
+
+import '../Controller/leaveController.dart';
+import '../Controller/loginController.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -13,14 +17,24 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  TextEditingController _nameController = TextEditingController();
-  UserController _userController = Get.put(UserController());
+  LeaveController lontroller = Get.put(LeaveController());
+  final LoginController controller = Get.find();
+  final box = GetStorage();
+
+  ProfilePage() {
+    controller.loadProfileData();
+  }
+
+  void _logout() {
+    box.erase();
+    Get.offAllNamed('/');
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _userController.getData();
+    // _userController.getData();
   }
 
   @override

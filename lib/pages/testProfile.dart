@@ -41,36 +41,6 @@ class ProfilePage extends StatelessWidget {
           children: [
             Center(
               child: Obx(
-                // () => Stack(
-                //   children: [
-                //     Padding(
-                //       padding: const EdgeInsets.only(top: 10.0),
-                //       child: CircleAvatar(
-                //         radius: _radius,
-                //         backgroundColor: Colors.transparent,
-                //         backgroundImage:
-                //             NetworkImage("https://loremflickr.com/640/480"),
-                //       ),
-                //     ),
-                //     Positioned(
-                //       right: 0,
-                //       bottom: 0,
-                //       child: CircleAvatar(
-                //         radius: 15,
-                //         child: IconButton(
-                //           onPressed: () {
-                //             // Get.to(EditPage());
-                //           },
-                //           icon: IconButton(
-                //             color: Colors.black,
-                //             onPressed: () {},
-                //             icon: Icon(Icons.edit),
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 () => CircleAvatar(
                   radius: 100,
                   backgroundImage: controller.profileImage.value.isEmpty
@@ -168,7 +138,7 @@ class ProfilePage extends StatelessWidget {
                     foregroundColor: Colors.lightGreenAccent),
                 onPressed: () {
                   _logout();
-                  lontroller.Leave();
+                  // lontroller.Leave();
                 },
                 child: Text("Log Out"),
               ),

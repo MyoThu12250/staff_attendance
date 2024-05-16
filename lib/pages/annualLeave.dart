@@ -180,12 +180,15 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                             width: screenWidth * .7,
                             // color: Colors.red,
                             child: Center(
-                              child: TextField(
-                                controller: _nameController,
-                                decoration: InputDecoration(
-                                  labelText: 'Name',
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter your name',
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: _nameController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Name',
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Enter your name',
+                                  ),
                                 ),
                               ),
                             ),
@@ -194,60 +197,67 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                             height: screenHeight * .15,
                             width: screenWidth * .7,
                             // color: Colors.red,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  height: 70,
-                                  width: 130,
-                                  child: TextField(
-                                    controller: TextEditingController(
-                                      text: _selectedDateTimef != null
-                                          ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
-                                          : null,
-                                    ),
-                                    readOnly: true,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'From',
-                                      hintText: 'From',
-                                      suffixIcon: Icon(
-                                        Icons.date_range,
-                                        size: 20,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: SizedBox(
+                                        height: 70,
+                                        width: 125,
+                                        child: TextField(
+                                          controller: TextEditingController(
+                                            text: _selectedDateTimef != null
+                                                ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
+                                                : null,
+                                          ),
+                                          readOnly: true,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'From',
+                                            hintText: 'From',
+                                            suffixIcon: Icon(
+                                              Icons.date_range,
+                                              size: 20,
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            _selectedDatef();
+                                          },
+                                        ),
                                       ),
                                     ),
-                                    onTap: () {
-                                      _selectedDatef();
-                                    },
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                SizedBox(
-                                  height: 70,
-                                  width: 130,
-                                  child: TextField(
-                                    controller: TextEditingController(
-                                      text: _selectedDateTimet != null
-                                          ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
-                                          : null,
-                                    ),
-                                    readOnly: true,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'to',
-                                      hintText: 'to',
-                                      suffixIcon: Icon(
-                                        Icons.date_range,
-                                        size: 20,
+                                    SizedBox(
+                                      height: 70,
+                                      width: 125,
+                                      child: TextField(
+                                        controller: TextEditingController(
+                                          text: _selectedDateTimet != null
+                                              ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
+                                              : null,
+                                        ),
+                                        readOnly: true,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: 'to',
+                                          hintText: 'to',
+                                          suffixIcon: Icon(
+                                            Icons.date_range,
+                                            size: 20,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          _selectedDatet();
+                                        },
                                       ),
                                     ),
-                                    onTap: () {
-                                      _selectedDatet();
-                                    },
-                                  ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                           Container(
@@ -258,14 +268,17 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                               width: 290,
                               height: 95,
                               // color: Colors.blue,
-                              child: TextField(
-                                controller: _reasonController,
-                                maxLines: null,
-                                expands: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Reason',
-                                  hintText: 'Enter reason ',
-                                  border: OutlineInputBorder(),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: _reasonController,
+                                  maxLines: null,
+                                  expands: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Reason',
+                                    hintText: 'Enter reason ',
+                                    border: OutlineInputBorder(),
+                                  ),
                                 ),
                               ),
                             ),

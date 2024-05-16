@@ -27,67 +27,69 @@ class _RequestPageState extends State<RequestPage> {
 
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFE1FF3C), elevation: 8),
-              onPressed: () {
-                Get.to(RequestPageForm());
-              },
-              child: Text(
-                'Attendance Form',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFE1FF3C), elevation: 8),
+                onPressed: () {
+                  Get.to(RequestPageForm());
+                },
+                child: Text(
+                  'Attendance Form',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Text(
-            'Attendance History',
-            style: TextStyle(
-              fontSize: 25,
+            SizedBox(
+              height: 30,
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 500,
-              // color: Colors.lightGreen,
-              child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Card(
-                        elevation: 8,
-                        child: SizedBox(
-                          height: 100,
-                          child: ListTile(
-                            title: Text('h1'),
-                            subtitle: Text('h3'),
-                            isThreeLine: true,
+            Text(
+              'Attendance History',
+              style: TextStyle(
+                fontSize: 25,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 470,
+                // color: Colors.lightGreen,
+                child: ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Card(
+                          elevation: 8,
+                          child: SizedBox(
+                            height: 130,
+                            child: ListTile(
+                              title: Text('h1'),
+                              subtitle: Text('h3'),
+                              isThreeLine: true,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  );
-                },
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
@@ -154,6 +156,7 @@ class _RequestPageState extends State<RequestPage> {
           color: Color(0xFFE1FF3C),
         ),
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

@@ -38,6 +38,8 @@ class LocationController extends GetxController {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
+                shadowColor: Colors.green[800],
+                elevation: 30,
                 title: Text(
                   "Successful Check " + status,
                   style: TextStyle(color: Colors.green[800]),
@@ -49,11 +51,13 @@ class LocationController extends GetxController {
                 actions: <Widget>[
                   TextButton(
                     style: TextButton.styleFrom(
+                      elevation: 8,
                       backgroundColor: Colors.green,
                     ),
                     child: Text(
                       "OK",
                       style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
@@ -72,6 +76,8 @@ class LocationController extends GetxController {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
+                shadowColor: Colors.red,
+                elevation: 30,
                 title: Text(
                   "Unsuccessful ",
                   style: TextStyle(
@@ -83,11 +89,15 @@ class LocationController extends GetxController {
                   "Out of range or Out of time ",
                   style: TextStyle(
                     color: Colors.red[400],
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 actions: [
                   TextButton(
-                    style: TextButton.styleFrom(backgroundColor: Colors.red),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      elevation: 8,
+                    ),
                     child: Text(
                       "OK",
                       style: TextStyle(

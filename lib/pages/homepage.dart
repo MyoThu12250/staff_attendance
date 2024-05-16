@@ -423,10 +423,6 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
-                // Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (context) => HomePage(),
-                // ));
                 Get.to(
                   HomePage(),
                 );
@@ -441,10 +437,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                // Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (context) => Leave(),
-                // ));
-                Get.to(Leave(), transition: Transition.rightToLeftWithFade);
+                Get.to(Leave(), transition: Transition.fadeIn);
               },
               child: Image.asset(
                 'assets/icons/leave.png',
@@ -457,8 +450,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                Get.to(RequestPage(),
-                    transition: Transition.rightToLeftWithFade);
+                Get.to(RequestPage(), transition: Transition.fadeIn);
               },
               child: Image.asset(
                 'assets/icons/attendance_history.png',
@@ -470,7 +462,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                Get.to(Calender(), transition: Transition.rightToLeftWithFade);
+                Get.to(Calender(), transition: Transition.fadeIn);
               },
               child: Icon(
                 Icons.calendar_month,
@@ -488,6 +480,7 @@ class _HomePageState extends State<HomePage> {
           color: Color(0xFFE1FF3C),
         ),
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

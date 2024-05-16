@@ -183,54 +183,8 @@ class _CalenderState extends State<Calender> {
           color: Color(0xFFE1FF3C),
         ),
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
       ),
-
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: IconButton(
-      //           onPressed: () {
-      //             Get.to(HomePage());
-      //           },
-      //           icon: Icon(
-      //             Icons.home,
-      //             color: Colors.black,
-      //           )),
-      //       label: "Home",
-      //       // activeIcon: Icon(Icons.home_sharp)
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: IconButton(
-      //         onPressed: () {
-      //           Get.to(Leave());
-      //         },
-      //         icon: Icon(Icons.exit_to_app),
-      //         color: Colors.black,
-      //       ),
-      //       label: "Leave",
-      //       // activeIcon: Icon(Icons.exit_to_app_sharp)
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: IconButton(
-      //         onPressed: () {},
-      //         icon: Icon(Icons.fact_check),
-      //         color: Colors.black,
-      //       ),
-      //       label: "Request",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: IconButton(
-      //         onPressed: () {
-      //           Get.to(Calender());
-      //         },
-      //         icon: Icon(Icons.calendar_month),
-      //         color: Colors.black,
-      //       ),
-      //       label: "Calender",
-      //       // activeIcon: Icon(Icons.calendar_month_sharp)
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

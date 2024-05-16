@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:project_ui/pages/sendingrequest.dart';
 
 class RequestPageForm extends StatefulWidget {
   const RequestPageForm({super.key});
@@ -107,7 +109,9 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   'Submit',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(RequestPage());
+                },
               ),
             ],
           ),

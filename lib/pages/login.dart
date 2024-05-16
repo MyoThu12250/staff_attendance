@@ -19,10 +19,11 @@ class LoginPage extends StatelessWidget {
                 Text(
                   'Login',
                   style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.lightGreenAccent,
-                  ),
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFE1FF3C)
+                      // color: Colors.lightGreenAccent,
+                      ),
                 ),
                 SizedBox(height: 20),
                 TextField(

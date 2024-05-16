@@ -232,15 +232,14 @@ class _LeaveState extends State<Leave> {
           ),
         ),
       ),
-
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
                 Get.to(
                   HomePage(),
+                  transition: Transition.fadeIn,
                 );
               },
               child: Image.asset(
@@ -254,7 +253,7 @@ class _LeaveState extends State<Leave> {
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                Get.to(Leave(), transition: Transition.rightToLeftWithFade);
+                Get.to(Leave(), transition: Transition.fadeIn);
               },
               child: Image.asset(
                 'assets/icons/leave.png',
@@ -267,8 +266,7 @@ class _LeaveState extends State<Leave> {
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                Get.to(RequestPage(),
-                    transition: Transition.rightToLeftWithFade);
+                Get.to(RequestPage(), transition: Transition.fadeIn);
               },
               child: Image.asset(
                 'assets/icons/attendance_history.png',
@@ -280,7 +278,7 @@ class _LeaveState extends State<Leave> {
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                Get.to(Calender(), transition: Transition.rightToLeftWithFade);
+                Get.to(Calender(), transition: Transition.fadeIn);
               },
               child: Icon(
                 Icons.calendar_month,
@@ -298,52 +296,8 @@ class _LeaveState extends State<Leave> {
           color: Color(0xFFE1FF3C),
         ),
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
       ),
-
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: IconButton(
-      //         onPressed: () {
-      //           Get.to(HomePage());
-      //         },
-      //         icon: Icon(
-      //           Icons.home,
-      //           color: Colors.black,
-      //         ),
-      //       ),
-      //       label: "Home",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: IconButton(
-      //         onPressed: () {
-      //           Get.to(Leave());
-      //         },
-      //         icon: Icon(Icons.exit_to_app),
-      //         color: Colors.black,
-      //       ),
-      //       label: "Leave",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: IconButton(
-      //         onPressed: () {},
-      //         icon: Icon(Icons.fact_check),
-      //         color: Colors.black,
-      //       ),
-      //       label: "Request",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: IconButton(
-      //         onPressed: () {
-      //           Get.to(Calender());
-      //         },
-      //         icon: Icon(Icons.calendar_month),
-      //         color: Colors.black,
-      //       ),
-      //       label: "Calender",
-      //     ),
-      //   ],
-      // ),
     );
   }
 }
