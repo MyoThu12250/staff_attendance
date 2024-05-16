@@ -17,6 +17,7 @@ class RequestPage extends StatefulWidget {
 class _RequestPageState extends State<RequestPage> {
   @override
   Widget build(BuildContext context) {
+    // int _countLeft = 0; // attendance count
     int _selectedIndex = 2;
 
     void _onItemTapped(int index) {
@@ -31,6 +32,8 @@ class _RequestPageState extends State<RequestPage> {
         child: Column(
           children: [
             Center(
+              // child: _countLeft != 0
+              //     ?
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFE1FF3C), elevation: 8),
@@ -45,6 +48,13 @@ class _RequestPageState extends State<RequestPage> {
                       fontSize: 16),
                 ),
               ),
+              // : Text(
+              //     'You have nothing attempt',
+              //     style: TextStyle(
+              //       fontSize: 20,
+              //       color: Colors.red,
+              //     ),
+              //   ),
             ),
             SizedBox(
               height: 30,
