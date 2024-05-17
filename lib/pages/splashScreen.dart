@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:project_ui/pages/homepage.dart';
+import 'package:project_ui/pages/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,19 +14,15 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    Timer(Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => HomePage(),
-      ));
-    });
-  }
+  // bool _isLogin = true;
 
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+    final bool _isLogin = box.read('isLoggedIn') ?? false;
+    Timer(Duration(seconds: 3), () {
+      Get.off(_isLogin == false ? HomePage() : LoginPage());
+    });
     return Scaffold(
       backgroundColor: Color(0xFFE1FF3C),
       body: Column(

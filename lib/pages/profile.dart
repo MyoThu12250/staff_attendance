@@ -2,12 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:project_ui/Controller/userController.dart';
 
-import '../Controller/leaveController.dart';
-import '../Controller/loginController.dart';
+// import '../Controller/leaveController.dart';
+// import '../Controller/loginController.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -17,25 +15,25 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  LeaveController lontroller = Get.put(LeaveController());
-  final LoginController controller = Get.find();
+  // LeaveController lontroller = Get.put(LeaveController());
+// final LoginController controller = Get.find();
   final box = GetStorage();
 
-  ProfilePage() {
-    controller.loadProfileData();
-  }
+  // ProfilePage() {
+  //   // controller.loadProfileData();
+  // }
 
-  void _logout() {
-    box.erase();
-    Get.offAllNamed('/');
-  }
+  // void _logout() {
+  //   box.erase();
+  //   Get.offAllNamed('/');
+  // }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // _userController.getData();
-  }
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   // _userController.getData();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +58,6 @@ class _ProfileState extends State<Profile> {
                 Container(
                   width: screenWidth,
                   height: screenHeight * 0.243,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.blue,
-                        Colors.purpleAccent,
-                        Colors.green,
-                      ],
-                    ),
-                  ),
                   child: Center(
                     child: Column(
                       children: [
@@ -153,41 +140,6 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     Column(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         SizedBox(
-                //             width: 100,
-                //             height: 40,
-                //             child: Center(child: Text('User Name'))),
-                //         Text('Employee id'),
-                //         Text('Position'),
-                //         Text('Phone no'),
-                //         Text('Email'),
-                //         Text('Address'),
-                //         Text('Date of Birth'),
-                //       ],
-                //     ),
-                //     Column(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         SizedBox(
-                //             width: 100,
-                //             height: 40,
-                //             child: Center(child: Text('Ag Ag'))),
-                //         Text('697830011'),
-                //         Text('CEO'),
-                //         Text('09697830011'),
-                //         Text('agag@gmail.com'),
-                //         Text('New York'),
-                //         Text('12/2/89'),
-                //       ],
-                //     )
-                //   ],
-                // )
               ],
             ),
           ),
@@ -195,4 +147,8 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(Profile());
 }

@@ -18,7 +18,7 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.post(
-        Uri.parse('http://10.103.0.142:8000/api/v1/users/loginUser'),
+        Uri.parse('http://10.103.1.17:8000/api/v1/users/loginUser'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

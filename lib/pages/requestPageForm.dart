@@ -110,7 +110,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                  Get.to(RequestPage());
+                  Get.off(RequestPage());
                 },
               ),
             ],

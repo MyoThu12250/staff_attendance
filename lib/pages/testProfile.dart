@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../Controller/leaveController.dart';
@@ -42,20 +43,30 @@ class ProfilePage extends StatelessWidget {
             Center(
               child: Obx(
                 () => CircleAvatar(
-                  radius: 100,
-                  backgroundImage: controller.profileImage.value.isEmpty
-                      ? AssetImage('assets/images/default_profile.jpg')
-                      : FileImage(File(controller.profileImage.value))
-                          as ImageProvider,
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: IconButton(
-                      iconSize: 40.0,
-                      color: Colors.lightGreenAccent,
-                      onPressed: () {
-                        controller.pickImage();
-                      },
-                      icon: Icon(Icons.edit),
+                  radius: 85,
+                  backgroundColor: Colors.pinkAccent.withOpacity(0.5),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.red,
+                    radius: 80,
+                    backgroundImage: controller.profileImage.value.isEmpty
+                        ? AssetImage('assets/images/default_profile.jpg')
+                        : FileImage(File(controller.profileImage.value))
+                            as ImageProvider,
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: Center(
+                          child: IconButton(
+                            iconSize: 30.0,
+                            color: Colors.black,
+                            onPressed: () {
+                              controller.pickImage();
+                            },
+                            icon: Icon(Icons.edit),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -72,15 +83,7 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 30),
-            Obx(
-              () => Text(
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
-                      fontSize: 21),
-                  'Id: ${controller.userInfo['userId']}'),
-            ),
-            SizedBox(height: 30),
+
             Obx(
               () => Text(
                   style: TextStyle(

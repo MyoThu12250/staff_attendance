@@ -19,7 +19,7 @@ class LocationController extends GetxController {
     currentLocation.value = position;
 
     if (position != null) {
-      final url = Uri.parse('http://10.103.0.142:8000/api/v1/mapCheck');
+      final url = Uri.parse('http://10.103.1.17:8000/api/v1/mapCheck');
       final response = await http.post(
         url,
         body: json.encode({

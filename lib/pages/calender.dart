@@ -32,158 +32,161 @@ class _CalenderState extends State<Calender> {
     Size size = mediaQuery.size;
     double screenWidth = size.width;
     double screenHeight = size.height;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Calender'),
-      ),
-      body: MediaQuery(
-        data: MediaQuery.of(context),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                // color: Colors.lightBlueAccent.withOpacity(0.5),
-                width: screenWidth,
-                height: screenHeight * 0.47,
-                child: TableCalendar(
-                  firstDay: DateTime.utc(2024, 4, 1),
-                  lastDay: DateTime.utc(2030, 3, 14),
-                  focusedDay: DateTime.now(),
-                  selectedDayPredicate: (day) {
-                    return isSameDay(_selectedDay, day);
-                  },
-                  onDaySelected: (selectedDay, focusedDay) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                    });
-                  },
-                  onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0, left: 20.0),
-                child: Container(
-                  height: screenHeight * .3,
+    return WillPopScope(
+      onWillPop: () async {
+        Get.off(HomePage());
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Calender'),
+        ),
+        body: MediaQuery(
+          data: MediaQuery.of(context),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  // color: Colors.lightBlueAccent.withOpacity(0.5),
                   width: screenWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(Icons.date_range),
-                          Icon(Icons.watch_later_outlined),
-                          Icon(Icons.location_on_outlined),
-                          Icon(Icons.lan),
-                          Icon(Icons.medication),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 300,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text('Mon, May 20 2024'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text('From 8:30 to 4:30'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text('L1 Developer'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text('AGB Communication'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text('Medical Leave'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  height: screenHeight * 0.47,
+                  child: TableCalendar(
+                    firstDay: DateTime.utc(2024, 4, 1),
+                    lastDay: DateTime.utc(2030, 3, 14),
+                    focusedDay: DateTime.now(),
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                    },
+                    onPageChanged: (focusedDay) {
+                      _focusedDay = focusedDay;
+                    },
                   ),
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0, left: 20.0),
+                  child: Container(
+                    height: screenHeight * .3,
+                    width: screenWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.date_range),
+                            Icon(Icons.watch_later_outlined),
+                            Icon(Icons.location_on_outlined),
+                            Icon(Icons.lan),
+                            Icon(Icons.medication),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text('Mon, May 20 2024'),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text('From 8:30 to 4:30'),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text('L1 Developer'),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text('AGB Communication'),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text('Medical Leave'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-      ),
-      //
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: InkWell(
-              onTap: () {
-                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
-                Get.to(
-                  HomePage(),
-                );
-              },
-              child: Image.asset(
-                'assets/icons/home.png',
-                width: 30,
-                color: Colors.black,
+        //
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: InkWell(
+                onTap: () {
+                  // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+                  Get.off(HomePage(), transition: Transition.fadeIn);
+                },
+                child: Image.asset(
+                  'assets/icons/home.png',
+                  width: 30,
+                  color: Colors.black,
+                ),
               ),
+              label: 'Home',
             ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: InkWell(
-              onTap: () {
-                Get.to(Leave(), transition: Transition.rightToLeftWithFade);
-              },
-              child: Image.asset(
-                'assets/icons/leave.png',
-                width: 30,
-                color: Colors.black,
+            BottomNavigationBarItem(
+              icon: InkWell(
+                onTap: () {
+                  Get.off(Leave(), transition: Transition.fadeIn);
+                },
+                child: Image.asset(
+                  'assets/icons/leave.png',
+                  width: 30,
+                  color: Colors.black,
+                ),
               ),
+              label: 'Leave',
             ),
-            label: 'Leave',
-          ),
-          BottomNavigationBarItem(
-            icon: InkWell(
-              onTap: () {
-                Get.to(RequestPage(),
-                    transition: Transition.rightToLeftWithFade);
-              },
-              child: Image.asset(
-                'assets/icons/attendance_history.png',
-                width: 30,
+            BottomNavigationBarItem(
+              icon: InkWell(
+                onTap: () {
+                  Get.off(RequestPage(), transition: Transition.fadeIn);
+                },
+                child: Image.asset(
+                  'assets/icons/attendance_history.png',
+                  width: 30,
+                ),
               ),
+              label: 'Attendance',
             ),
-            label: 'Attendance',
-          ),
-          BottomNavigationBarItem(
-            icon: InkWell(
-              onTap: () {
-                Get.to(Calender(), transition: Transition.rightToLeftWithFade);
-              },
-              child: Icon(
-                Icons.calendar_month,
-                color: Colors.black,
-                size: 30,
+            BottomNavigationBarItem(
+              icon: InkWell(
+                onTap: () {
+                  Get.off(Calender(), transition: Transition.fadeIn);
+                },
+                child: Icon(
+                  Icons.calendar_month,
+                  color: Colors.black,
+                  size: 30,
+                ),
               ),
+              label: 'Calendar',
             ),
-            label: 'Calendar',
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.green,
+          selectedIconTheme: IconThemeData(
+            size: 35,
+            color: Color(0xFFE1FF3C),
           ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green,
-        selectedIconTheme: IconThemeData(
-          size: 35,
-          color: Color(0xFFE1FF3C),
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
         ),
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
       ),
     );
   }

@@ -49,6 +49,7 @@ dependencies:
   firebase_core: ^2.31.0
   get_storage: ^2.1.1
   image_cropper: ^5.0.1
+  flutter_speed_dial: ^7.0.0
 
 
 
@@ -75,12 +76,21 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
+  fonts:
+    - family: Epilogue
+      fonts:
+        - asset: assets/fonts/Epilogue-Regular.ttf
+          weight: 700
+        # Include other font weights if necessary
+
   assets:
     - assets/icons/leave.png
     - assets/icons/attendance_history.png
     - assets/icons/home.png
     - assets/images/agb.png
     - assets/images/novalink.png
+    - assets/images/novalinkLogo.png
+    - assets/fonts/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
