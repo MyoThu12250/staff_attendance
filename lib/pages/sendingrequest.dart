@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:project_ui/pages/calender.dart';
 import 'package:project_ui/pages/homepage.dart';
@@ -32,83 +33,67 @@ class _RequestPageState extends State<RequestPage> {
         return false;
       },
       child: Scaffold(
-        appBar: AppBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Center(
-                // child: _countLeft != 0
-                //     ?
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFE1FF3C), elevation: 8),
-                  onPressed: () {
-                    Get.to(RequestPageForm());
-                  },
-                  child: Text(
-                    'Attendance Form',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                ),
-                // : Text(
-                //     'You have nothing attempt',
-                //     style: TextStyle(
-                //       fontSize: 20,
-                //       color: Colors.red,
-                //     ),
-                //   ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Text(
-                'Attendance History',
-                style: TextStyle(
-                  fontSize: 25,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 470,
-                  // color: Colors.lightGreen,
-                  child: ListView.builder(
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Card(
-                            elevation: 8,
-                            child: SizedBox(
-                              height: 130,
-                              child: ListTile(
-                                title: Text('h1'),
-                                subtitle: Text('h3'),
-                                isThreeLine: true,
-                              ),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Attendance History'),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 10),
+                          child: ListTile(
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('In time : '),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text('Out time : '),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text('Date : '),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            )
+          ],
+        ),
+        floatingActionButton: SpeedDial(
+          child: Icon(Icons.add),
+          onPress: () {
+            Get.to(RequestPageForm());
+          },
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
+              // label: 'Home',
+              // icon: IconButton(
+              //   onPressed: () {
+              //     Get.off(HomePage(), transition: Transition.fadeIn);
+              //   },
+              //   icon: Image.asset(
+              //     'assets/icons/home.png',
+              //     color: Colors.black,
+              //     width: 30,
+              //   ),
+              // ),
               icon: InkWell(
                 onTap: () {
                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
@@ -123,6 +108,15 @@ class _RequestPageState extends State<RequestPage> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
+              // label: 'Leave',
+              // icon: IconButton(
+              //   onPressed: () {},
+              //   icon: Image.asset(
+              //     'assets/icons/leave.png',
+              //     width: 30,
+              //     color: Colors.black,
+              //   ),
+              // )
               icon: InkWell(
                 onTap: () {
                   Get.off(Leave(), transition: Transition.fadeIn);
@@ -136,6 +130,14 @@ class _RequestPageState extends State<RequestPage> {
               label: 'Leave',
             ),
             BottomNavigationBarItem(
+              // label: 'Attendance',
+              // icon: IconButton(
+              //     onPressed: () {},
+              //     icon: Image.asset(
+              //       'assets/icons/attendance_history.png',
+              //       width: 30,
+              //       color: Colors.green,
+              //     ))
               icon: InkWell(
                 onTap: () {
                   Get.off(RequestPage(), transition: Transition.fadeIn);
@@ -148,6 +150,14 @@ class _RequestPageState extends State<RequestPage> {
               label: 'Attendance',
             ),
             BottomNavigationBarItem(
+              // label: 'Calendar',
+              // icon: IconButton(
+              //   onPressed: () {},
+              //   icon: Icon(
+              //     Icons.calendar_month,
+              //     color: Colors.black,
+              //   ),
+              // ),
               icon: InkWell(
                 onTap: () {
                   Get.off(Calender(), transition: Transition.fadeIn);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:project_ui/pages/leave.dart';
 
 class AnnualLeave extends StatefulWidget {
   const AnnualLeave({super.key});
@@ -128,186 +129,194 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     Size size = mediaQuery.size;
     double screenWidth = size.width;
     double screenHeight = size.height;
-    return Scaffold(
-        appBar: AppBar(
-            // title: Text('Annual Leave'),
-            ),
-        body: MediaQuery(
-            data: MediaQuery.of(context),
-            child: Container(
-              // color: Colors.lightGreenAccent,
-              width: screenWidth,
-              height: screenHeight * 0.7,
-              // color: Colors.indigoAccent.withOpacity(0.4),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      'Annual Leave Form',
-                      style: TextStyle(fontSize: 25),
-                    ),
-                  ),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return WillPopScope(
+      onWillPop: () async {
+        Get.off(Leave());
+        return false;
+      },
+      child: Scaffold(
+          appBar: AppBar(
+              // title: Text('Annual Leave'),
+              ),
+          body: MediaQuery(
+              data: MediaQuery.of(context),
+              child: Container(
+                // color: Colors.lightGreenAccent,
+                width: screenWidth,
+                height: screenHeight * 0.7,
+                // color: Colors.indigoAccent.withOpacity(0.4),
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: screenHeight * .15,
-                            width: screenWidth * .29,
-                            // color: Colors.red,
-                            child: Icon(Icons.person),
-                          ),
-                          Container(
-                            height: screenHeight * .15,
-                            width: screenWidth * .29,
-                            // color: Colors.red,
-                            child: Icon(Icons.access_time),
-                          ),
-                          Container(
-                            height: screenHeight * .15,
-                            width: screenWidth * .29,
-                            // color: Colors.red,
-                            child: Icon(Icons.library_books),
-                          ),
-                        ],
+                      Center(
+                        child: Text(
+                          'Annual Leave Form',
+                          style: TextStyle(fontSize: 25),
+                        ),
                       ),
-                      Column(
+                      Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            height: screenHeight * .15,
-                            width: screenWidth * .7,
-                            // color: Colors.red,
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: _nameController,
-                                  decoration: InputDecoration(
-                                    labelText: 'Name',
-                                    border: OutlineInputBorder(),
-                                    hintText: 'Enter your name',
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: screenHeight * .15,
+                                width: screenWidth * .29,
+                                // color: Colors.red,
+                                child: Icon(Icons.person),
+                              ),
+                              Container(
+                                height: screenHeight * .15,
+                                width: screenWidth * .29,
+                                // color: Colors.red,
+                                child: Icon(Icons.access_time),
+                              ),
+                              Container(
+                                height: screenHeight * .15,
+                                width: screenWidth * .29,
+                                // color: Colors.red,
+                                child: Icon(Icons.library_books),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                height: screenHeight * .15,
+                                width: screenWidth * .7,
+                                // color: Colors.red,
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      controller: _nameController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Name',
+                                        border: OutlineInputBorder(),
+                                        hintText: 'Enter your name',
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            height: screenHeight * .15,
-                            width: screenWidth * .7,
-                            // color: Colors.red,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                      child: SizedBox(
-                                        height: 70,
-                                        width: 125,
-                                        child: TextField(
-                                          controller: TextEditingController(
-                                            text: _selectedDateTimef != null
-                                                ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
-                                                : null,
-                                          ),
-                                          readOnly: true,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'From',
-                                            hintText: 'From',
-                                            suffixIcon: Icon(
-                                              Icons.date_range,
-                                              size: 20,
+                              Container(
+                                height: screenHeight * .15,
+                                width: screenWidth * .7,
+                                // color: Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: SizedBox(
+                                            height: 70,
+                                            width: 125,
+                                            child: TextField(
+                                              controller: TextEditingController(
+                                                text: _selectedDateTimef != null
+                                                    ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
+                                                    : null,
+                                              ),
+                                              readOnly: true,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'From',
+                                                hintText: 'From',
+                                                suffixIcon: Icon(
+                                                  Icons.date_range,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                _selectedDatef();
+                                              },
                                             ),
                                           ),
-                                          onTap: () {
-                                            _selectedDatef();
-                                          },
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 70,
-                                      width: 125,
-                                      child: TextField(
-                                        controller: TextEditingController(
-                                          text: _selectedDateTimet != null
-                                              ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
-                                              : null,
-                                        ),
-                                        readOnly: true,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'to',
-                                          hintText: 'to',
-                                          suffixIcon: Icon(
-                                            Icons.date_range,
-                                            size: 20,
+                                        SizedBox(
+                                          height: 70,
+                                          width: 125,
+                                          child: TextField(
+                                            controller: TextEditingController(
+                                              text: _selectedDateTimet != null
+                                                  ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
+                                                  : null,
+                                            ),
+                                            readOnly: true,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              labelText: 'to',
+                                              hintText: 'to',
+                                              suffixIcon: Icon(
+                                                Icons.date_range,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              _selectedDatet();
+                                            },
                                           ),
                                         ),
-                                        onTap: () {
-                                          _selectedDatet();
-                                        },
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: screenHeight * .15,
-                            width: screenWidth * .7,
-                            // color: Colors.red,
-                            child: Container(
-                              width: 290,
-                              height: 95,
-                              // color: Colors.blue,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: _reasonController,
-                                  maxLines: null,
-                                  expands: true,
-                                  decoration: InputDecoration(
-                                    labelText: 'Reason',
-                                    hintText: 'Enter reason ',
-                                    border: OutlineInputBorder(),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
-                      )
+                              Container(
+                                height: screenHeight * .15,
+                                width: screenWidth * .7,
+                                // color: Colors.red,
+                                child: Container(
+                                  width: 290,
+                                  height: 95,
+                                  // color: Colors.blue,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      controller: _reasonController,
+                                      maxLines: null,
+                                      expands: true,
+                                      decoration: InputDecoration(
+                                        labelText: 'Reason',
+                                        hintText: 'Enter reason ',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
 
-                      //
+                          //
+                        ],
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      SizedBox(
+                        width: 130,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _validate() ? _sendData() : print("error");
+                          },
+                          child: Text(
+                            'Submit',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
+                        ),
+                      )
                     ],
                   ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  SizedBox(
-                    width: 130,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _validate() ? _sendData() : print("error");
-                      },
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
-                    ),
-                  )
-                ],
-              ),
-            )));
+                ),
+              ))),
+    );
   }
 }

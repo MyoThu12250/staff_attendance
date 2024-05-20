@@ -112,257 +112,263 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     Size size = mediaQuery.size;
     double screenWidth = size.width;
     double screenHeight = size.height;
-    return Scaffold(
-      appBar: AppBar(
-          // title: Padding(
-          //   padding: const EdgeInsets.only(left: 30.0),
-          //   child: Text('Medical Leave Form'),
-          // ),
-          ),
-      body: MediaQuery(
-        data: MediaQuery.of(context),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Container(
-            // color: Color(0xFFE1FF3C),
-            width: screenWidth,
-            height: screenHeight,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    width: screenWidth,
-                    height: screenHeight * 0.7,
-                    // color: Colors.red,
-                    child: Column(
-                      children: [
-                        Container(
-                          // color: Colors.greenAccent,
-                          width: screenWidth,
-                          height: screenHeight * .1,
-                          child: Center(
-                            child: Text(
-                              'Medical Leave Form',
-                              style: TextStyle(fontSize: 25),
+    return WillPopScope(
+      onWillPop: () async {
+        Get.off(Leave());
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+            // title: Padding(
+            //   padding: const EdgeInsets.only(left: 30.0),
+            //   child: Text('Medical Leave Form'),
+            // ),
+            ),
+        body: MediaQuery(
+          data: MediaQuery.of(context),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Container(
+              width: screenWidth,
+              height: screenHeight,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      width: screenWidth,
+                      height: screenHeight * 0.7,
+                      // color: Colors.red,
+                      child: Column(
+                        children: [
+                          Container(
+                            // color: Colors.greenAccent,
+                            width: screenWidth,
+                            height: screenHeight * .1,
+                            child: Center(
+                              child: Text(
+                                'Medical Leave Form',
+                                style: TextStyle(fontSize: 25),
+                              ),
                             ),
                           ),
-                        ),
-                        SingleChildScrollView(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    height: 95,
-                                    // color: Colors.amber,
-                                    child: Icon(Icons.person),
-                                  ),
-                                  Container(
-                                    width: 100,
-                                    height: 95,
-                                    // color: Colors.amber,
-                                    child: Icon(Icons.medication),
-                                  ),
-                                  Container(
-                                    width: 100,
-                                    height: 95,
-                                    // color: Colors.amber,
-                                    child: Icon(Icons.access_time),
-                                  ),
-                                  Container(
-                                    width: 100,
-                                    height: 95,
-                                    // color: Colors.amber,
-                                    child: Icon(Icons.library_books),
-                                  ),
-                                  Container(
-                                    width: 100,
-                                    height: 95,
-                                    // color: Colors.amber,
-                                    child: Icon(Icons.link),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Container(
-                                    width: 290,
-                                    height: 95,
-                                    // color: Colors.blue,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                          SingleChildScrollView(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      width: 100,
+                                      height: 95,
+                                      // color: Colors.amber,
+                                      child: Icon(Icons.person),
+                                    ),
+                                    Container(
+                                      width: 100,
+                                      height: 95,
+                                      // color: Colors.amber,
+                                      child: Icon(Icons.medication),
+                                    ),
+                                    Container(
+                                      width: 100,
+                                      height: 95,
+                                      // color: Colors.amber,
+                                      child: Icon(Icons.access_time),
+                                    ),
+                                    Container(
+                                      width: 100,
+                                      height: 95,
+                                      // color: Colors.amber,
+                                      child: Icon(Icons.library_books),
+                                    ),
+                                    Container(
+                                      width: 100,
+                                      height: 95,
+                                      // color: Colors.amber,
+                                      child: Icon(Icons.link),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      width: 290,
+                                      height: 95,
+                                      // color: Colors.blue,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: TextField(
+                                            controller: _nameController,
+                                            decoration: InputDecoration(
+                                              labelText: 'Name',
+                                              hintText: 'Enter your name',
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 290,
+                                      height: 95,
+                                      // color: Colors.blue,
                                       child: Center(
+                                        child: DropdownButton<String>(
+                                          value: selectedValue,
+                                          onChanged: (String? newValue) {
+                                            if (newValue != null) {
+                                              // Update selected value when an item is selected
+                                              selectedValue = newValue;
+                                            }
+                                            setState(() {});
+                                          },
+                                          items: items.map((String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 290,
+                                      height: 95,
+                                      // color: Colors.blue,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SizedBox(
+                                            height: 70,
+                                            width: 130,
+                                            child: TextField(
+                                              controller: TextEditingController(
+                                                text: _selectedDateTimef != null
+                                                    ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
+                                                    : null,
+                                              ),
+                                              readOnly: true,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'From',
+                                                hintText: 'From',
+                                                suffixIcon: Icon(
+                                                  Icons.date_range,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                _selectedDatef();
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 70,
+                                            width: 130,
+                                            child: TextField(
+                                              controller: TextEditingController(
+                                                text: _selectedDateTimet != null
+                                                    ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
+                                                    : null,
+                                              ),
+                                              readOnly: true,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'to',
+                                                hintText: 'to',
+                                                suffixIcon: Icon(
+                                                  Icons.date_range,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                _selectedDatet();
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 290,
+                                      height: 95,
+                                      // color: Colors.blue,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
                                         child: TextField(
-                                          controller: _nameController,
+                                          controller: _reasonController,
+                                          maxLines: null,
+                                          expands: true,
                                           decoration: InputDecoration(
-                                            labelText: 'Name',
-                                            hintText: 'Enter your name',
+                                            labelText: 'Reason',
+                                            hintText: 'Enter Reason ',
                                             border: OutlineInputBorder(),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: 290,
-                                    height: 95,
-                                    // color: Colors.blue,
-                                    child: Center(
-                                      child: DropdownButton<String>(
-                                        value: selectedValue,
-                                        onChanged: (String? newValue) {
-                                          if (newValue != null) {
-                                            // Update selected value when an item is selected
-                                            selectedValue = newValue;
-                                          }
-                                          setState(() {});
-                                        },
-                                        items: items.map((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 290,
-                                    height: 95,
-                                    // color: Colors.blue,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SizedBox(
-                                          height: 70,
-                                          width: 130,
-                                          child: TextField(
-                                            controller: TextEditingController(
-                                              text: _selectedDateTimef != null
-                                                  ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
-                                                  : null,
+                                    Container(
+                                      width: 290,
+                                      height: 95,
+                                      // color: Colors.blue,
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: 290,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextField(
+                                              controller: _attatchController,
+                                              decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  hintText: 'Choose File',
+                                                  suffixIcon: Icon(Icons.link)),
+                                              readOnly: true,
+                                              onTap: () async {
+                                                _attatchController.text =
+                                                    imageController
+                                                        .fileName.value
+                                                        .toString();
+                                                imageController.pickImage();
+                                              },
                                             ),
-                                            readOnly: true,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              labelText: 'From',
-                                              hintText: 'From',
-                                              suffixIcon: Icon(
-                                                Icons.date_range,
-                                                size: 20,
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              _selectedDatef();
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 70,
-                                          width: 130,
-                                          child: TextField(
-                                            controller: TextEditingController(
-                                              text: _selectedDateTimet != null
-                                                  ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
-                                                  : null,
-                                            ),
-                                            readOnly: true,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              labelText: 'to',
-                                              hintText: 'to',
-                                              suffixIcon: Icon(
-                                                Icons.date_range,
-                                                size: 20,
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              _selectedDatet();
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 290,
-                                    height: 95,
-                                    // color: Colors.blue,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: TextField(
-                                        controller: _reasonController,
-                                        maxLines: null,
-                                        expands: true,
-                                        decoration: InputDecoration(
-                                          labelText: 'Reason',
-                                          hintText: 'Enter Reason ',
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 290,
-                                    height: 95,
-                                    // color: Colors.blue,
-                                    child: Center(
-                                      child: SizedBox(
-                                        width: 290,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: TextField(
-                                            controller: _attatchController,
-                                            decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                hintText: 'Choose File',
-                                                suffixIcon: Icon(Icons.link)),
-                                            readOnly: true,
-                                            onTap: () async {
-                                              _attatchController.text =
-                                                  imageController.fileName.value
-                                                      .toString();
-                                              imageController.pickImage();
-                                            },
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: SizedBox(
-                      width: 130,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          _validate()
-                              ? imageController.uploadImage()
-                              : print("Enter Required Data");
-                          imageController.imageUrl.value != null
-                              ? _sendData()
-                              : print("error");
-                        },
-                        child: Text(
-                          'Submit',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: SizedBox(
+                        width: 130,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            _validate()
+                                ? imageController.uploadImage()
+                                : print("Enter Required Data");
+                            imageController.imageUrl.value != null
+                                ? _sendData()
+                                : print("error");
+                          },
+                          child: Text(
+                            'Submit',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

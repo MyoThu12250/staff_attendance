@@ -4,10 +4,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:project_ui/pages/homepage.dart';
 import 'package:project_ui/pages/leave.dart';
 import 'package:project_ui/pages/login.dart';
+import 'package:project_ui/pages/notification.dart';
 import 'package:project_ui/pages/splashScreen.dart';
 import 'package:project_ui/pages/testProfile.dart';
-import 'package:project_ui/test.dart';
-
 import 'Controller/loginController.dart';
 
 void main() async {
@@ -30,10 +29,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/splash',
-      // initialRoute: isLoggedIn ? '/home' : '/',
       getPages: [
         GetPage(name: '/', page: () => LoginPage()),
         GetPage(name: '/profile', page: () => ProfilePage()),
+        GetPage(name: '/noti', page: () => NotiPage()),
         GetPage(name: '/home', page: () => HomePage()),
         GetPage(name: '/leave', page: () => Leave()),
         GetPage(name: '/splash', page: () => SplashScreen())

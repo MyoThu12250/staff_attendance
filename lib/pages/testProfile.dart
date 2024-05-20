@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -7,13 +8,16 @@ import '../Controller/loginController.dart';
 
 import 'dart:io';
 
+import '../Controller/photoController.dart';
+
 class ProfilePage extends StatelessWidget {
   LeaveController lontroller = Get.put(LeaveController());
-  final LoginController controller = Get.find();
+  ImageUploadController controller = Get.put(ImageUploadController());
+  final LoginController loginController = Get.find();
   final box = GetStorage();
 
   ProfilePage() {
-    controller.loadProfileData();
+    loginController.loadProfileData();
   }
 
   void _logout() {
@@ -34,52 +38,79 @@ class ProfilePage extends StatelessWidget {
         //   ),
         // ],
       ),
-      backgroundColor: Colors.white60,
+      // backgroundColor: Colors.white60,
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Obx(
-                () => CircleAvatar(
-                  radius: 85,
-                  backgroundColor: Colors.pinkAccent.withOpacity(0.5),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 80,
-                    backgroundImage: controller.profileImage.value.isEmpty
-                        ? AssetImage('assets/images/default_profile.jpg')
-                        : FileImage(File(controller.profileImage.value))
-                            as ImageProvider,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
+            Obx(
+              () => Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: 180,
+                    child: Image.asset(
+                      'assets/images/agb.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 70,
+                    left: 110,
+                    child: Center(
                       child: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        child: Center(
-                          child: IconButton(
-                            iconSize: 30.0,
-                            color: Colors.black,
-                            onPressed: () {
-                              controller.pickImage();
-                            },
-                            icon: Icon(Icons.edit),
+                        radius: 85,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          radius: 80,
+                          backgroundImage: loginController
+                                  .profileImage.value.isEmpty
+                              ? AssetImage('assets/images/default_profile.jpg')
+                              : FileImage(
+                                      File(loginController.profileImage.value))
+                                  as ImageProvider,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.white,
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    child: Center(
+                                      child: IconButton(
+                                        iconSize: 30.0,
+                                        color: Colors.black,
+                                        onPressed: () {
+                                          controller.pickImage();
+                                        },
+                                        icon: Icon(Icons.edit),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 110),
             Center(
               child: Text(
                 'User Information',
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.lightGreenAccent),
+                    color: Colors.black),
               ),
             ),
             SizedBox(height: 30),
@@ -87,48 +118,45 @@ class ProfilePage extends StatelessWidget {
             Obx(
               () => Text(
                   style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
+                      // fontStyle: FontStyle.italic,
+                      color: Colors.black,
                       fontSize: 21),
-                  'Name: ${controller.userInfo['username']}'),
+                  'Name: ${loginController.userInfo['username']}'),
             ),
 
             SizedBox(height: 30),
             Obx(
               () => Text(
                   style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
+                      // fontStyle: FontStyle.italic,
+                      color: Colors.black,
                       fontSize: 21),
-                  'Email: ${controller.userInfo['email']}'),
+                  'Email: ${loginController.userInfo['email']}'),
             ),
 
             SizedBox(height: 30),
             Obx(
               () => Text(
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
-                      fontSize: 21),
-                  'Employee Id: ${controller.userInfo['employeeId']}'),
+                  style: TextStyle(color: Colors.black, fontSize: 21),
+                  'Employee Id: ${loginController.userInfo['employeeId']}'),
             ),
             SizedBox(height: 30),
             Obx(
               () => Text(
                   style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
+                      // fontStyle: FontStyle.italic,
+                      color: Colors.black,
                       fontSize: 21),
-                  'Date Of Birth : ${controller.userInfo['DOB']}'),
+                  'Date Of Birth : ${loginController.userInfo['DOB']}'),
             ),
             SizedBox(height: 30),
             Obx(
               () => Text(
                   style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
+                      // fontStyle: FontStyle.italic,
+                      color: Colors.black,
                       fontSize: 21),
-                  'Address: ${controller.userInfo['address']}'),
+                  'Address: ${loginController.userInfo['address']}'),
             ),
 
             SizedBox(
@@ -137,8 +165,9 @@ class ProfilePage extends StatelessWidget {
             Center(
               child: TextButton(
                 style: TextButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.lightGreenAccent),
+                  backgroundColor: Colors.pinkAccent,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: () {
                   _logout();
                   // lontroller.Leave();
