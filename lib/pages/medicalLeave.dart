@@ -119,11 +119,13 @@ class _MedicalLeaveState extends State<MedicalLeave> {
       },
       child: Scaffold(
         appBar: AppBar(
-            // title: Padding(
-            //   padding: const EdgeInsets.only(left: 30.0),
-            //   child: Text('Medical Leave Form'),
-            // ),
-            ),
+          leading: IconButton(
+            onPressed: () {
+              Get.off(Leave());
+            },
+            icon: Icon(Icons.arrow_back_ios_new),
+          ),
+        ),
         body: MediaQuery(
           data: MediaQuery.of(context),
           child: Padding(

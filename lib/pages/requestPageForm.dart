@@ -18,7 +18,16 @@ class _RequestPageFormState extends State<RequestPageForm> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Get.off(
+                RequestPage(),
+              );
+            },
+            icon: Icon(Icons.arrow_back_ios_new),
+          ),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [

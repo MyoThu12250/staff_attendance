@@ -136,8 +136,12 @@ class _AnnualLeaveState extends State<AnnualLeave> {
       },
       child: Scaffold(
           appBar: AppBar(
-              // title: Text('Annual Leave'),
-              ),
+            leading: IconButton(
+                onPressed: () {
+                  Get.off(Leave());
+                },
+                icon: Icon(Icons.arrow_back_ios_new)),
+          ),
           body: MediaQuery(
               data: MediaQuery.of(context),
               child: Container(

@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:project_ui/Controller/timeController.dart';
 
-// final ClockController clockcontroller = Get.put(ClockController());
 final DateTimeController dateTimeController = Get.put(DateTimeController());
 
 class LocationController extends GetxController {

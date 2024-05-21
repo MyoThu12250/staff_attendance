@@ -49,15 +49,14 @@ class ProfilePage extends StatelessWidget {
                 clipBehavior: Clip.none,
                 children: [
                   Container(
+                    color: Colors.indigoAccent,
                     height: 180,
                     child: Image.asset(
-                      'assets/images/agb.png',
+                      'assets/images/default_profile.jpg',
                       fit: BoxFit.cover,
                     ),
                   ),
                   Positioned(
-                    top: 70,
-                    left: 110,
                     child: Center(
                       child: CircleAvatar(
                         radius: 85,
@@ -86,7 +85,8 @@ class ProfilePage extends StatelessWidget {
                                         iconSize: 30.0,
                                         color: Colors.black,
                                         onPressed: () {
-                                          controller.pickImage();
+                                          print('jahfurhfa');
+                                          // controller.pickImage();
                                         },
                                         icon: Icon(Icons.edit),
                                       ),

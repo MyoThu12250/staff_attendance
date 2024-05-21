@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_ui/Controller/loginController.dart';
 import 'package:project_ui/pages/calender.dart';
 import 'package:project_ui/pages/leave.dart';
 import 'package:project_ui/pages/notification.dart';
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
       Get.put(PermissionController());
   final DateTimeController dateTimeController = Get.put(DateTimeController());
   final LocationController locationController = Get.put(LocationController());
+  final LoginController controller = Get.put(LoginController());
 
   final Set<Marker> _marker = {
     const Marker(
@@ -242,6 +244,7 @@ class _HomePageState extends State<HomePage> {
                     controller: scrollController,
                     itemCount: 1,
                     itemBuilder: (context, index) {
+                      String name = controller.userInfo['username'].toString();
                       String dateType =
                           DateTime.now().hour < 12 ? 'Morning' : 'Afternoon';
                       return Column(
@@ -254,9 +257,10 @@ class _HomePageState extends State<HomePage> {
                             height: 20,
                           ),
                           Text(
-                            'Good ${dateType}',
+                            'Good ${dateType + ' ' + name}',
                             style: TextStyle(
                               fontSize: 25,
+                              fontFamily: 'Epilogue',
                             ),
                           ),
                           SizedBox(

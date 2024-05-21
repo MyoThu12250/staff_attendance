@@ -90,6 +90,7 @@ flutter:
     - assets/icons/home.png
     - assets/images/agb.png
     - assets/images/novalink.png
+    - assets/images/default_profile.jpg
     - assets/images/novalinkLogo.png
     - assets/fonts/
 

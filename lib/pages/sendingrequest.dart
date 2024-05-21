@@ -53,15 +53,17 @@ class _RequestPageState extends State<RequestPage> {
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('In time : '),
+                                Text(
+                                    'In time : {controller.userInfo[in-time]}'),
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Text('Out time : '),
+                                Text(
+                                    'Out time : {controller.userInfo[out-time]}'),
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Text('Date : '),
+                                Text('Date : {controller.userInfo[date]}'),
                               ],
                             ),
                           ),
@@ -76,9 +78,19 @@ class _RequestPageState extends State<RequestPage> {
         ),
         floatingActionButton: SpeedDial(
           child: Icon(Icons.add),
-          onPress: () {
-            Get.to(RequestPageForm());
-          },
+          children: [
+            SpeedDialChild(
+              elevation: 0,
+              child: Icon(Icons.medication),
+              labelWidget: Text('Request Form'),
+              onTap: () {
+                Get.off(RequestPageForm());
+              },
+            ),
+          ],
+          // onPress: () {
+          //   Get.to(RequestPageForm());
+          // },
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
