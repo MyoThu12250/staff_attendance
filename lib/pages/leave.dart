@@ -3,7 +3,7 @@
 // import 'package:get/get.dart';
 // import 'package:project_ui/pages/annualLeave.dart';
 // import 'package:project_ui/pages/calender.dart';
-// import 'package:project_ui/pages/homepage.dart';
+// import 'package:project_ui/pages/home.dart';
 // import 'package:project_ui/pages/medicalLeave.dart';
 // import 'package:project_ui/pages/sendingrequest.dart';
 // import 'package:project_ui/pages/splashScreen.dart';
@@ -566,7 +566,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:project_ui/pages/annualLeave.dart';
 import 'package:project_ui/pages/calender.dart';
-import 'package:project_ui/pages/homepage.dart';
+import 'package:project_ui/pages/home.dart';
 import 'package:project_ui/pages/medicalLeave.dart';
 import 'package:project_ui/pages/sendingrequest.dart';
 import 'package:project_ui/pages/splashScreen.dart';
@@ -575,6 +575,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../Controller/leaveController.dart';
+import 'detailPages/leaveDetailPage.dart';
 
 class Leave extends StatefulWidget {
   const Leave({super.key});
@@ -616,7 +617,12 @@ class _LeaveState extends State<Leave> {
     final List<dynamic> Alist = arguments?['Alist'] ?? [];
     final List<dynamic> Plist = arguments?['Plist'] ?? [];
     return DefaultTabController(
-        length: 4,
+      length: 4,
+      child: WillPopScope(
+        onWillPop: () async {
+          Get.off(HomePage());
+          return false;
+        },
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -635,7 +641,14 @@ class _LeaveState extends State<Leave> {
                           Text('Pending'),
                           Text('Accepted'),
                           Text('Rejected'),
-                          Text('All'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('All'),
+                              Icon(Icons.arrow_drop_down)
+                            ],
+                          ),
+                          // Text('All'),
                         ],
                       ),
                     ),
@@ -645,40 +658,105 @@ class _LeaveState extends State<Leave> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Plist.isEmpty
-                        ? Center(
-                            child: Text('Empty Leave History',
-                                style: TextStyle(
-                                    fontSize: 25, color: Colors.green)))
-                        : ListView.builder(
-                            itemCount: Plist.length,
-                            itemBuilder: (context, index) {
-                              var item = Plist[index];
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: ListTile(
-                                      title: Text(
-                                          'Leave Type    :   ${item['leaveType']}'),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              'Reason              :    ${item['reasons']}'),
-                                          Text(
-                                              'From                  :    ${item['from']}'),
-                                          Text(
-                                              'To                      :     ${item['to']}'),
-                                        ],
+                    if (Plist.isEmpty)
+                      Center(
+                          child: Text('Empty Leave History',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.green)))
+                    else
+                      ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            color: Colors.black,
+                            thickness: 0.5,
+                          );
+                        },
+                        // itemCount: 2,
+                        itemCount: Plist.length,
+                        itemBuilder: (context, index) {
+                          var item = Plist[index];
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // Get.off(LeaveDetailPage());
+                                  },
+                                  child: ListTile(
+                                    trailing: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            //Perform edit function
+                                          },
+                                          icon: Icon(
+                                            Icons.edit,
+                                            color: Colors.lightGreenAccent,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            //perform delete function
+                                          },
+                                          icon: Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    title: Text(
+                                      'Leave Type    :   ${item['leaveType']}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  )
-                                ],
-                              );
-                            },
-                          ),
+                                    subtitle: Text(
+                                      'Date : ',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    // subtitle: Column(
+                                    //   crossAxisAlignment:
+                                    //       CrossAxisAlignment.start,
+                                    //   children: [
+                                    //     Text(
+                                    //       'Reason              :    ${item['reasons']}',
+                                    //       style: TextStyle(
+                                    //         fontSize: 15,
+                                    //         color: Colors.grey,
+                                    //       ),
+                                    //     ),
+                                    //     Text(
+                                    //       'From                  :    ${item['from']}',
+                                    //       style: TextStyle(
+                                    //         fontSize: 13,
+                                    //         color: Colors.grey,
+                                    //       ),
+                                    //     ),
+                                    //     Text(
+                                    //       'To                      :     ${item['to']}',
+                                    //       style: TextStyle(
+                                    //         fontSize: 13,
+                                    //         color: Colors.grey,
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      ),
                     // Text('Pending2'), // AcceptedPage()
 
                     Alist.isEmpty
@@ -686,26 +764,64 @@ class _LeaveState extends State<Leave> {
                             child: Text('Empty Leave History',
                                 style: TextStyle(
                                     fontSize: 25, color: Colors.green)))
-                        : ListView.builder(
+                        : ListView.separated(
+                            separatorBuilder: (context, index) {
+                              return Divider(
+                                color: Colors.black,
+                                thickness: 0.5,
+                              );
+                            },
                             itemCount: Alist.length,
                             itemBuilder: (context, index) {
                               var item = Alist[index];
                               return Column(
                                 children: [
-                                  ListTile(
-                                    title: Text(
-                                        'Leave Type    :   ${item['leaveType']}'),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            'Reason              :    ${item['reasons']}'),
-                                        Text(
-                                            'From                  :    ${item['from']}'),
-                                        Text(
-                                            'To                      :   ${item['to']}'),
-                                      ],
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.off(LeaveDetailPage());
+                                    },
+                                    child: ListTile(
+                                      isThreeLine: true,
+                                      title: Text(
+                                        'Leave Type    :   ${item['leaveType']}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Date  : ',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      // subtitle: Column(
+                                      //   crossAxisAlignment:
+                                      //       CrossAxisAlignment.start,
+                                      //   children: [
+                                      //     Text(
+                                      //       'Reason              :    ${item['reasons']}',
+                                      //       style: TextStyle(
+                                      //         fontSize: 14,
+                                      //         color: Colors.grey,
+                                      //       ),
+                                      //     ),
+                                      //     Text(
+                                      //       'From                  :    ${item['from']}',
+                                      //       style: TextStyle(
+                                      //         fontSize: 14,
+                                      //         color: Colors.grey,
+                                      //       ),
+                                      //     ),
+                                      //     Text(
+                                      //       'To                      :   ${item['to']}',
+                                      //       style: TextStyle(
+                                      //         fontSize: 14,
+                                      //         color: Colors.grey,
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
                                     ),
                                   ),
                                 ],
@@ -718,26 +834,63 @@ class _LeaveState extends State<Leave> {
                             child: Text('Empty Leave History',
                                 style: TextStyle(
                                     fontSize: 25, color: Colors.green)))
-                        : ListView.builder(
+                        : ListView.separated(
+                            separatorBuilder: (context, index) {
+                              return Divider(
+                                color: Colors.black,
+                                thickness: 0.5,
+                              );
+                            },
                             itemCount: Rlist.length,
                             itemBuilder: (context, index) {
                               var item = Rlist[index];
                               return Column(
                                 children: [
-                                  ListTile(
-                                    title: Text(
-                                        'Leave Type    :   ${item['leaveType']}'),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            'Reason              :    ${item['reasons']}'),
-                                        Text(
-                                            'From                  :    ${item['from']}'),
-                                        Text(
-                                            'To                      :   ${item['to']}'),
-                                      ],
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.off(LeaveDetailPage());
+                                    },
+                                    child: ListTile(
+                                      title: Text(
+                                        'Leave Type    :   ${item['leaveType']}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Date : ',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      // subtitle: Column(
+                                      //   crossAxisAlignment:
+                                      //       CrossAxisAlignment.start,
+                                      //   children: [
+                                      //     Text(
+                                      //       'Reason              :    ${item['reasons']}',
+                                      //       style: TextStyle(
+                                      //         fontSize: 14,
+                                      //         color: Colors.grey,
+                                      //       ),
+                                      //     ),
+                                      //     Text(
+                                      //       'From                  :    ${item['from']}',
+                                      //       style: TextStyle(
+                                      //         fontSize: 14,
+                                      //         color: Colors.grey,
+                                      //       ),
+                                      //     ),
+                                      //     Text(
+                                      //       'To                      :   ${item['to']}',
+                                      //       style: TextStyle(
+                                      //         fontSize: 14,
+                                      //         color: Colors.grey,
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
                                     ),
                                   ),
                                 ],
@@ -756,20 +909,44 @@ class _LeaveState extends State<Leave> {
                               var item = filteredData[index];
                               return Column(
                                 children: [
-                                  ListTile(
-                                    title: Text(
-                                        'Leave Type    :   ${item['leaveType']}'),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            'Reason              :    ${item['reasons']}'),
-                                        Text(
-                                            'From                  :    ${item['from']}'),
-                                        Text(
-                                            'To                      :   ${item['to']}'),
-                                      ],
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.off(LeaveDetailPage());
+                                    },
+                                    child: ListTile(
+                                      title: Text(
+                                        'Leave Type    :   ${item['leaveType']}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Reason              :    ${item['reasons']}',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          Text(
+                                            'From                  :    ${item['from']}',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          Text(
+                                            'To                      :   ${item['to']}',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -787,14 +964,30 @@ class _LeaveState extends State<Leave> {
             children: [
               SpeedDialChild(
                   elevation: 0,
-                  child: Icon(Icons.medication),
+                  child: Icon(
+                    Icons.medication,
+                    color: Colors.pink,
+                  ),
+                  labelWidget: Text('Leave Details'),
+                  onTap: () {
+                    Get.off(LeaveDetailPage(), transition: Transition.fadeIn);
+                  }),
+              SpeedDialChild(
+                  elevation: 0,
+                  child: Icon(
+                    Icons.medication,
+                    color: Colors.pink,
+                  ),
                   labelWidget: Text('Medical leave'),
                   onTap: () {
                     Get.off(MedicalLeave(), transition: Transition.fadeIn);
                   }),
               SpeedDialChild(
                 elevation: 0,
-                child: Icon(Icons.access_time),
+                child: Icon(
+                  Icons.access_time,
+                  color: Colors.purpleAccent,
+                ),
                 labelWidget: Text('Annual leave'),
                 onTap: () {
                   Get.off(AnnualLeave());
@@ -802,72 +995,125 @@ class _LeaveState extends State<Leave> {
               ),
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: InkWell(
-                  onTap: () {
-                    Get.off(
-                      HomePage(),
-                      transition: Transition.fadeIn,
-                    );
+          // bottomNavigationBar: BottomNavigationBar(
+          //   items: <BottomNavigationBarItem>[
+          //     BottomNavigationBarItem(
+          //       icon: InkWell(
+          //         onTap: () {
+          //           Get.off(
+          //             HomePage(),
+          //             transition: Transition.fadeIn,
+          //           );
+          //         },
+          //         child: Image.asset(
+          //           'assets/icons/home.png',
+          //           width: 30,
+          //           color: Colors.black,
+          //         ),
+          //       ),
+          //       label: 'Home',
+          //     ),
+          //     BottomNavigationBarItem(
+          //       icon: InkWell(
+          //         onTap: () {
+          //           Get.off(Leave(), transition: Transition.fadeIn);
+          //         },
+          //         child: Image.asset(
+          //           'assets/icons/leave.png',
+          //           width: 30,
+          //           color: Colors.black,
+          //         ),
+          //       ),
+          //       label: 'Leave',
+          //     ),
+          //     BottomNavigationBarItem(
+          //       icon: InkWell(
+          //         onTap: () {
+          //           Get.off(RequestPage(), transition: Transition.fadeIn);
+          //         },
+          //         child: Image.asset(
+          //           'assets/icons/attendance_history.png',
+          //           width: 30,
+          //         ),
+          //       ),
+          //       label: 'Attendance',
+          //     ),
+          //     BottomNavigationBarItem(
+          //       icon: InkWell(
+          //         onTap: () {
+          //           Get.off(Calender(), transition: Transition.fadeIn);
+          //         },
+          //         child: Icon(
+          //           Icons.calendar_month,
+          //           color: Colors.black,
+          //           size: 30,
+          //         ),
+          //       ),
+          //       label: 'Calendar',
+          //     ),
+          //   ],
+          //   currentIndex: _selectedIndex,
+          //   selectedItemColor: Colors.green,
+          //   selectedIconTheme: IconThemeData(
+          //     size: 35,
+          //     color: Color(0xFFE1FF3C),
+          //   ),
+          //   onTap: _onItemTapped,
+          //   type: BottomNavigationBarType.fixed,
+          // ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(HomePage(), transition: Transition.fadeIn);
                   },
-                  child: Image.asset(
+                  icon: Image.asset(
                     'assets/icons/home.png',
-                    width: 30,
                     color: Colors.black,
+                    width: 35,
                   ),
                 ),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: InkWell(
-                  onTap: () {
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
                     Get.off(Leave(), transition: Transition.fadeIn);
                   },
-                  child: Image.asset(
+                  icon: Image.asset(
                     'assets/icons/leave.png',
-                    width: 30,
-                    color: Colors.black,
+                    color: Colors.green,
+                    width: 35,
                   ),
                 ),
-                label: 'Leave',
-              ),
-              BottomNavigationBarItem(
-                icon: InkWell(
-                  onTap: () {
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
                     Get.off(RequestPage(), transition: Transition.fadeIn);
                   },
-                  child: Image.asset(
+                  icon: Image.asset(
                     'assets/icons/attendance_history.png',
-                    width: 30,
+                    color: Colors.black,
+                    width: 35,
                   ),
                 ),
-                label: 'Attendance',
-              ),
-              BottomNavigationBarItem(
-                icon: InkWell(
-                  onTap: () {
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
                     Get.off(Calender(), transition: Transition.fadeIn);
                   },
-                  child: Icon(
+                  icon: Icon(
                     Icons.calendar_month,
                     color: Colors.black,
-                    size: 30,
                   ),
                 ),
-                label: 'Calendar',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.green,
-            selectedIconTheme: IconThemeData(
-              size: 35,
-              color: Color(0xFFE1FF3C),
+              ],
             ),
-            onTap: _onItemTapped,
-            type: BottomNavigationBarType.fixed,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

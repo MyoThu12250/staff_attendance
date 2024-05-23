@@ -130,84 +130,71 @@ class _HomePageState extends State<HomePage> {
       onWillPop: () => _onWillPop(context),
       child: Scaffold(
         appBar: AppBar(
-          // centerTitle: true,
-          // title: Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [
-          //     Image.asset(
-          //       'assets/images/novalinkLogo.png',
-          //       width: 60,
-          //       // color: Color(0xFFE1FF3C),
-          //       color: Colors.green,
-          //     ),
-          //     Text(
-          //       'N O V A L I N K',
-          //       style: TextStyle(fontSize: 20, fontFamily: 'Epilogue'),
-          //     ),
-          //   ],
-          // ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: CircleAvatar(
-                backgroundColor: Colors.black.withOpacity(0.095),
-                radius: 20,
-                child: Center(
-                  child: IconButton(
-                    onPressed: () {
-                      Get.to(ProfilePage());
-                    },
-                    icon: const Icon(
-                      Icons.person,
-                      size: 25,
-                    ),
-                  ),
+          centerTitle: true,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/logo.jpg',
+                width: 50,
+                // color: Color(0xFFE1FF3C),
+                // color: Colors.green,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Text(
+                  'Global Time Attendance',
+                  style: TextStyle(fontSize: 17, fontFamily: 'Epilogue'),
                 ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Get.off(ProfilePage());
+              },
+              icon: const Icon(
+                Icons.person,
+                size: 25,
               ),
             ),
-            CircleAvatar(
-              backgroundColor: Colors.black.withOpacity(0.095),
-              radius: 20,
-              child: Center(
-                child: Stack(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.to(NotiPage());
-                      },
-                      icon: const Icon(
-                        Icons.notifications,
-                        size: 25,
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Get.off(NotiPage());
+                  },
+                  icon: const Icon(
+                    Icons.notifications,
+                    size: 25,
+                  ),
+                ),
+                Positioned(
+                  left: 27,
+                  // right: 0,
+                  bottom: 25,
+                  // top: 0,
+                  child: CircleAvatar(
+                    radius: 10,
+                    backgroundColor: Colors.amber,
+                    child: Text(
+                      '2', // noti count
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black,
                       ),
                     ),
-                    Positioned(
-                      left: 25,
-                      // right: 0,
-                      bottom: 20,
-                      // top: 0,
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.amber,
-                        child: Text(
-                          '2', // noti count
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+                  ),
+                )
+              ],
             ),
             SizedBox(
               width: 10,
             ),
           ],
         ),
-
         body: Stack(
           children: [
             GoogleMap(
@@ -277,7 +264,7 @@ class _HomePageState extends State<HomePage> {
                                           horizontal: 8.0),
                                       child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
@@ -318,6 +305,18 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
+                                          Text(
+                                            snapshot.data!.hour < 12
+                                                ? 'AM'
+                                                : 'PM',
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.1,
+                                              // Responsive font size
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Epilogue',
+                                            ),
+                                          ),
+
                                           // Text(
                                           //   ':',
                                           //   style: TextStyle(
@@ -457,300 +456,123 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
 
-        // body: MediaQuery(
-        //   data: MediaQuery.of(context),
-        //   child: SingleChildScrollView(
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         SizedBox(
-        //           width: screenWidth, //1.sw // flutter_screenutil
-        //           child: SingleChildScrollView(
-        //             child: Column(
-        //               crossAxisAlignment: CrossAxisAlignment.start,
-        //               children: [
-        //                 SizedBox(
-        //                   height: 20,
-        //                 ),
-        //                 Padding(
-        //                   padding: const EdgeInsets.symmetric(horizontal: 40),
-        //                   child: Row(
-        //                     children: [
-        //                       Text(
-        //                         formattedDateMonth + ', ',
-        //                         style: TextStyle(
-        //                             fontSize: 35, fontFamily: 'Epilogue'),
-        //                       ),
-        //                       Text(
-        //                         formattedDateDay + ', ',
-        //                         style: TextStyle(
-        //                             fontSize: 35, fontFamily: 'Epilogue'),
-        //                       ),
-        //                       Text(
-        //                         formattedDateYear,
-        //                         style: TextStyle(
-        //                             fontSize: 35, fontFamily: 'Epilogue'),
-        //                       ),
-        //                     ],
-        //                   ),
-        //                 ),
-        //                 SizedBox(
-        //                   height: 20,
-        //                 ),
-        //                 Row(
-        //                   children: [
-        //                     SizedBox(
-        //                       child: StreamBuilder<DateTime>(
-        //                         stream: _timeStream,
-        //                         builder: (context, snapshot) {
-        //                           if (snapshot.hasData) {
-        //                             return Row(
-        //                               children: [
-        //                                 Padding(
-        //                                   padding: const EdgeInsets.symmetric(
-        //                                       horizontal: 30.0),
-        //                                   child: Row(
-        //                                     crossAxisAlignment:
-        //                                         CrossAxisAlignment.start,
-        //                                     mainAxisAlignment:
-        //                                         MainAxisAlignment.start,
-        //                                     children: [
-        //                                       SizedBox(
-        //                                         width: screenWidth * 0.21,
-        //                                         child: Text(
-        //                                           DateFormat('h').format(
-        //                                                   snapshot.data!) +
-        //                                               'h',
-        //                                           style: TextStyle(
-        //                                             fontSize:
-        //                                                 screenWidth * 0.12,
-        //                                             // Responsive font size
-        //                                             fontWeight: FontWeight.bold,
-        //                                             fontFamily: 'Epilogue',
-        //                                           ),
-        //                                         ),
-        //                                       ),
-        //                                       Text(
-        //                                         ':',
-        //                                         style: TextStyle(
-        //                                             fontSize: screenWidth *
-        //                                                 0.1), // Responsive font size
-        //                                       ),
-        //                                       SizedBox(
-        //                                         width: screenWidth * 0.29,
-        //                                         // Responsive width
-        //                                         child: Text(
-        //                                           '${snapshot.data!.minute}m',
-        //                                           style: TextStyle(
-        //                                             fontSize:
-        //                                                 screenWidth * 0.12,
-        //                                             // Responsive font size
-        //                                             fontWeight: FontWeight.bold,
-        //                                             fontFamily: 'Epilogue',
-        //                                           ),
-        //                                         ),
-        //                                       ),
-        //                                       // Text(
-        //                                       //   ':',
-        //                                       //   style: TextStyle(
-        //                                       //       fontSize: screenWidth *
-        //                                       //           0.1), // Responsive font size
-        //                                       // ),
-        //                                       // SizedBox(
-        //                                       //   width: screenWidth * 0.23,
-        //                                       //   // Responsive width
-        //                                       //   child: Text(
-        //                                       //     '${snapshot.data!.second}s',
-        //                                       //     style: TextStyle(
-        //                                       //       fontSize: screenWidth * 0.12,
-        //                                       //       // Responsive font size
-        //                                       //       fontWeight: FontWeight.bold,
-        //                                       //     ),
-        //                                       //   ),
-        //                                       // ),
-        //                                     ],
-        //                                   ),
-        //                                 )
-        //                               ],
-        //                             );
-        //                           } else if (snapshot.hasError) {
-        //                             return Text('Error : ${snapshot.error}');
-        //                           } else {
-        //                             return SizedBox(
-        //                               height: 50,
-        //                               width: 130,
-        //                               child: Center(
-        //                                 child: Text(
-        //                                   'Loading....',
-        //                                   style: TextStyle(
-        //                                     fontFamily: 'Epilogue',
-        //                                   ),
-        //                                 ),
-        //                               ),
-        //                             );
-        //                           }
-        //                         },
-        //                       ),
-        //                     ),
-        //                   ],
-        //                 ),
-        //                 SizedBox(
-        //                   height: 10,
-        //                 ),
-        //               ],
-        //             ),
-        //           ),
-        //         ),
-        //         Container(
-        //           height: screenHeight * 0.4,
-        //           width: screenWidth,
-        //           color: Colors.greenAccent.withOpacity(0.6),
-        //           child: GoogleMap(
-        //             initialCameraPosition: kGoogle,
-        //             mapType: MapType.normal,
-        //             myLocationEnabled: true,
-        //             myLocationButtonEnabled: true,
-        //             compassEnabled: true,
-        //             onMapCreated: (GoogleMapController controller) {
-        //               _controller.complete(controller);
-        //             },
-        //             markers: _marker,
-        //             circles: {
-        //               Circle(
-        //                 circleId: CircleId("1"),
-        //                 radius: 789,
-        //                 strokeColor: Colors.lightBlue,
-        //                 strokeWidth: 1,
-        //                 fillColor: Colors.lightBlue.withOpacity(0.5),
-        //                 center: LatLng(16.81605105, 96.12887631),
-        //               )
-        //             },
-        //           ),
-        //         ),
-        //         Padding(
-        //           padding: EdgeInsets.only(top: 40.0),
-        //           child: Row(
-        //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //             children: [
-        //               SizedBox(
-        //                 width: screenWidth * 0.35, // Responsive width
-        //                 height: screenHeight * 0.07, // Responsive height
-        //                 child: ElevatedButton(
-        //                   onPressed: DateTime.now().hour > 16
-        //                       ? null
-        //                       : () {
-        //                           locationController
-        //                               .sendLocationToServer(context);
-        //                         },
-        //                   child: const Text(
-        //                     'Check in  ',
-        //                     style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontSize: 18,
-        //                       fontWeight: FontWeight.bold,
-        //                       fontFamily: 'Epilogue',
-        //                     ),
-        //                   ),
-        //                   style: ElevatedButton.styleFrom(
-        //                     elevation: 8,
-        //                     backgroundColor: Color(0xFFE1FF3C),
-        //                   ),
-        //                 ),
-        //               ),
-        //               SizedBox(
-        //                 width: screenWidth * 0.35, // Responsive width
-        //                 height: screenHeight * 0.07, // Responsive height
-        //                 child: ElevatedButton(
-        //                   onPressed: DateTime.now().hour > 16
-        //                       ? null
-        //                       : () {
-        //                           locationController
-        //                               .sendLocationToServer(context);
-        //                         },
-        //                   child: Text(
-        //                     'Check out',
-        //                     style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontSize: 18,
-        //                       fontWeight: FontWeight.bold,
-        //                       fontFamily: 'Epilogue',
-        //                     ),
-        //                   ),
-        //                   style: ElevatedButton.styleFrom(
-        //                     elevation: 8, backgroundColor: Colors.pinkAccent,
-        //                     // backgroundColor: Color(0xFFE1FF3C),
-        //                   ),
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  Get.off(HomePage(), transition: Transition.fadeIn);
-                },
-                child: Image.asset(
-                  'assets/icons/home.png',
-                  width: 30,
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: SingleChildScrollView(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  tooltip: 'Home',
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(HomePage(), transition: Transition.fadeIn);
+                  },
+                  icon: Image.asset(
+                    'assets/icons/home.png',
+                    color: Colors.green,
+                    width: 35,
+                  ),
                 ),
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  Get.off(Leave(), transition: Transition.fadeIn);
-                },
-                child: Image.asset(
-                  'assets/icons/leave.png',
-                  width: 30,
-                  color: Colors.black,
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(Leave(), transition: Transition.fadeIn);
+                  },
+                  icon: Image.asset(
+                    'assets/icons/leave.png',
+                    color: Colors.black,
+                    width: 35,
+                  ),
                 ),
-              ),
-              label: 'Leave',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  Get.off(RequestPage(), transition: Transition.fadeIn);
-                },
-                child: Image.asset(
-                  'assets/icons/attendance_history.png',
-                  width: 30,
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(RequestPage(), transition: Transition.fadeIn);
+                  },
+                  icon: Image.asset(
+                    'assets/icons/attendance_history.png',
+                    color: Colors.black,
+                    width: 35,
+                  ),
                 ),
-              ),
-              label: 'Attendance',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  Get.off(Calender(), transition: Transition.fadeIn);
-                },
-                child: Icon(
-                  Icons.calendar_month,
-                  color: Colors.black,
-                  size: 30,
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(Calender(), transition: Transition.fadeIn);
+                  },
+                  icon: Icon(
+                    Icons.calendar_month,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              label: 'Calendar',
+              ],
             ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.green,
-          selectedIconTheme: IconThemeData(
-            size: 35,
-            color: Color(0xFFE1FF3C),
           ),
-          onTap: _onItemTapped,
-          type: BottomNavigationBarType.fixed,
         ),
+
+        // bottomNavigationBar: BottomNavigationBar(
+        //   items: <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(
+        //       icon: InkWell(
+        //         onTap: () {
+        //           Get.off(HomePage(), transition: Transition.fadeIn);
+        //         },
+        //         child: Image.asset(
+        //           'assets/icons/home.png',
+        //           width: 30,
+        //         ),
+        //       ),
+        //       label: 'Home',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: InkWell(
+        //         onTap: () {
+        //           Get.off(Leave(), transition: Transition.fadeIn);
+        //         },
+        //         child: Image.asset(
+        //           'assets/icons/leave.png',
+        //           width: 30,
+        //           color: Colors.black,
+        //         ),
+        //       ),
+        //       label: 'Leave',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: InkWell(
+        //         onTap: () {
+        //           Get.off(RequestPage(), transition: Transition.fadeIn);
+        //         },
+        //         child: Image.asset(
+        //           'assets/icons/attendance_history.png',
+        //           width: 30,
+        //         ),
+        //       ),
+        //       label: 'Attendance',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: InkWell(
+        //         onTap: () {
+        //           Get.off(Calender(), transition: Transition.fadeIn);
+        //         },
+        //         child: Icon(
+        //           Icons.calendar_month,
+        //           color: Colors.black,
+        //           size: 30,
+        //         ),
+        //       ),
+        //       label: 'Calendar',
+        //     ),
+        //   ],
+        //   currentIndex: _selectedIndex,
+        //   selectedItemColor: Colors.green,
+        //   selectedIconTheme: IconThemeData(
+        //     size: 35,
+        //     color: Color(0xFFE1FF3C),
+        //   ),
+        //   onTap: _onItemTapped,
+        //   type: BottomNavigationBarType.fixed,
+        // ),
       ),
     );
   }

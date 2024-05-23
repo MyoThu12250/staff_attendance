@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:project_ui/pages/homepage.dart';
+import 'package:project_ui/pages/home.dart';
 import 'package:project_ui/pages/login.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Center(
             child: Image.asset(
               width: 150,
-              'assets/images/novalink.png',
+              'assets/images/logo.jpg',
               color: Colors.black,
             ),
           ),

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:project_ui/pages/sendingrequest.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'homepage.dart';
+import 'home.dart';
 import 'leave.dart';
 
 class Calender extends StatefulWidget {
@@ -123,69 +123,120 @@ class _CalenderState extends State<Calender> {
           ),
         ),
         //
-        bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+        // bottomNavigationBar: BottomNavigationBar(
+        //   items: <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(
+        //       icon: InkWell(
+        //         onTap: () {
+        //           // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+        //           Get.off(HomePage(), transition: Transition.fadeIn);
+        //         },
+        //         child: Image.asset(
+        //           'assets/icons/home.png',
+        //           width: 30,
+        //           color: Colors.black,
+        //         ),
+        //       ),
+        //       label: 'Home',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: InkWell(
+        //         onTap: () {
+        //           Get.off(Leave(), transition: Transition.fadeIn);
+        //         },
+        //         child: Image.asset(
+        //           'assets/icons/leave.png',
+        //           width: 30,
+        //           color: Colors.black,
+        //         ),
+        //       ),
+        //       label: 'Leave',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: InkWell(
+        //         onTap: () {
+        //           Get.off(RequestPage(), transition: Transition.fadeIn);
+        //         },
+        //         child: Image.asset(
+        //           'assets/icons/attendance_history.png',
+        //           width: 30,
+        //         ),
+        //       ),
+        //       label: 'Attendance',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: InkWell(
+        //         onTap: () {
+        //           Get.off(Calender(), transition: Transition.fadeIn);
+        //         },
+        //         child: Icon(
+        //           Icons.calendar_month,
+        //           color: Colors.black,
+        //           size: 30,
+        //         ),
+        //       ),
+        //       label: 'Calendar',
+        //     ),
+        //   ],
+        //   currentIndex: _selectedIndex,
+        //   selectedItemColor: Colors.green,
+        //   selectedIconTheme: IconThemeData(
+        //     size: 35,
+        //     color: Color(0xFFE1FF3C),
+        //   ),
+        //   onTap: _onItemTapped,
+        //   type: BottomNavigationBarType.fixed,
+        // ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                iconSize: 35,
+                onPressed: () {
                   Get.off(HomePage(), transition: Transition.fadeIn);
                 },
-                child: Image.asset(
+                icon: Image.asset(
                   'assets/icons/home.png',
-                  width: 30,
                   color: Colors.black,
+                  width: 35,
                 ),
               ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
+              IconButton(
+                iconSize: 35,
+                onPressed: () {
                   Get.off(Leave(), transition: Transition.fadeIn);
                 },
-                child: Image.asset(
+                icon: Image.asset(
                   'assets/icons/leave.png',
-                  width: 30,
                   color: Colors.black,
+                  width: 35,
                 ),
               ),
-              label: 'Leave',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
+              IconButton(
+                iconSize: 35,
+                onPressed: () {
                   Get.off(RequestPage(), transition: Transition.fadeIn);
                 },
-                child: Image.asset(
+                icon: Image.asset(
                   'assets/icons/attendance_history.png',
-                  width: 30,
+                  color: Colors.black,
+                  width: 35,
                 ),
               ),
-              label: 'Attendance',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
+              IconButton(
+                iconSize: 35,
+                onPressed: () {
                   Get.off(Calender(), transition: Transition.fadeIn);
                 },
-                child: Icon(
+                icon: Icon(
                   Icons.calendar_month,
-                  color: Colors.black,
-                  size: 30,
+                  color: Colors.green,
                 ),
               ),
-              label: 'Calendar',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.green,
-          selectedIconTheme: IconThemeData(
-            size: 35,
-            color: Color(0xFFE1FF3C),
+            ],
           ),
-          onTap: _onItemTapped,
-          type: BottomNavigationBarType.fixed,
         ),
       ),
     );
