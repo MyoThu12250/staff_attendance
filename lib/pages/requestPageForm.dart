@@ -10,9 +10,24 @@ class RequestPageForm extends StatefulWidget {
 }
 
 class _RequestPageFormState extends State<RequestPageForm> {
-  TextEditingController _name = TextEditingController();
+  DateTime? _selectedDateTime;
   TextEditingController _email = TextEditingController();
   TextEditingController _reason = TextEditingController();
+
+  String _selectedItem = 'item 1';
+
+  Future<void> _selectedDatef() async {
+    final _pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100));
+    if (_pickedDate != null) {
+      setState(() {
+        _selectedDateTime = _pickedDate;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +58,12 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 55.0),
-                        child: Icon(Icons.person),
+                        padding: const EdgeInsets.symmetric(vertical: 80.0),
+                        child: Icon(Icons.access_time),
                       ),
                       // SizedBox(),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50.0),
-                        child: Icon(Icons.email),
-                      ),
-                      // SizedBox(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50.0),
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
                         child: Icon(Icons.my_library_books),
                       ),
                     ],
@@ -61,35 +71,29 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50.0),
-                        child: SizedBox(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Container(
                           width: 300,
                           child: TextField(
-                            controller: _name,
+                            onTap: () {
+                              _selectedDatef();
+                            },
+                            controller: TextEditingController(
+                              text: _selectedDateTime != null
+                                  ? '${_selectedDateTime!.day}/${_selectedDateTime!.month}/${_selectedDateTime!.year}'
+                                  : null,
+                            ),
+                            readOnly: true,
                             decoration: InputDecoration(
-                              labelText: 'Name',
-                              hintText: 'Enter name',
+                              labelText: 'Date',
+                              suffixIcon: Icon(Icons.calendar_month),
                               border: OutlineInputBorder(),
                             ),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: SizedBox(
-                          width: 300,
-                          child: TextField(
-                            controller: _email,
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              hintText: 'Enter email',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
                         child: SizedBox(
                           width: 300,
                           height: 120,

@@ -32,7 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Image.asset(
               width: 150,
               'assets/images/logo.jpg',
-              color: Colors.black,
             ),
           ),
           SizedBox(

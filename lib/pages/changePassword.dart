@@ -123,7 +123,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                   });
                                 },
                               ),
-                              Text('show Password'),
+                              Text('Show Password'),
                             ],
                           ),
                           Padding(

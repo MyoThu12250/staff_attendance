@@ -74,7 +74,7 @@ class LeaveController extends GetxController {
   var Info = {}.obs;
   var isLoading = false.obs;
   final box = GetStorage();
-  var profileImage = ''.obs; // Path to the profile image
+  var profileImage = ''.obs;
   final LoginController controller = Get.find();
 
   Future<void> Leave() async {
