@@ -1,103 +1,70 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(SliverAppBarExample());
-
-// Adapted from offical flutter gallery:
-// https://github.com/flutter/flutter/blob/master/examples/flutter_gallery/lib/demo/material/bottom_app_bar_demo.dart
-class SliverAppBarExample extends StatefulWidget {
-  const SliverAppBarExample({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _SliverAppBarExampleState();
+void main() {
+  runApp(MaterialApp(
+    home: TestLeave(),
+  ));
 }
 
-class _SliverAppBarExampleState extends State<SliverAppBarExample> {
-  bool _pinned = true;
+class TestLeave extends StatefulWidget {
+  const TestLeave({Key? key}) : super(key: key);
 
-  bool _snap = false;
-  bool _floating = false;
+  @override
+  State<TestLeave> createState() => _TestLeaveState();
+}
+
+class _TestLeaveState extends State<TestLeave> {
+  var status = 'rejected'; // Example status, change this as needed
+
+  // Function to return icon based on status
+  IconData getIcon(String status) {
+    switch (status) {
+      case 'pending':
+        return Icons.pending;
+      case 'accepted':
+        return Icons.check_circle;
+      case 'rejected':
+        return Icons.cancel;
+      default:
+        return Icons.error;
+    }
+  }
+
+  Color getColor(String status) {
+    switch (status) {
+      case 'pending':
+        return Colors.grey;
+      case 'accepted':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      default:
+        return Colors.transparent;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // SliverAppBar is declared in Scaffold.body, in slivers of a
-      // CustomScrollView.
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            pinned: this._pinned,
-            snap: this._snap,
-            floating: this._floating,
-            expandedHeight: 160.0,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text("FlexibleSpace title"),
-              background: Image.asset(
-                'res/images/material_design_3.png',
-                fit: BoxFit.fill,
-              ),
+      appBar: AppBar(),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  trailing: Icon(
+                    getIcon(status),
+                    color: getColor(status),
+                  ),
+                  // Use the getIcon function to get the appropriate icon
+                  title: Text('ahhuerhru'),
+                  subtitle: Text('asfrhauiwe'),
+                );
+              },
             ),
-          ),
-          // If the main content is a list, use SliverList instead.
-          const SliverFillRemaining(
-            child: Center(child: Text("Hello")),
-          ),
-        ],
-      ),
-      bottomNavigationBar: this._getBottomAppBar(),
-    );
-  }
-
-  Widget _getBottomAppBar() {
-    return BottomAppBar(
-      child: ButtonBar(
-        alignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              const Text('pinned'),
-              Switch(
-                onChanged: (bool val) {
-                  setState(() {
-                    this._pinned = val;
-                  });
-                },
-                value: this._pinned,
-              ),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              const Text('snap'),
-              Switch(
-                onChanged: (bool val) {
-                  setState(() {
-                    this._snap = val;
-                    // Snapping only applies when the app bar is floating.
-                    this._floating = this._floating || val;
-                  });
-                },
-                value: this._snap,
-              ),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              const Text('floating'),
-              Switch(
-                onChanged: (bool val) {
-                  setState(() {
-                    this._floating = val;
-                    if (this._snap == true) {
-                      if (this._floating != true) {
-                        this._snap = false;
-                      }
-                    }
-                  });
-                },
-                value: this._floating,
-              ),
-            ],
-          ),
+          )
         ],
       ),
     );

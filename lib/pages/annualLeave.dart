@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:project_ui/pages/leave.dart';
+
+import 'leave.dart';
 
 class AnnualLeave extends StatefulWidget {
   const AnnualLeave({super.key});
@@ -99,10 +100,13 @@ class _AnnualLeaveState extends State<AnnualLeave> {
 
   Future<void> _selectedDatef() async {
     final _pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
+      context: context,
+      initialDate: _selectedDateTimef ?? DateTime.now().add(Duration(days: 4)),
+      // If _selectedDateTimef is null, set initialDate to the day after 3 days from today
+      firstDate: DateTime.now().add(Duration(days: 4)),
+      // Set firstDate to 3 days after today
+      lastDate: DateTime(2100),
+    );
     if (_pickedDate != null) {
       setState(() {
         _selectedDateTimef = _pickedDate;
@@ -110,14 +114,20 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     }
   }
 
-  Future<void> _selectedDatet() async {
+  Future<void> _selectedDateTo() async {
     final _pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
+      context: context,
+      initialDate: _selectedDateTimet ?? _selectedDateTimef ?? DateTime.now(),
+      firstDate: _selectedDateTimef ?? DateTime.now().add(Duration(days: 4)),
+      lastDate: DateTime(2100),
+    );
     if (_pickedDate != null) {
       setState(() {
+        if (_selectedDateTimef != null &&
+            _pickedDate.isBefore(_selectedDateTimef!)) {
+          // Do not update the "to" date if it's before the "from" date
+          return;
+        }
         _selectedDateTimet = _pickedDate;
       });
     }
@@ -159,7 +169,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                   acount == 0
                       ? Center(
                           child: Text(
-                            'You have nothing attempt left for this month',
+                            'You have nothing attempt left',
                             style: TextStyle(color: Colors.red, fontSize: 20),
                           ),
                         )
@@ -269,7 +279,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                                               ),
                                             ),
                                             onTap: () {
-                                              _selectedDatet();
+                                              _selectedDateTo();
                                             },
                                           ),
                                         ),

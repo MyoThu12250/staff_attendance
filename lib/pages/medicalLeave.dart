@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
-import 'package:project_ui/pages/leave.dart';
 
 import '../Controller/photoController.dart';
+import 'leave.dart';
 
 class MedicalLeave extends StatefulWidget {
   const MedicalLeave({super.key});
@@ -142,7 +142,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                     mcount == 0
                         ? Center(
                             child: Text(
-                              'You have nothing attempt for this month',
+                              'You have nothing attempt left',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.red,
@@ -309,12 +309,11 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                                             Icon(Icons.link)),
                                                     readOnly: true,
                                                     onTap: () async {
+                                                      String fileName =
+                                                          await imageController
+                                                              .pickImage();
                                                       _attatchController.text =
-                                                          imageController
-                                                              .fileName.value
-                                                              .toString();
-                                                      imageController
-                                                          .pickImage();
+                                                          fileName;
                                                     },
                                                   ),
                                                 ),
@@ -369,25 +368,37 @@ class _MedicalLeaveState extends State<MedicalLeave> {
 
   Future<void> _selectedDatef() async {
     final _pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
+      context: context,
+      initialDate: _selectedDateTimef ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
     if (_pickedDate != null) {
       setState(() {
         _selectedDateTimef = _pickedDate;
+        if (_selectedDateTimet != null &&
+            _pickedDate.isAfter(_selectedDateTimet!)) {
+          // Reset the "to" date if it's after the newly selected "from" date
+          _selectedDateTimet = null;
+        }
       });
     }
   }
 
   Future<void> _selectedDatet() async {
     final _pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
+      context: context,
+      initialDate: _selectedDateTimef ?? DateTime.now(),
+      firstDate: _selectedDateTimef ?? DateTime(2000),
+      lastDate: DateTime(2100),
+    );
     if (_pickedDate != null) {
       setState(() {
+        if (_selectedDateTimef != null &&
+            _pickedDate.isBefore(_selectedDateTimef!)) {
+          // Do not update the "to" date if it's before the "from" date
+          return;
+        }
         _selectedDateTimet = _pickedDate;
       });
     }

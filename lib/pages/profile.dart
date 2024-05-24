@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:project_ui/pages/changePassword.dart';
-import 'package:project_ui/pages/home.dart';
 import '../Controller/leaveController.dart';
 import '../Controller/loginController.dart';
 
 import 'dart:io';
 
 import '../Controller/photoController.dart';
+import 'changePassword.dart';
+import 'home.dart';
 
 class ProfilePage extends StatelessWidget {
   LeaveController lontroller = Get.put(LeaveController());
@@ -193,7 +193,7 @@ class ProfilePage extends StatelessWidget {
                       Get.off(ChangePassword());
                     },
                     child: Text(
-                      'Reset Password or change password',
+                      'Reset Password',
                       style: TextStyle(color: Colors.pink),
                     ),
                   ),

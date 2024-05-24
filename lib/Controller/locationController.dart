@@ -1,10 +1,9 @@
+import 'package:Global_TA/Controller/timeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'package:project_ui/Controller/timeController.dart';
 
 final DateTimeController dateTimeController = Get.put(DateTimeController());
 
@@ -32,7 +31,7 @@ class LocationController extends GetxController {
         String check = response.body;
         bool isValid = checkIsValid(check);
         if (isValid) {
-          dateTimeController.sendDateTimeToServer();
+          dateTimeController.sendDateTimeToServer(context);
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -61,7 +60,7 @@ class LocationController extends GetxController {
                       ),
                     ),
                     onPressed: () {
-                      dateTimeController.sendDateTimeToServer();
+                      dateTimeController.sendDateTimeToServer(context);
 
                       Navigator.of(context).pop();
                     },

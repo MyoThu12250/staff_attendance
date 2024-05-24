@@ -1,9 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_ui/pages/home.dart';
 
 import 'detailPages/notiDetailPage.dart';
+import 'home.dart';
+
+final String status = 'rejected';
+
+IconData getIcon(String status) {
+  switch (status) {
+    case 'pending':
+      return Icons.pending;
+    case 'accepted':
+      return Icons.check_circle;
+    case 'rejected':
+      return Icons.cancel;
+    default:
+      return Icons.error;
+  }
+}
+
+Color getColor(String status) {
+  switch (status) {
+    case 'pending':
+      return Colors.grey;
+    case 'accepted':
+      return Colors.green;
+    case 'rejected':
+      return Colors.red;
+    default:
+      return Colors.transparent;
+  }
+}
 
 class NotiPage extends StatelessWidget {
   @override
@@ -42,7 +70,10 @@ class NotiPage extends StatelessWidget {
                             Get.off(NotiDetailPage());
                           },
                           child: ListTile(
-                            trailing: Icon(Icons.warning),
+                            trailing: Icon(
+                              getIcon(status),
+                              color: getColor(status),
+                            ),
                             // change icon accoriding to status
                             title: Text(
                               'Request pending',

@@ -396,16 +396,16 @@
 //     );
 //   }
 // }
+import 'package:Global_TA/pages/sendingrequest.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_ui/pages/annualLeave.dart';
-import 'package:project_ui/pages/calender.dart';
-import 'package:project_ui/pages/home.dart';
-import 'package:project_ui/pages/medicalLeave.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:project_ui/pages/sendingrequest.dart';
 import '../Controller/leaveController.dart';
+import 'annualLeave.dart';
+import 'calender.dart';
 import 'detailPages/leaveDetailPage.dart';
+import 'home.dart';
+import 'medicalLeave.dart';
 
 class Leave extends StatefulWidget {
   const Leave({super.key});
@@ -415,6 +415,7 @@ class Leave extends StatefulWidget {
 }
 
 class _LeaveState extends State<Leave> {
+  final String status = 'pending';
   LeaveController controller = Get.put(LeaveController());
 
   late List<dynamic> filteredData;
@@ -468,6 +469,32 @@ class _LeaveState extends State<Leave> {
         _loadMoreData('all');
       }
     });
+  }
+
+  IconData getIcon(String status) {
+    switch (status) {
+      case 'pending':
+        return Icons.pending;
+      case 'accepted':
+        return Icons.check_circle;
+      case 'rejected':
+        return Icons.cancel;
+      default:
+        return Icons.error;
+    }
+  }
+
+  Color getColor(String status) {
+    switch (status) {
+      case 'pending':
+        return Colors.grey;
+      case 'accepted':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      default:
+        return Colors.transparent;
+    }
   }
 
   Future<void> _loadMoreData(String listType) async {
@@ -769,6 +796,10 @@ class _LeaveState extends State<Leave> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
+                                      ),
+                                      trailing: Icon(
+                                        getIcon(status),
+                                        color: getColor(status),
                                       ),
                                       subtitle: Column(
                                         crossAxisAlignment:

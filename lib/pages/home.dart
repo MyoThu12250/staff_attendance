@@ -1,17 +1,17 @@
 import 'dart:async';
+import 'package:Global_TA/pages/profile.dart';
+import 'package:Global_TA/pages/sendingrequest.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_ui/Controller/loginController.dart';
-import 'package:project_ui/pages/calender.dart';
-import 'package:project_ui/pages/leave.dart';
-import 'package:project_ui/pages/notification.dart';
-import 'package:project_ui/pages/sendingrequest.dart';
-import 'package:project_ui/pages/testProfile.dart';
 import '../Controller/locationController.dart';
+import '../Controller/loginController.dart';
 import '../Controller/permissionController.dart';
 import '../Controller/timeController.dart';
+import 'calender.dart';
+import 'leave.dart';
+import 'notification.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -30,6 +30,9 @@ class _HomePageState extends State<HomePage> {
   final DateTimeController dateTimeController = Get.put(DateTimeController());
   final LocationController locationController = Get.put(LocationController());
   final LoginController controller = Get.put(LoginController());
+
+  var disablein = (DateTime.now().hour >= 7 && DateTime.now().hour <= 10).obs;
+  var disableout = (DateTime.now().hour >= 14 && DateTime.now().hour <= 17).obs;
 
   final Set<Marker> _marker = {
     const Marker(
@@ -137,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Text(
                   'Global Time Attendance',
-                  style: TextStyle(fontSize: 17, fontFamily: 'Epilogue'),
+                  style: TextStyle(fontSize: 14, fontFamily: 'Epilogue'),
                 ),
               ),
             ],
@@ -385,25 +388,36 @@ class _HomePageState extends State<HomePage> {
                                   // Responsive width
                                   height: screenHeight * 0.07,
                                   // Responsive height
-                                  child: ElevatedButton(
-                                    onPressed: DateTime.now().hour > 16
-                                        ? null
-                                        : () {
-                                            locationController
-                                                .sendLocationToServer(context);
-                                          },
-                                    child: const Text(
-                                      'Check in  ',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Epilogue',
+                                  child: Obx(
+                                    () => ElevatedButton(
+                                      onPressed: (disablein == false ||
+                                              dateTimeController
+                                                      .isButtonDisabled.value ==
+                                                  true)
+                                          ? null
+                                          : () {
+                                              print(disablein);
+
+                                              dateTimeController
+                                                  .sendDateTimeToServer(
+                                                      context);
+                                              locationController
+                                                  .sendLocationToServer(
+                                                      context);
+                                            },
+                                      child: const Text(
+                                        'Check in  ',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Epilogue',
+                                        ),
                                       ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 8,
-                                      backgroundColor: Color(0xFFE1FF3C),
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 8,
+                                        backgroundColor: Color(0xFFE1FF3C),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -412,26 +426,34 @@ class _HomePageState extends State<HomePage> {
                                   // Responsive width
                                   height: screenHeight * 0.07,
                                   // Responsive height
-                                  child: ElevatedButton(
-                                    onPressed: DateTime.now().hour > 16
-                                        ? null
-                                        : () {
-                                            locationController
-                                                .sendLocationToServer(context);
-                                          },
-                                    child: Text(
-                                      'Check out',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Epilogue',
+                                  child: Obx(
+                                    () => ElevatedButton(
+                                      onPressed: disableout == false ||
+                                              dateTimeController
+                                                      .isButtonDisabled.value ==
+                                                  true
+                                          ? null
+                                          : () {
+                                              dateTimeController
+                                                  .sendDateTimeToServer(
+                                                      context);
+                                              // locationController
+                                              //     .sendLocationToServer(context);
+                                            },
+                                      child: Text(
+                                        'Check out',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Epilogue',
+                                        ),
                                       ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 8,
-                                      backgroundColor: Colors.pinkAccent,
-                                      // backgroundColor: Color(0xFFE1FF3C),
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 8,
+                                        backgroundColor: Colors.pinkAccent,
+                                        // backgroundColor: Color(0xFFE1FF3C),
+                                      ),
                                     ),
                                   ),
                                 ),

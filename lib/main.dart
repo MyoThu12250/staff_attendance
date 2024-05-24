@@ -1,12 +1,12 @@
+import 'package:Global_TA/pages/home.dart';
+import 'package:Global_TA/pages/leave.dart';
+import 'package:Global_TA/pages/login.dart';
+import 'package:Global_TA/pages/notification.dart';
+import 'package:Global_TA/pages/profile.dart';
+import 'package:Global_TA/pages/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:project_ui/pages/home.dart';
-import 'package:project_ui/pages/leave.dart';
-import 'package:project_ui/pages/login.dart';
-import 'package:project_ui/pages/notification.dart';
-import 'package:project_ui/pages/splashScreen.dart';
-import 'package:project_ui/pages/testProfile.dart';
 import 'Controller/loginController.dart';
 
 void main() async {

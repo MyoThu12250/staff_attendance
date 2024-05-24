@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_ui/pages/leave.dart';
+import '../annualLeave.dart';
+import '../leave.dart';
+import '../medicalLeave.dart';
 
 class LeaveDetailPage extends StatefulWidget {
   const LeaveDetailPage({super.key});
@@ -10,8 +12,35 @@ class LeaveDetailPage extends StatefulWidget {
 }
 
 class _LeaveDetailPageState extends State<LeaveDetailPage> {
+  IconData getIcon(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return Icons.pending;
+      case 'accepted':
+        return Icons.check_circle;
+      case 'rejected':
+        return Icons.cancel;
+      default:
+        return Icons.error;
+    }
+  }
+
+  Color getColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return Colors.grey;
+      case 'accepted':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      default:
+        return Colors.transparent;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final String leaveType = 'Annual Leave';
     final String status = 'Pending';
     return WillPopScope(
       onWillPop: () async {
@@ -92,7 +121,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 50.0),
                         child: Text(
-                          'Medical Leave',
+                          leaveType,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
@@ -127,12 +156,25 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 50.0),
-                        child: Text(
-                          status,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              status,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              getIcon(status),
+                              color: getColor(status),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -149,13 +191,17 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         width: 100,
                         child: ElevatedButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Perform edit method'),
-                                action: SnackBarAction(
-                                    label: 'Undo', onPressed: () {}),
-                              ),
-                            );
+                            leaveType.toLowerCase().trim() ==
+                                    'Medical Leave'.toLowerCase().trim()
+                                ? Get.off(MedicalLeave())
+                                : Get.off(AnnualLeave());
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   SnackBar(
+                            //     content: Text('Perform edit method'),
+                            //     action: SnackBarAction(
+                            //         label: 'Undo', onPressed: () {}),
+                            //   ),
+                            // );
                           },
                           child: Text(
                             'Edit',
