@@ -460,4 +460,72 @@
 //       ),
 //     );
 //   }
-// }
+//
+
+import 'package:Global_TA/Controller/testController.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+
+import 'testingForm.dart';
+
+void main() {
+  Get.put(TestController());
+  runApp(GetMaterialApp(
+    home: Test(),
+  ));
+}
+
+class Test extends StatefulWidget {
+  const Test({super.key});
+
+  @override
+  State<Test> createState() => _TestState();
+}
+
+class _TestState extends State<Test> {
+  TestController c = Get.find();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    c.getData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              c.getData();
+            },
+            child: Text('Get data'),
+          ),
+          Obx(() => Expanded(
+              child: ListView.builder(
+                  itemCount: c.leaveList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {},
+                      title: Text(c.leaveList[index].leaveType),
+                      trailing: IconButton(
+                          onPressed: () async {},
+                          icon: Icon(Icons.delete_forever)),
+                    );
+                  })))
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}

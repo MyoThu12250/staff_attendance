@@ -58,6 +58,7 @@
 // //   }
 // // }
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -152,6 +153,27 @@ class LeaveController extends GetxController {
       profileImage.value = pickedFile.path;
       box.write('profileImage', profileImage.value);
     }
+  }
+}
+
+// delete operation
+Future<void> deleteData(String id) async {
+  var headers = {'Content-Type': 'application/json'};
+  var data = json.encode({"name": "name"});
+  var dio = Dio();
+  var response = await dio.request(
+    'https://6642e3fe3c01a059ea20b604.mockapi.io/leave/$id',
+    options: Options(
+      method: 'DELETE',
+      headers: headers,
+    ),
+    data: data,
+  );
+
+  if (response.statusCode == 200) {
+    print(json.encode(response.data));
+  } else {
+    print(response.statusMessage);
   }
 }
 //   void loadProfileData() {
