@@ -2,13 +2,14 @@ import 'dart:convert';
 
 class TestModel {
   String leaveType;
-  String date;
+  int date;
   String reason;
   int from;
   int to;
   String status;
   String userId;
-  int id;
+  String id;
+  String? name;
 
   TestModel({
     required this.leaveType,
@@ -19,6 +20,7 @@ class TestModel {
     required this.status,
     required this.userId,
     required this.id,
+    this.name,
   });
 
   factory TestModel.fromRawJson(String str) =>
@@ -35,6 +37,7 @@ class TestModel {
         status: json["status"],
         userId: json["UserId"],
         id: json["id"],
+        name: json["name"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,5 +49,6 @@ class TestModel {
         "status": status,
         "UserId": userId,
         "id": id,
+        "name": name,
       };
 }

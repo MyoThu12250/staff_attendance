@@ -1,4 +1,5 @@
 import 'package:Global_TA/Controller/testController.dart';
+import 'package:Global_TA/Model/testModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,146 +18,59 @@ class TestingForm extends StatefulWidget {
 }
 
 class _TestingFormState extends State<TestingForm> {
-  TestController c = Get.find();
-  TextEditingController typecontroller = TextEditingController();
-  TextEditingController reasoncontroller = TextEditingController();
-  TextEditingController fromcontroller = TextEditingController();
-  TextEditingController tocontroller = TextEditingController();
-  TextEditingController datecontroller = TextEditingController();
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
     if (widget.isedit == true) {
-      typecontroller.text = c.leaveList[widget.index!].leaveType.toString();
-      reasoncontroller.text = c.leaveList[widget.index!].reason.toString();
-      fromcontroller.text = c.leaveList[widget.index!].from;
-      tocontroller.text = c.leaveList[widget.index!].to;
-      datecontroller.text = c.leaveList[widget.index!].date.toString();
+      _type.text = c.leaveList[widget.index!].leaveType;
     }
   }
+
+  TestController c = Get.find();
+  TextEditingController _type = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('FormPage'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 40,
-                width: 300,
-                child: TextField(
-                  controller: typecontroller,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'type'),
+      appBar: AppBar(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              width: 200,
+              height: 40,
+              child: TextField(
+                controller: _type,
+                decoration: InputDecoration(
+                  labelText: 'Type',
+                  border: OutlineInputBorder(),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 40,
-                width: 300,
-                child: TextField(
-                  controller: datecontroller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'date',
-                  ),
-                ),
-              ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              TestModel model = TestModel(
+                leaveType: _type.text,
+                date: c.leaveList[widget.index!].date,
+                reason: c.leaveList[widget.index!].reason,
+                from: c.leaveList[widget.index!].from,
+                to: c.leaveList[widget.index!].to,
+                status: c.leaveList[widget.index!].status,
+                userId: c.leaveList[widget.index!].UserId,
+                id: c.leaveList[widget.index!].id,
+              );
+              widget.isedit
+                  ? c.updateData(model, c.leaveList[widget.index!].id)
+                  : c.addData(model);
+            },
+            child: Text(
+              widget.isedit ? 'Update' : 'Add',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 40,
-                width: 300,
-                child: TextField(
-                  controller: reasoncontroller,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'reason'),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 40,
-                width: 300,
-                child: TextField(
-                  controller: fromcontroller,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'from'),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 40,
-                width: 300,
-                child: TextField(
-                  controller: tocontroller,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'to'),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 40,
-                width: 300,
-                child: TextField(
-                  controller: tocontroller,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'status'),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 40,
-                width: 300,
-                child: TextField(
-                  controller: tocontroller,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'userId'),
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // TestModel model = TestModel(
-                //     leaveType: typecontroller.text.toString(),
-                //     date: datecontroller.text.toString(),
-                //     reason: reasoncontroller.text.toString(),
-                //     from: fromcontroller.text.toString(),
-                //     to: tocontroller.text.toString(),
-                //     status: c.leaveList[widget.index!].status.toString(),
-                //     userId: c.leaveList[widget.index!].UserId.toString(),
-                //     id: c.leaveList[widget.index!].id.toString());
-
-                // widget.isedit
-                //     ? c.editData(
-                //         model, c.leaveList[widget.index!].id.toString())
-                //     : c.addData();
-              },
-              child: Text('Save'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

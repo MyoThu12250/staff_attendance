@@ -1,3 +1,4 @@
+import 'package:Global_TA/pages/home.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -18,7 +19,7 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.post(
-        Uri.parse('http://10.103.1.17:8000/api/v1/users/loginUser'),
+        Uri.parse('http://10.103.1.29:8000/api/v1/users/loginUser'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -32,7 +33,8 @@ class LoginController extends GetxController {
         userInfo.value = jsonDecode(response.body)['userData'];
         box.write('isLoggedIn', true);
         box.write('userInfo', userInfo.value);
-        Get.toNamed('/home');
+        Get.off(HomePage());
+        // Get.toNamed('/home');
       } else {
         Get.snackbar('Error', 'Login failed');
       }

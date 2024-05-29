@@ -219,9 +219,10 @@ class _HomePageState extends State<HomePage> {
               minChildSize: 0.15,
               // Minimum size of the sheet (fraction of parent height)
               maxChildSize: 0.55,
+
               builder: (context, scrollController) {
                 return Container(
-                  color: Colors.white,
+                  color: Colors.grey[200],
                   child: ListView.builder(
                     controller: scrollController,
                     itemCount: 1,
@@ -241,8 +242,10 @@ class _HomePageState extends State<HomePage> {
                           Text(
                             'Good ${dateType + ' ' + name}',
                             style: TextStyle(
+                              fontWeight: FontWeight.bold,
                               fontSize: 25,
                               fontFamily: 'Epilogue',
+                              color: Colors.indigoAccent,
                             ),
                           ),
                           SizedBox(
@@ -277,6 +280,7 @@ class _HomePageState extends State<HomePage> {
                                                   // Responsive font size
                                                   fontWeight: FontWeight.bold,
                                                   fontFamily: 'Epilogue',
+                                                  color: Colors.purpleAccent,
                                                 ),
                                               ),
                                             ),
@@ -293,11 +297,11 @@ class _HomePageState extends State<HomePage> {
                                             child: Text(
                                               '${snapshot.data!.minute}m',
                                               style: TextStyle(
-                                                fontSize: screenWidth * 0.12,
-                                                // Responsive font size
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Epilogue',
-                                              ),
+                                                  fontSize: screenWidth * 0.12,
+                                                  // Responsive font size
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Epilogue',
+                                                  color: Colors.purpleAccent),
                                             ),
                                           ),
                                           Text(
@@ -309,6 +313,7 @@ class _HomePageState extends State<HomePage> {
                                               // Responsive font size
                                               fontWeight: FontWeight.bold,
                                               fontFamily: 'Epilogue',
+                                              color: Colors.deepPurple,
                                             ),
                                           ),
 
@@ -362,17 +367,26 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     formattedDateMonth + ', ',
                                     style: TextStyle(
-                                        fontSize: 25, fontFamily: 'Epilogue'),
+                                      fontSize: 25,
+                                      fontFamily: 'Epilogue',
+                                      color: Colors.deepOrange,
+                                    ),
                                   ),
                                   Text(
                                     formattedDateDay + ', ',
                                     style: TextStyle(
-                                        fontSize: 25, fontFamily: 'Epilogue'),
+                                      fontSize: 25,
+                                      fontFamily: 'Epilogue',
+                                      color: Colors.deepOrange,
+                                    ),
                                   ),
                                   Text(
                                     formattedDateYear,
                                     style: TextStyle(
-                                        fontSize: 25, fontFamily: 'Epilogue'),
+                                      fontSize: 25,
+                                      fontFamily: 'Epilogue',
+                                      color: Colors.deepOrange,
+                                    ),
                                   ),
                                 ],
                               ),

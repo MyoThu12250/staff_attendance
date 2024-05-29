@@ -42,6 +42,11 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
   Widget build(BuildContext context) {
     final String leaveType = 'Annual Leave';
     final String status = 'Pending';
+    final String reason = 'suck leave';
+    final String date = '10/2/24';
+    final String from = '12/2/24';
+    final String to = '14/2/24';
+
     return WillPopScope(
       onWillPop: () async {
         Get.off(Leave());
@@ -131,7 +136,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                       Text(
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        'anvjnra an arnvnu qvf weuiqfh cfqbwdfyc gfy cbfq4fuybuahc vra vra bvrb',
+                        reason,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
@@ -140,7 +145,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 50.0),
                         child: Text(
-                          '13/12/2024',
+                          date,
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
@@ -148,7 +153,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         ),
                       ),
                       Text(
-                        'From 1/1/2023 to 1/2/2024',
+                        'from-${from + '  to-' + to}',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
@@ -182,6 +187,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                 ),
               ],
             ),
+
             status.toLowerCase() == 'pending'.toLowerCase()
                 ? Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

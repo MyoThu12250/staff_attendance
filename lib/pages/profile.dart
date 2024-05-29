@@ -29,7 +29,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _radius = 70;
     return WillPopScope(
       onWillPop: () async {
         Get.off(HomePage());

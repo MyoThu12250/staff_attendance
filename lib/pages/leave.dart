@@ -1,13 +1,16 @@
+// import 'dart:async';
+//
+// import 'package:Global_TA/pages/annualLeave.dart';
+// import 'package:Global_TA/pages/calender.dart';
+// import 'package:Global_TA/pages/detailPages/leaveDetailPage.dart';
+// import 'package:Global_TA/pages/home.dart';
+// import 'package:Global_TA/pages/medicalLeave.dart';
+// import 'package:Global_TA/pages/sendingrequest.dart';
 // import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:project_ui/pages/annualLeave.dart';
-// import 'package:project_ui/pages/calender.dart';
-// import 'package:project_ui/pages/home.dart';
-// import 'package:project_ui/pages/medicalLeave.dart';
-// import 'package:project_ui/pages/sendingrequest.dart';
 // import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+// import 'package:get/get.dart';
+//
 // import '../Controller/leaveController.dart';
-// import 'detailPages/leaveDetailPage.dart';
 //
 // class Leave extends StatefulWidget {
 //   const Leave({super.key});
@@ -18,7 +21,6 @@
 //
 // class _LeaveState extends State<Leave> {
 //   LeaveController controller = Get.put(LeaveController());
-//
 //   late List<dynamic> filteredData;
 //   late List<dynamic> Rlist;
 //
@@ -26,7 +28,15 @@
 //   void initState() {
 //     super.initState();
 //     controller.Leave();
+//     // Get.arguments != null ? Get.arguments as Map<String, dynamic> : [];
+//     // filteredData = Get.arguments != null ? Get.arguments as List<dynamic> : [];
 //   }
+//
+//   var dropdownvalue;
+//   var _items = [
+//     'by pervious month',
+//     'by current month',
+//   ];
 //
 //   @override
 //   Widget build(BuildContext context) {
@@ -38,12 +48,7 @@
 //     final List<dynamic> Alist = arguments?['Alist'] ?? [];
 //     final List<dynamic> Plist = arguments?['Plist'] ?? [];
 //     return DefaultTabController(
-//       length: 4,
-//       child: WillPopScope(
-//         onWillPop: () async {
-//           Get.off(HomePage());
-//           return false;
-//         },
+//         length: 4,
 //         child: Scaffold(
 //           appBar: AppBar(
 //             centerTitle: true,
@@ -62,13 +67,7 @@
 //                           Text('Pending'),
 //                           Text('Accepted'),
 //                           Text('Rejected'),
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.center,
-//                             children: [
-//                               Text('All'),
-//                               Icon(Icons.arrow_drop_down)
-//                             ],
-//                           ),
+//                           Text('All'),
 //                         ],
 //                       ),
 //                     ),
@@ -78,83 +77,40 @@
 //               Expanded(
 //                 child: TabBarView(
 //                   children: [
-//                     if (Plist.isEmpty)
-//                       Center(
-//                         child: Text(
-//                           'Empty Leave History',
-//                           style: TextStyle(
-//                             fontSize: 25,
-//                             color: Colors.green,
+//                     Plist.isEmpty
+//                         ? Center(
+//                             child: Text('Empty Leave History',
+//                                 style: TextStyle(
+//                                     fontSize: 25, color: Colors.green)))
+//                         : ListView.builder(
+//                             itemCount: Plist.length,
+//                             itemBuilder: (context, index) {
+//                               var item = Plist[index];
+//                               return Column(
+//                                 children: [
+//                                   Padding(
+//                                     padding: const EdgeInsets.all(12.0),
+//                                     child: ListTile(
+//                                       title: Text(
+//                                           'Leave Type    :   ${item['leaveType']}'),
+//                                       subtitle: Column(
+//                                         crossAxisAlignment:
+//                                             CrossAxisAlignment.start,
+//                                         children: [
+//                                           Text(
+//                                               'Reason              :    ${item['reasons']}'),
+//                                           Text(
+//                                               'From                  :    ${item['from']}'),
+//                                           Text(
+//                                               'To                      :     ${item['to']}'),
+//                                         ],
+//                                       ),
+//                                     ),
+//                                   )
+//                                 ],
+//                               );
+//                             },
 //                           ),
-//                         ),
-//                       )
-//                     else
-//                       ListView.separated(
-//                         separatorBuilder: (context, index) {
-//                           return Divider(
-//                             color: Colors.black,
-//                             thickness: 0.5,
-//                           );
-//                         },
-//                         // itemCount: 2,
-//                         itemCount: Plist.length,
-//                         itemBuilder: (context, index) {
-//                           var item = Plist[index];
-//                           return Column(
-//                             children: [
-//                               Padding(
-//                                 padding: const EdgeInsets.all(12.0),
-//                                 child: GestureDetector(
-//                                   onTap: () {
-//                                     Get.off(LeaveDetailPage());
-//                                   },
-//                                   child: ListTile(
-//                                     trailing: Row(
-//                                       mainAxisAlignment:
-//                                           MainAxisAlignment.spaceEvenly,
-//                                       crossAxisAlignment:
-//                                           CrossAxisAlignment.center,
-//                                       children: [
-//                                         IconButton(
-//                                           onPressed: () {
-//                                             //Perform edit function
-//                                           },
-//                                           icon: Icon(
-//                                             Icons.edit,
-//                                             color: Colors.lightGreenAccent,
-//                                           ),
-//                                         ),
-//                                         IconButton(
-//                                           onPressed: () {
-//                                             //perform delete function
-//                                           },
-//                                           icon: Icon(
-//                                             Icons.delete,
-//                                             color: Colors.red,
-//                                           ),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                     title: Text(
-//                                       'Leave Type    :   ${item['leaveType']}',
-//                                       style: TextStyle(
-//                                         fontWeight: FontWeight.bold,
-//                                       ),
-//                                     ),
-//                                     subtitle: Text(
-//                                       'Date : ',
-//                                       style: TextStyle(
-//                                         fontSize: 14,
-//                                         color: Colors.grey,
-//                                       ),
-//                                     ),
-//                                   ),
-//                                 ),
-//                               )
-//                             ],
-//                           );
-//                         },
-//                       ),
 //                     // Text('Pending2'), // AcceptedPage()
 //
 //                     Alist.isEmpty
@@ -162,79 +118,59 @@
 //                             child: Text('Empty Leave History',
 //                                 style: TextStyle(
 //                                     fontSize: 25, color: Colors.green)))
-//                         : ListView.separated(
-//                             separatorBuilder: (context, index) {
-//                               return Divider(
-//                                 color: Colors.black,
-//                                 thickness: 0.5,
-//                               );
-//                             },
+//                         : ListView.builder(
 //                             itemCount: Alist.length,
 //                             itemBuilder: (context, index) {
 //                               var item = Alist[index];
 //                               return Column(
 //                                 children: [
-//                                   GestureDetector(
-//                                     onTap: () {
-//                                       Get.off(LeaveDetailPage());
-//                                     },
-//                                     child: ListTile(
-//                                       isThreeLine: true,
-//                                       title: Text(
-//                                         'Leave Type    :   ${item['leaveType']}',
-//                                         style: TextStyle(
-//                                           fontWeight: FontWeight.bold,
-//                                         ),
-//                                       ),
-//                                       subtitle: Text(
-//                                         'Date  : ',
-//                                         style: TextStyle(
-//                                           fontSize: 14,
-//                                           color: Colors.grey,
-//                                         ),
-//                                       ),
+//                                   ListTile(
+//                                     title: Text(
+//                                         'Leave Type    :   ${item['leaveType']}'),
+//                                     subtitle: Column(
+//                                       crossAxisAlignment:
+//                                           CrossAxisAlignment.start,
+//                                       children: [
+//                                         Text(
+//                                             'Reason              :    ${item['reasons']}'),
+//                                         Text(
+//                                             'From                  :    ${item['from']}'),
+//                                         Text(
+//                                             'To                      :   ${item['to']}'),
+//                                       ],
 //                                     ),
 //                                   ),
 //                                 ],
 //                               );
 //                             },
 //                           ),
+//
 //                     // Text('Pending3'), // RejectedPage()
 //                     Rlist.isEmpty
 //                         ? Center(
 //                             child: Text('Empty Leave History',
 //                                 style: TextStyle(
 //                                     fontSize: 25, color: Colors.green)))
-//                         : ListView.separated(
-//                             separatorBuilder: (context, index) {
-//                               return Divider(
-//                                 color: Colors.black,
-//                                 thickness: 0.5,
-//                               );
-//                             },
+//                         : ListView.builder(
 //                             itemCount: Rlist.length,
 //                             itemBuilder: (context, index) {
 //                               var item = Rlist[index];
 //                               return Column(
 //                                 children: [
-//                                   GestureDetector(
-//                                     onTap: () {
-//                                       Get.off(LeaveDetailPage());
-//                                     },
-//                                     child: ListTile(
-//                                       title: Text(
-//                                         'Leave Type    :   ${item['leaveType']}',
-//                                         style: TextStyle(
-//                                           fontWeight: FontWeight.bold,
-//                                         ),
-//                                       ),
-//                                       subtitle: Text(
-//                                         'Date : ',
-//                                         style: TextStyle(
-//                                           fontSize: 14,
-//                                           color: Colors.grey,
-//                                         ),
-//                                       ),
+//                                   ListTile(
+//                                     title: Text(
+//                                         'Leave Type    :   ${item['leaveType']}'),
+//                                     subtitle: Column(
+//                                       crossAxisAlignment:
+//                                           CrossAxisAlignment.start,
+//                                       children: [
+//                                         Text(
+//                                             'Reason              :    ${item['reasons']}'),
+//                                         Text(
+//                                             'From                  :    ${item['from']}'),
+//                                         Text(
+//                                             'To                      :   ${item['to']}'),
+//                                       ],
 //                                     ),
 //                                   ),
 //                                 ],
@@ -253,44 +189,20 @@
 //                               var item = filteredData[index];
 //                               return Column(
 //                                 children: [
-//                                   GestureDetector(
-//                                     onTap: () {
-//                                       Get.off(LeaveDetailPage());
-//                                     },
-//                                     child: ListTile(
-//                                       title: Text(
-//                                         'Leave Type    :   ${item['leaveType']}',
-//                                         style: TextStyle(
-//                                           fontWeight: FontWeight.bold,
-//                                         ),
-//                                       ),
-//                                       subtitle: Column(
-//                                         crossAxisAlignment:
-//                                             CrossAxisAlignment.start,
-//                                         children: [
-//                                           Text(
-//                                             'Reason              :    ${item['reasons']}',
-//                                             style: TextStyle(
-//                                               fontSize: 14,
-//                                               color: Colors.grey,
-//                                             ),
-//                                           ),
-//                                           Text(
-//                                             'From                  :    ${item['from']}',
-//                                             style: TextStyle(
-//                                               fontSize: 14,
-//                                               color: Colors.grey,
-//                                             ),
-//                                           ),
-//                                           Text(
-//                                             'To                      :   ${item['to']}',
-//                                             style: TextStyle(
-//                                               fontSize: 14,
-//                                               color: Colors.grey,
-//                                             ),
-//                                           ),
-//                                         ],
-//                                       ),
+//                                   ListTile(
+//                                     title: Text(
+//                                         'Leave Type    :   ${item['leaveType']}'),
+//                                     subtitle: Column(
+//                                       crossAxisAlignment:
+//                                           CrossAxisAlignment.start,
+//                                       children: [
+//                                         Text(
+//                                             'Reason              :    ${item['reasons']}'),
+//                                         Text(
+//                                             'From                  :    ${item['from']}'),
+//                                         Text(
+//                                             'To                      :   ${item['to']}'),
+//                                       ],
 //                                     ),
 //                                   ),
 //                                 ],
@@ -308,32 +220,22 @@
 //             children: [
 //               SpeedDialChild(
 //                   elevation: 0,
-//                   child: Icon(
-//                     Icons.medication,
-//                     color: Colors.pink,
-//                   ),
-//                   labelWidget: Text('Leave Details'),
+//                   child: Icon(Icons.details),
+//                   labelWidget: Text('Leave Detail'),
 //                   onTap: () {
-//                     Get.off(LeaveDetailPage(), transition: Transition.fadeIn);
+//                     Get.off(LeaveDetailPage());
 //                   }),
 //               SpeedDialChild(
 //                   elevation: 0,
-//                   child: Icon(
-//                     Icons.medication,
-//                     color: Colors.pink,
-//                   ),
+//                   child: Icon(Icons.medication),
 //                   labelWidget: Text('Medical leave'),
 //                   onTap: () {
-//                     Get.off(MedicalLeave(), transition: Transition.fadeIn);
+//                     Get.off(MedicalLeave());
 //                   }),
 //               SpeedDialChild(
 //                 elevation: 0,
-//                 child: Icon(
-//                   Icons.access_time,
-//                   color: Colors.purpleAccent,
-//                 ),
+//                 child: Icon(Icons.access_time),
 //                 labelWidget: Text('Annual leave'),
-
 //                 onTap: () {
 //                   Get.off(AnnualLeave());
 //                 },
@@ -342,60 +244,62 @@
 //           ),
 //           bottomNavigationBar: Padding(
 //             padding: const EdgeInsets.symmetric(vertical: 10.0),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: [
-//                 IconButton(
-//                   iconSize: 35,
-//                   onPressed: () {
-//                     Get.off(HomePage(), transition: Transition.fadeIn);
-//                   },
-//                   icon: Image.asset(
-//                     'assets/icons/home.png',
-//                     color: Colors.black,
-//                     width: 35,
+//             child: SingleChildScrollView(
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: [
+//                   IconButton(
+//                     tooltip: 'Home',
+//                     iconSize: 35,
+//                     onPressed: () {
+//                       Get.off(HomePage(), transition: Transition.fadeIn);
+//                     },
+//                     icon: Image.asset(
+//                       'assets/icons/home.png',
+//                       color: Colors.black,
+//                       width: 35,
+//                     ),
 //                   ),
-//                 ),
-//                 IconButton(
-//                   iconSize: 35,
-//                   onPressed: () {
-//                     Get.off(Leave(), transition: Transition.fadeIn);
-//                   },
-//                   icon: Image.asset(
-//                     'assets/icons/leave.png',
-//                     color: Colors.green,
-//                     width: 35,
+//                   IconButton(
+//                     iconSize: 35,
+//                     onPressed: () {
+//                       Get.off(Leave(), transition: Transition.fadeIn);
+//                     },
+//                     icon: Image.asset(
+//                       'assets/icons/leave.png',
+//                       color: Colors.green,
+//                       width: 35,
+//                     ),
 //                   ),
-//                 ),
-//                 IconButton(
-//                   iconSize: 35,
-//                   onPressed: () {
-//                     Get.off(RequestPage(), transition: Transition.fadeIn);
-//                   },
-//                   icon: Image.asset(
-//                     'assets/icons/attendance_history.png',
-//                     color: Colors.black,
-//                     width: 35,
+//                   IconButton(
+//                     iconSize: 35,
+//                     onPressed: () {
+//                       Get.off(RequestPage(), transition: Transition.fadeIn);
+//                     },
+//                     icon: Image.asset(
+//                       'assets/icons/attendance_history.png',
+//                       color: Colors.black,
+//                       width: 35,
+//                     ),
 //                   ),
-//                 ),
-//                 IconButton(
-//                   iconSize: 35,
-//                   onPressed: () {
-//                     Get.off(Calender(), transition: Transition.fadeIn);
-//                   },
-//                   icon: Icon(
-//                     Icons.calendar_month,
-//                     color: Colors.black,
+//                   IconButton(
+//                     iconSize: 35,
+//                     onPressed: () {
+//                       Get.off(Calender(), transition: Transition.fadeIn);
+//                     },
+//                     icon: Icon(
+//                       Icons.calendar_month,
+//                       color: Colors.black,
+//                     ),
 //                   ),
-//                 ),
-//               ],
+//                 ],
+//               ),
 //             ),
 //           ),
-//         ),
-//       ),
-//     );
+//         ));
 //   }
 // }
+
 import 'package:Global_TA/pages/sendingrequest.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -503,13 +407,17 @@ class _LeaveState extends State<Leave> {
     });
 
     await Future.delayed(Duration(seconds: 2));
-
-    List<Map<String, String>> newData = List.generate(20, (index) {
+    List<Map<String, String>> newData = List.generate(10, (index) {
       return {
         'leaveType': 'Type ${Plist.length + index}',
         'reasons': 'Reason ${Plist.length + index}',
         'from': '2024-01-01',
         'to': '2024-01-10',
+        //
+        //         'leaveType': newData['leaveType'],
+        //         'reasons': 'Reason ${Plist.length + index}',
+        //         'from': '2024-01-01',
+        //         'to': '2024-01-10',
       };
     });
 
@@ -517,15 +425,19 @@ class _LeaveState extends State<Leave> {
       switch (listType) {
         case 'pending':
           Plist.addAll(newData);
+          //count++;
           break;
         case 'accepted':
           Alist.addAll(newData);
+          //count++;
           break;
         case 'rejected':
           Rlist.addAll(newData);
+          //count++;
           break;
         case 'all':
           filteredData.addAll(newData);
+          //count++;
           break;
       }
       _isLoading = false;
