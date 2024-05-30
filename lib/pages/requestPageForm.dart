@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:project_ui/pages/sendingrequest.dart';
 
 class RequestPageForm extends StatefulWidget {
@@ -11,9 +12,51 @@ class RequestPageForm extends StatefulWidget {
 
 class _RequestPageFormState extends State<RequestPageForm> {
   TextEditingController _name = TextEditingController();
-  TextEditingController _email = TextEditingController();
+  DateTime ? _date ;
   TextEditingController _reason = TextEditingController();
 
+
+  bool _validate() {
+ final String name = _name.text;
+    final String reason = _reason.text;
+ final date = DateFormat('yyyy-MM-dd').format(_date!);
+    if (name.isNotEmpty &&
+        date.isNotEmpty &&
+        reason.isNotEmpty
+       ) {
+      return true;
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Required'),
+              content: Text('Please enter your data'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Ok'),
+                ),
+              ],
+            );
+          });
+      return false;
+    }
+  }
+  Future<void> _selectedDatef() async {
+    final _pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100));
+    if (_pickedDate != null) {
+      setState(() {
+        _date = _pickedDate;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,7 +83,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
                       // SizedBox(),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 50.0),
-                        child: Icon(Icons.email),
+                        child: Icon(Icons.calendar_month),
                       ),
                       // SizedBox(),
                       Padding(
@@ -68,14 +111,27 @@ class _RequestPageFormState extends State<RequestPageForm> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: SizedBox(
-                          width: 300,
+
+                          width:300,
                           child: TextField(
-                            controller: _email,
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              hintText: 'Enter email',
-                              border: OutlineInputBorder(),
+                            controller: TextEditingController(
+                              text: _date != null
+                                  ? '${_date!.day}/${_date!.month}/${_date!.year}'
+                                  : null,
                             ),
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'From',
+                              hintText: 'From',
+                              suffixIcon: Icon(
+                                Icons.date_range,
+                                size: 20,
+                              ),
+                            ),
+                            onTap: () {
+                              _selectedDatef();
+                            },
                           ),
                         ),
                       ),
@@ -110,7 +166,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                  Get.off(RequestPage());
+               _validate();
                 },
               ),
             ],

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:project_ui/pages/homepage.dart';
-import 'package:project_ui/pages/login.dart';
+
+import 'login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,24 +16,30 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   // bool _isLogin = true;
+  void main() async {
+    await GetStorage.init();
+  }
 
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
     final bool _isLogin = box.read('isLoggedIn') ?? false;
     Timer(Duration(seconds: 3), () {
-      Get.off(_isLogin == false ? HomePage() : LoginPage());
+      Get.off(_isLogin == true ? HomePage() : LoginPage());
     });
     return Scaffold(
-      backgroundColor: Color(0xFFE1FF3C),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Spacer(),
           Center(
-            child: Image.asset(
-              width: 150,
-              'assets/images/novalink.png',
-              color: Colors.black,
+            child: CircleAvatar(
+              radius: 200,
+              child: Image.asset(
+                width: 300,
+                'assets/images/logo.jpg',
+                // color: Colors.black,
+              ),
             ),
           ),
           SizedBox(

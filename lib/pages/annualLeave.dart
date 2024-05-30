@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:project_ui/Controller/leaveController.dart';
+import 'package:project_ui/pages/leave.dart';
 
 class AnnualLeave extends StatefulWidget {
   const AnnualLeave({super.key});
@@ -9,6 +11,8 @@ class AnnualLeave extends StatefulWidget {
   @override
   State<AnnualLeave> createState() => _AnnualLeaveState();
 }
+
+final LeaveController controller = Get.put(LeaveController());
 
 class _AnnualLeaveState extends State<AnnualLeave> {
   DateTime? _selectedDateTimef;
@@ -19,44 +23,29 @@ class _AnnualLeaveState extends State<AnnualLeave> {
   Future<void> _sendData() async {
     final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
     final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
-    final String reason = _reasonController.text;
-    final String leavetype = 'Annual leave';
 
+    final String reason = _reasonController.text;
+    final String leavetype = 'Annual Leave';
+    // final String userId = controller.retrieveUserId().toString();
     final response = await http.post(
-      Uri.parse('https://663077fcc92f351c03d9ee40.mockapi.io/apitest/myint'),
+      Uri.parse('http://10.103.1.6:8000/api/v1/leaveRecord/createLeave'),
       body: {
-        'Reason': reason,
-        'fromday': fromdate,
-        'today': todate,
-        'Leave': leavetype
+        'reasons': reason,
+        'from': fromdate,
+        'to': todate,
+        'leaveType': leavetype,
+        'UserId': 15
       },
     );
 
-    if (response.statusCode == 201) {
-      // Handle successful response
-      print('Data sent successfully');
-    } else {
-      // Handle error response
-      print('Failed to send data');
-    }
-  }
-
-  bool _validate() {
-    String _name = _nameController.text.trim();
-    String _fromDate = _selectedDateTimef.toString();
-    String _toDate = _selectedDateTimet.toString();
-    String _reason = _reasonController.text;
-    if (_name.isNotEmpty &&
-        _fromDate.isNotEmpty &&
-        _toDate.isNotEmpty &&
-        _reason.isNotEmpty) {
+    if (response.statusCode == 200) {
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             elevation: 8,
-            title: Text('Annual Leave Submitted Successfully '),
+            title: Text('Annual Leave Request Submitted Successfully '),
             content: Container(
               width: 300,
               height: 60,
@@ -64,23 +53,69 @@ class _AnnualLeaveState extends State<AnnualLeave> {
             ),
             actions: <Widget>[
               TextButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.lightGreenAccent)),
                 child: Text('Ok'),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog.
+                  Get.to(Leave()); // Close the dialog.
                 },
               ),
             ],
           );
         },
       );
+    } else {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text(' Unsuccessful  '),
+            content: Container(
+              width: 300,
+              height: 60,
+              child: Text("Unsuccessful"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.to(Leave()); // Close the dialog.
+                },
+              ),
+            ],
+          );
+        },
+      );
+      // Handle error response
+      print('Failed to send data');
+    }
+  }
 
+  bool _validate() {
+    final testdate = _selectedDateTimef!.day.toInt() + 3;
+    final testdate1 = DateTime.now().day.toInt();
+    String _name = _nameController.text.trim();
+    String _fromDate = _selectedDateTimef.toString();
+    String _toDate = _selectedDateTimet.toString();
+    String _reason = _reasonController.text;
+    if ((_name.isNotEmpty &&
+            _fromDate.isNotEmpty &&
+            _toDate.isNotEmpty &&
+            _reason.isNotEmpty) &&
+        testdate > testdate1 + 3) {
       return true;
     } else {
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('required'),
+              title: Text('Required'),
               content: Text('Please enter your data'),
               actions: [
                 TextButton(
@@ -96,32 +131,6 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     }
   }
 
-  Future<void> _selectedDatef() async {
-    final _pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
-    if (_pickedDate != null) {
-      setState(() {
-        _selectedDateTimef = _pickedDate;
-      });
-    }
-  }
-
-  Future<void> _selectedDatet() async {
-    final _pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
-    if (_pickedDate != null) {
-      setState(() {
-        _selectedDateTimet = _pickedDate;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -130,8 +139,14 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     double screenHeight = size.height;
     return Scaffold(
         appBar: AppBar(
-            // title: Text('Annual Leave'),
-            ),
+          // title: Text('Annual Leave'),
+          leading: IconButton(
+            onPressed: () {
+              Get.off(Leave());
+            },
+            icon: Icon(Icons.arrow_back_ios_new),
+          ),
+        ),
         body: MediaQuery(
             data: MediaQuery.of(context),
             child: Container(
@@ -251,7 +266,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                                           ),
                                         ),
                                         onTap: () {
-                                          _selectedDatet();
+                                          _selectedDateTo();
                                         },
                                       ),
                                     ),
@@ -309,5 +324,40 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                 ],
               ),
             )));
+  }
+
+  Future<void> _selectedDatef() async {
+    final _pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDateTimef ?? DateTime.now().add(Duration(days: 4)),
+      // If _selectedDateTimef is null, set initialDate to the day after 3 days from today
+      firstDate: DateTime.now().add(Duration(days: 4)),
+      // Set firstDate to 3 days after today
+      lastDate: DateTime(2100),
+    );
+    if (_pickedDate != null) {
+      setState(() {
+        _selectedDateTimef = _pickedDate;
+      });
+    }
+  }
+
+  Future<void> _selectedDateTo() async {
+    final _pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDateTimet ?? _selectedDateTimef ?? DateTime.now(),
+      firstDate: _selectedDateTimef ?? DateTime.now().add(Duration(days: 4)),
+      lastDate: DateTime(2100),
+    );
+    if (_pickedDate != null) {
+      setState(() {
+        if (_selectedDateTimef != null &&
+            _pickedDate.isBefore(_selectedDateTimef!)) {
+          // Do not update the "to" date if it's before the "from" date
+          return;
+        }
+        _selectedDateTimet = _pickedDate;
+      });
+    }
   }
 }

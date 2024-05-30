@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../Controller/leaveController.dart';
 import '../Controller/loginController.dart';
-
-import 'dart:io';
+import '../Controller/photoController.dart';
+import '../Controller/profileController.dart';
+import 'changePassword.dart';
+import 'homepage.dart';
 
 class ProfilePage extends StatelessWidget {
+  final ProfileController _controller = Get.put(ProfileController());
   LeaveController lontroller = Get.put(LeaveController());
-  final LoginController controller = Get.find();
+  ImageUploadController controller = Get.put(ImageUploadController());
+  final LoginController loginController = Get.find();
   final box = GetStorage();
 
   ProfilePage() {
-    controller.loadProfileData();
+    loginController.loadProfileData();
   }
 
   void _logout() {
@@ -23,132 +28,261 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _radius = 70;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile Page'),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.logout),
-        //     onPressed: _logout,
-        //   ),
-        // ],
-      ),
-      backgroundColor: Colors.white60,
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Obx(
-                () => CircleAvatar(
-                  radius: 85,
-                  backgroundColor: Colors.pinkAccent.withOpacity(0.5),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 80,
-                    backgroundImage: controller.profileImage.value.isEmpty
-                        ? AssetImage('assets/images/default_profile.jpg')
-                        : FileImage(File(controller.profileImage.value))
-                            as ImageProvider,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        child: Center(
-                          child: IconButton(
-                            iconSize: 30.0,
-                            color: Colors.black,
-                            onPressed: () {
-                              controller.pickImage();
-                            },
-                            icon: Icon(Icons.edit),
+    return WillPopScope(
+      onWillPop: () async {
+        Get.off(HomePage());
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Get.off(HomePage());
+            },
+            icon: Icon(Icons.arrow_back_ios_new),
+          ),
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(Icons.logout),
+          //     onPressed: _logout,
+          //   ),
+          // ],
+        ),
+        // backgroundColor: Colors.white60,
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(
+                () => Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    _controller.isLoading.value
+                        ? Center(child: CircularProgressIndicator())
+                        : Container(
+                            height: 200,
+                            width: 400,
+                            child: _controller.imageUrl.value.isEmpty
+                                ? Image.asset(
+                                    fit: BoxFit.fitWidth,
+                                    'assets/images/default_profile.jpg')
+                                : Image.network(
+                                    _controller.imageUrl.value,
+                                    fit: BoxFit.fitWidth,
+                                  ),
                           ),
-                        ),
+                    Positioned(
+                      child: Center(
+                        child: _controller.isLoading.value
+                            ? Center(child: CircularProgressIndicator())
+                            : CircleAvatar(
+                                radius: 85,
+                                backgroundColor: Colors.white,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 80,
+                                  backgroundImage: _controller
+                                          .imageUrl.value.isEmpty
+                                      ? AssetImage(
+                                          'assets/images/default_profile.jpg')
+                                      : NetworkImage(_controller.imageUrl.value)
+                                          as ImageProvider,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        right: 0,
+                                        bottom: 0,
+                                        child: CircleAvatar(
+                                          radius: 25,
+                                          backgroundColor: Colors.white,
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            child: Center(
+                                              child: IconButton(
+                                                iconSize: 30.0,
+                                                color: Colors.black,
+                                                onPressed: () {
+                                                  showModalBottomSheet(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        BottomSheetOptions(
+                                                            _controller),
+                                                  );
+                                                  // _controller.pickImage(
+                                                  //     ImageSource.gallery);
+                                                },
+                                                icon: Icon(Icons.edit),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: Text(
-                'User Information',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.lightGreenAccent),
+              SizedBox(height: 80),
+              // Center(
+              //   child: Text(
+              //     'User Information',
+              //     style: TextStyle(
+              //         fontSize: 24,
+              //         fontWeight: FontWeight.bold,
+              //         color: Colors.black),
+              //   ),
+              // ),
+              SizedBox(height: 30),
+              Obx(
+                () => Text(
+                    style: TextStyle(
+                        // fontStyle: FontStyle.italic,
+                        color: Colors.black,
+                        fontSize: 21),
+                    'Name: ${loginController.userInfo['username']}'),
               ),
-            ),
-            SizedBox(height: 30),
-
-            Obx(
-              () => Text(
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
-                      fontSize: 21),
-                  'Name: ${controller.userInfo['username']}'),
-            ),
-
-            SizedBox(height: 30),
-            Obx(
-              () => Text(
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
-                      fontSize: 21),
-                  'Email: ${controller.userInfo['email']}'),
-            ),
-
-            SizedBox(height: 30),
-            Obx(
-              () => Text(
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
-                      fontSize: 21),
-                  'Employee Id: ${controller.userInfo['employeeId']}'),
-            ),
-            SizedBox(height: 30),
-            Obx(
-              () => Text(
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
-                      fontSize: 21),
-                  'Date Of Birth : ${controller.userInfo['DOB']}'),
-            ),
-            SizedBox(height: 30),
-            Obx(
-              () => Text(
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.lightGreenAccent,
-                      fontSize: 21),
-                  'Address: ${controller.userInfo['address']}'),
-            ),
-
-            SizedBox(
-              height: 30,
-            ),
-            Center(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.lightGreenAccent),
-                onPressed: () {
-                  _logout();
-                  // lontroller.Leave();
-                },
-                child: Text("Log Out"),
+              SizedBox(height: 30),
+              Obx(
+                () => Text(
+                    style: TextStyle(
+                        // fontStyle: FontStyle.italic,
+                        color: Colors.black,
+                        fontSize: 21),
+                    'Email: ${loginController.userInfo['email']}'),
               ),
-            ) // Add more fields as necessary
-          ],
+              SizedBox(height: 30),
+              Obx(
+                () => Text(
+                    style: TextStyle(color: Colors.black, fontSize: 21),
+                    'Employee Id: ${loginController.userInfo['employeeId']}'),
+              ),
+              SizedBox(height: 30),
+              Obx(
+                () => Text(
+                    style: TextStyle(
+                        // fontStyle: FontStyle.italic,
+                        color: Colors.black,
+                        fontSize: 21),
+                    'Date Of Birth : ${loginController.userInfo['DOB']}'),
+              ),
+              SizedBox(height: 30),
+              Obx(
+                () => Text(
+                    style: TextStyle(
+                        // fontStyle: FontStyle.italic,
+                        color: Colors.black,
+                        fontSize: 21),
+                    'Address: ${loginController.userInfo['address']}'),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Center(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.pinkAccent,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        _logout();
+                      },
+                      child: Text("Log Out"),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.off(ChangePassword());
+                    },
+                    child: Text(
+                      'Reset Password',
+                      style: TextStyle(color: Colors.pink),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+class BottomSheetOptions extends StatelessWidget {
+  final ProfileController controller;
+
+  BottomSheetOptions(this.controller);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      child: Column(
+        children: [
+          ListTile(
+            leading: Icon(Icons.photo),
+            title: Text('Choose from Gallery'),
+            onTap: () {
+              controller.pickImage(ImageSource.gallery);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.camera),
+            title: Text('Take a Photo'),
+            onTap: () {
+              controller.pickImage(ImageSource.camera);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// class ProfilePage extends StatelessWidget {
+//   final ProfileController _controller = Get.put(ProfileController());
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Profile Setup')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Obx(() => _controller.imageUrl.isNotEmpty
+//                 ? Image.network(_controller.imageUrl.value)
+//                 : Icon(Icons.person, size: 100)),
+//             SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () => _controller.pickImage(ImageSource.gallery),
+//               child: Text('Choose from Gallery'),
+//             ),
+//             SizedBox(height: 10),
+//             ElevatedButton(
+//               onPressed: () => _controller.pickImage(ImageSource.camera),
+//               child: Text('Take a Photo'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+//   await GetStorage.init();
+//   runApp(GetMaterialApp(home: ProfilePage()));
+// }

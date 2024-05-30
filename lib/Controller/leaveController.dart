@@ -1,59 +1,89 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:get_storage/get_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:project_ui/Controller/loginController.dart';
 
-import 'package:project_ui/pages/leave.dart';
+LoginController loginController = Get.find();
 
-import 'loginController.dart';
+class LeaveController extends GetxController with SingleGetTickerProviderMixin {
+  static const _pageSize = 10;
+  final id = loginController.userInfo['userId'];
 
-class LeaveController extends GetxController {
-  var Info = {}.obs;
-  var isLoading = false.obs;
-  final box = GetStorage();
+  final PagingController<int, dynamic> pagingController =
+      PagingController(firstPageKey: 0);
 
-  var profileImage = ''.obs; // Path to the profile image
-  final LoginController controller = Get.find();
+  var Rlist = <dynamic>[].obs;
+  var Alist = <dynamic>[].obs;
+  var Plist = <dynamic>[].obs;
+  var allLeaves = <dynamic>[].obs;
+  var isloading = false.obs;
 
-  Future<void> Leave() async {
-    isLoading.value = true;
+  late TabController tabController;
+
+  LeaveController() {
+    pagingController.addPageRequestListener((pageKey) {
+      Leave(pageKey);
+    });
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    tabController = TabController(length: 4, vsync: this);
+  }
+
+  Future<void> Leave(int pageKey) async {
+    isloading.value = true;
     try {
       final response = await http.get(
-        Uri.parse('http://10.103.0.142:8000/api/v1/leaveRecord'),
+        Uri.parse(
+            'http://10.103.0.226:8000/api/v1/leaveRecord/$id?page=$pageKey'),
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> jsonData = jsonDecode(response.body)['data'];
-        if (controller.userInfo['userId'] != null) {
-          List<dynamic> filteredData = jsonData
-              .where((data) => data['UserId'] == controller.userInfo['userId'])
-              .toList();
-          Get.toNamed('/leave', arguments: filteredData);
+        print(id);
+        final jsonData = jsonDecode(response.body);
+        final List<dynamic> newItems = jsonData['leaveListByUserId'] ?? [];
+
+        if (pageKey == 0) {
+          Rlist.clear();
+          Alist.clear();
+          Plist.clear();
+          allLeaves.clear();
+        }
+
+        Rlist.addAll(newItems.where((item) => item['status'] == "Rejected"));
+        Alist.addAll(newItems.where((item) => item['status'] == "Approved"));
+        Plist.addAll(newItems.where((item) => item['status'] == "Pending"));
+        allLeaves.addAll(newItems);
+
+        final isLastPage = newItems.length < _pageSize;
+        if (isLastPage) {
+          pagingController.appendLastPage(newItems);
+        } else {
+          CircularProgressIndicator();
+          final nextPageKey = pageKey + 1;
+          pagingController.appendPage(newItems, nextPageKey);
         }
       } else {
-        Get.snackbar('Error', 'Login failed');
+        pagingController.error = 'Failed to load data';
       }
-    } catch (e) {
-      Get.snackbar('Error', 'Network error: $e');
+    } catch (error) {
+      pagingController.error = error;
     } finally {
-      isLoading.value = false;
+      isloading.value = false;
     }
   }
 
-  Future<void> pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      profileImage.value = pickedFile.path;
-      box.write('profileImage', profileImage.value);
-    }
+  @override
+  void onClose() {
+    pagingController.dispose();
+    tabController.dispose();
+    super.onClose();
   }
 }
-//   void loadProfileData() {
-//     Info.value = box.read('userInfo') ?? {};
-//     profileImage.value = box.read('profileImage') ?? '';
-//   }
-// }
