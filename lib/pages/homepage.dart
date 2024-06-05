@@ -1,22 +1,24 @@
 import 'dart:async';
 
+import 'package:CheckMate/pages/sendingrequest.dart';
+import 'package:CheckMate/pages/testProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:project_ui/Controller/loginController.dart';
-import 'package:project_ui/pages/calender.dart';
-import 'package:project_ui/pages/leave.dart';
-import 'package:project_ui/pages/sendingrequest.dart';
-import 'package:project_ui/pages/testProfile.dart';
 
 import '../Controller/locationController.dart';
+import '../Controller/loginController.dart';
 import '../Controller/permissionController.dart';
 import '../Controller/timeController.dart';
+import 'calender.dart';
+import 'leave.dart';
 import 'notipage.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  late final Map<String, dynamic> leaveDetail;
+
+  HomePage({required this.leaveDetail});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -33,13 +35,13 @@ class _HomePageState extends State<HomePage> {
   final LoginController controller = Get.put(LoginController());
   final DateTimeController dateTimeController = Get.put(DateTimeController());
   final LocationController locationController = Get.put(LocationController());
-  var disablein = (DateTime.now().hour >= 7 && DateTime.now().hour <= 10).obs;
+  var disablein = (DateTime.now().hour >= 7 && DateTime.now().hour <= 13).obs;
   var disableout = (DateTime.now().hour >= 14 && DateTime.now().hour <= 17).obs;
 
   final Set<Marker> _marker = {
     const Marker(
       markerId: MarkerId('Times City'),
-      position: LatLng(16.81605105, 96.12887631),
+      position: LatLng(14.81605205, 96.12887631),
       infoWindow: InfoWindow(
         title: 'Times City',
         snippet: 'Office Tower',
@@ -56,10 +58,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     controller.loadProfileData();
-    // Timer(Duration(seconds: 3), () {
-    //   CircularProgressIndicator();
-    //   controller.loadProfileData();
-    // });
+
     permissionController.handleLocationPermission(context);
     _currentTime = DateTime.now();
     _timeStream =
@@ -140,6 +139,15 @@ class _HomePageState extends State<HomePage> {
       onWillPop: () => _onWillPop(context),
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: false,
+          leadingWidth: 60,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 12.0),
+            child: Image.asset(
+              'assets/icons/appIcon.png',
+            ),
+          ),
+          title: Text('Check Mate'),
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 10.0),
@@ -200,7 +208,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-
         body: Stack(
           children: [
             GoogleMap(
@@ -220,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                   strokeColor: Colors.lightBlue,
                   strokeWidth: 1,
                   fillColor: Colors.lightBlue.withOpacity(0.5),
-                  center: LatLng(16.81605105, 96.12887631),
+                  center: LatLng(14.81605105, 96.12887631),
                 )
               },
             ),
@@ -232,7 +239,7 @@ class _HomePageState extends State<HomePage> {
               maxChildSize: 0.55,
               builder: (context, scrollController) {
                 return Container(
-                  color: Colors.white,
+                  color: Colors.amber[200],
                   child: ListView.builder(
                     controller: scrollController,
                     itemCount: 1,
@@ -276,7 +283,8 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 80.0),
+                                              left: 80.0,
+                                            ),
                                             child: SizedBox(
                                               width: screenWidth * 0.21,
                                               child: Text(
@@ -287,8 +295,8 @@ class _HomePageState extends State<HomePage> {
                                                   fontSize: screenWidth * 0.12,
                                                   // Responsive font size
                                                   fontWeight: FontWeight.bold,
-
                                                   fontFamily: 'Epilogue',
+                                                  color: Colors.green,
                                                 ),
                                               ),
                                             ),
@@ -296,8 +304,7 @@ class _HomePageState extends State<HomePage> {
                                           Text(
                                             ':',
                                             style: TextStyle(
-                                                fontSize: screenWidth *
-                                                    0.1), // Responsive font size
+                                                fontSize: screenWidth * 0.1),
                                           ),
                                           SizedBox(
                                             width: screenWidth * 0.29,
@@ -306,30 +313,28 @@ class _HomePageState extends State<HomePage> {
                                               '${snapshot.data!.minute}m',
                                               style: TextStyle(
                                                 fontSize: screenWidth * 0.12,
-                                                // Responsive font size
                                                 fontWeight: FontWeight.bold,
                                                 fontFamily: 'Epilogue',
+                                                color: Colors.green,
                                               ),
                                             ),
                                           ),
-                                          // Text(
-                                          //   ':',
-                                          //   style: TextStyle(
-                                          //       fontSize: screenWidth *
-                                          //           0.1), // Responsive font size
-                                          // ),
-                                          // SizedBox(
-                                          //   width: screenWidth * 0.23,
-                                          //   // Responsive width
-                                          //   child: Text(
-                                          //     '${snapshot.data!.second}s',
-                                          //     style: TextStyle(
-                                          //       fontSize: screenWidth * 0.12,
-                                          //       // Responsive font size
-                                          //       fontWeight: FontWeight.bold,
-                                          //     ),
-                                          //   ),
-                                          // ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: Text(
+                                              snapshot.data!.hour < 12
+                                                  ? 'AM'
+                                                  : 'PM',
+                                              style: TextStyle(
+                                                fontSize: screenWidth * 0.1,
+                                                // Responsive font size
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Epilogue',
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     )
@@ -391,23 +396,12 @@ class _HomePageState extends State<HomePage> {
                                   // Responsive height
                                   child: Obx(
                                     () => ElevatedButton(
-                                      onPressed: (disablein == false ||
-                                              dateTimeController
-                                                      .isButtonDisabled.value ==
-                                                  true)
-                                          ? null
-                                          : () {
-                                              print(disablein);
-
-                                              dateTimeController
-                                                  .sendDateTimeToServer(
-                                                      context);
-                                              locationController
-                                                  .sendLocationToServer(
-                                                      context);
-                                            },
+                                      onPressed: () {
+                                        locationController
+                                            .sendLocationToServerin(context);
+                                      },
                                       child: const Text(
-                                        'Check in  ',
+                                        'Check in ',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 18,
@@ -417,7 +411,10 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       style: ElevatedButton.styleFrom(
                                         elevation: 8,
-                                        backgroundColor: Color(0xFFE1FF3C),
+                                        backgroundColor:
+                                            disablein.value == false
+                                                ? Colors.black
+                                                : Color(0xFFE1FF3C),
                                       ),
                                     ),
                                   ),
@@ -429,17 +426,15 @@ class _HomePageState extends State<HomePage> {
                                   // Responsive height
                                   child: Obx(
                                     () => ElevatedButton(
-                                      onPressed: disableout == false ||
-                                              dateTimeController
-                                                      .isButtonDisabled.value ==
-                                                  true
+                                      onPressed: dateTimeController
+                                                  .isButtonDisabled.value ==
+                                              true
                                           ? null
                                           : () {
-                                              dateTimeController
-                                                  .sendDateTimeToServer(
+                                              print('0');
+                                              locationController
+                                                  .sendLocationToServerout(
                                                       context);
-                                              // locationController
-                                              //     .sendLocationToServer(context);
                                             },
                                       child: Text(
                                         'Check out',
@@ -470,312 +465,72 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-
-        // body: MediaQuery(
-        //   data: MediaQuery.of(context),
-        //   child: SingleChildScrollView(
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         SizedBox(
-        //           width: screenWidth, //1.sw // flutter_screenutil
-        //           child: SingleChildScrollView(
-        //             child: Column(
-        //               crossAxisAlignment: CrossAxisAlignment.start,
-        //               children: [
-        //                 SizedBox(
-        //                   height: 20,
-        //                 ),
-        //                 Padding(
-        //                   padding: const EdgeInsets.symmetric(horizontal: 40),
-        //                   child: Row(
-        //                     children: [
-        //                       Text(
-        //                         formattedDateMonth + ', ',
-        //                         style: TextStyle(
-        //                             fontSize: 35, fontFamily: 'Epilogue'),
-        //                       ),
-        //                       Text(
-        //                         formattedDateDay + ', ',
-        //                         style: TextStyle(
-        //                             fontSize: 35, fontFamily: 'Epilogue'),
-        //                       ),
-        //                       Text(
-        //                         formattedDateYear,
-        //                         style: TextStyle(
-        //                             fontSize: 35, fontFamily: 'Epilogue'),
-        //                       ),
-        //                     ],
-        //                   ),
-        //                 ),
-        //                 SizedBox(
-        //                   height: 20,
-        //                 ),
-        //                 Row(
-        //                   children: [
-        //                     SizedBox(
-        //                       child: StreamBuilder<DateTime>(
-        //                         stream: _timeStream,
-        //                         builder: (context, snapshot) {
-        //                           if (snapshot.hasData) {
-        //                             return Row(
-        //                               children: [
-        //                                 Padding(
-        //                                   padding: const EdgeInsets.symmetric(
-        //                                       horizontal: 30.0),
-        //                                   child: Row(
-        //                                     crossAxisAlignment:
-        //                                         CrossAxisAlignment.start,
-        //                                     mainAxisAlignment:
-        //                                         MainAxisAlignment.start,
-        //                                     children: [
-        //                                       SizedBox(
-        //                                         width: screenWidth * 0.21,
-        //                                         child: Text(
-        //                                           DateFormat('h').format(
-        //                                                   snapshot.data!) +
-        //                                               'h',
-        //                                           style: TextStyle(
-        //                                             fontSize:
-        //                                                 screenWidth * 0.12,
-        //                                             // Responsive font size
-        //                                             fontWeight: FontWeight.bold,
-        //                                             fontFamily: 'Epilogue',
-        //                                           ),
-
-//                                         ),
-        //                                       ),
-        //                                       Text(
-        //                                         ':',
-        //                                         style: TextStyle(
-        //                                             fontSize: screenWidth *
-        //                                                 0.1), // Responsive font size
-        //                                       ),
-        //                                       SizedBox(
-        //                                         width: screenWidth * 0.29,
-        //                                         // Responsive width
-        //                                         child: Text(
-        //                                           '${snapshot.data!.minute}m',
-        //                                           style: TextStyle(
-        //                                             fontSize:
-        //                                                 screenWidth * 0.12,
-        //                                             // Responsive font size
-        //                                             fontWeight: FontWeight.bold,
-        //                                             fontFamily: 'Epilogue',
-        //                                           ),
-        //                                         ),
-        //                                       ),
-        //                                       // Text(
-        //                                       //   ':',
-        //                                       //   style: TextStyle(
-        //                                       //       fontSize: screenWidth *
-        //                                       //           0.1), // Responsive font size
-        //                                       // ),
-        //                                       // SizedBox(
-        //                                       //   width: screenWidth * 0.23,
-        //                                       //   // Responsive width
-        //                                       //   child: Text(
-        //                                       //     '${snapshot.data!.second}s',
-        //                                       //     style: TextStyle(
-        //                                       //       fontSize: screenWidth * 0.12,
-        //                                       //       // Responsive font size
-        //                                       //       fontWeight: FontWeight.bold,
-        //                                       //     ),
-        //                                       //   ),
-        //                                       // ),
-        //                                     ],
-        //                                   ),
-        //                                 )
-        //                               ],
-        //                             );
-        //                           } else if (snapshot.hasError) {
-        //                             return Text('Error : ${snapshot.error}');
-        //                           } else {
-        //                             return SizedBox(
-        //                               height: 50,
-        //                               width: 130,
-        //                               child: Center(
-        //                                 child: Text(
-        //                                   'Loading....',
-        //                                   style: TextStyle(
-        //                                     fontFamily: 'Epilogue',
-        //                                   ),
-        //                                 ),
-        //                               ),
-        //                             );
-        //                           }
-        //                         },
-        //                       ),
-        //                     ),
-        //                   ],
-        //                 ),
-        //                 SizedBox(
-
-//                   height: 10,
-        //                 ),
-        //               ],
-        //             ),
-        //           ),
-        //         ),
-        //         Container(
-        //           height: screenHeight * 0.4,
-        //           width: screenWidth,
-        //           color: Colors.greenAccent.withOpacity(0.6),
-        //           child: GoogleMap(
-        //             initialCameraPosition: kGoogle,
-        //             mapType: MapType.normal,
-        //             myLocationEnabled: true,
-        //             myLocationButtonEnabled: true,
-        //             compassEnabled: true,
-        //             onMapCreated: (GoogleMapController controller) {
-        //               _controller.complete(controller);
-        //             },
-        //             markers: _marker,
-        //             circles: {
-        //               Circle(
-        //                 circleId: CircleId("1"),
-        //                 radius: 789,
-        //                 strokeColor: Colors.lightBlue,
-        //                 strokeWidth: 1,
-        //                 fillColor: Colors.lightBlue.withOpacity(0.5),
-        //                 center: LatLng(16.81605105, 96.12887631),
-        //               )
-        //             },
-        //           ),
-        //         ),
-        //         Padding(
-        //           padding: EdgeInsets.only(top: 40.0),
-        //           child: Row(
-        //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //             children: [
-        //               SizedBox(
-        //                 width: screenWidth * 0.35, // Responsive width
-        //                 height: screenHeight * 0.07, // Responsive height
-        //                 child: ElevatedButton(
-        //                   onPressed: DateTime.now().hour > 16
-        //                       ? null
-        //                       : () {
-        //                           locationController
-        //                               .sendLocationToServer(context);
-        //                         },
-        //                   child: const Text(
-        //                     'Check in  ',
-        //                     style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontSize: 18,
-        //                       fontWeight: FontWeight.bold,
-        //                       fontFamily: 'Epilogue',
-        //                     ),
-        //                   ),
-        //                   style: ElevatedButton.styleFrom(
-        //                     elevation: 8,
-        //                     backgroundColor: Color(0xFFE1FF3C),
-        //                   ),
-        //                 ),
-        //               ),
-        //               SizedBox(
-        //                 width: screenWidth * 0.35, // Responsive width
-        //                 height: screenHeight * 0.07, // Responsive height
-        //                 child: ElevatedButton(
-        //                   onPressed: DateTime.now().hour > 16
-        //                       ? null
-        //                       : () {
-        //                           locationController
-        //                               .sendLocationToServer(context);
-        //                         },
-        //                   child: Text(
-        //                     'Check out',
-        //                     style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontSize: 18,
-        //                       fontWeight: FontWeight.bold,
-        //                       fontFamily: 'Epilogue',
-        //                     ),
-        //                   ),
-        //                   style: ElevatedButton.styleFrom(
-        //                     elevation: 8, backgroundColor: Colors.pinkAccent,
-        //                     // backgroundColor: Color(0xFFE1FF3C),
-        //                   ),
-        //                 ),
-        //               ),
-
-//             ],
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  Get.off(HomePage(), transition: Transition.fadeIn);
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                iconSize: 35,
+                onPressed: () {
+                  Get.off(
+                      HomePage(
+                        leaveDetail: {},
+                      ),
+                      transition: Transition.fadeIn);
                 },
-                child: Image.asset(
+                icon: Image.asset(
                   'assets/icons/home.png',
-                  width: 30,
+                  color: Colors.green,
+                  width: 35,
                 ),
               ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => Leave(),
-                  ));
-                  // Get.off(Leave(), transition: Transition.fadeIn);
+              IconButton(
+                iconSize: 35,
+                onPressed: () {
+                  Get.off(
+                      Leave(
+                        leaveDetail: widget.leaveDetail,
+                      ),
+                      transition: Transition.fadeIn);
                 },
-                child: Image.asset(
+                icon: Image.asset(
                   'assets/icons/leave.png',
-                  width: 30,
                   color: Colors.black,
+                  width: 35,
                 ),
               ),
-              label: 'Leave',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => RequestPage(),
-                  ));
-                  // Get.off(RequestPage(), transition: Transition.fadeIn);
+              IconButton(
+                iconSize: 35,
+                onPressed: () {
+                  Get.off(
+                      RequestPage(
+                        attendanceDetail: {},
+                      ),
+                      transition: Transition.fadeIn);
                 },
-                child: Image.asset(
+                icon: Image.asset(
                   'assets/icons/attendance_history.png',
-                  width: 30,
+                  color: Colors.black,
+                  width: 35,
                 ),
               ),
-              label: 'Attendance',
-            ),
-            BottomNavigationBarItem(
-              icon: InkWell(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => Calender(),
-                  ));
-                  // Get.off(Calender(), transition: Transition.fadeIn);
+              IconButton(
+                iconSize: 35,
+                onPressed: () {
+                  Get.off(
+                      Calender(
+                        leaveDetail: {},
+                      ),
+                      transition: Transition.fadeIn);
                 },
-                child: Icon(
+                icon: Icon(
                   Icons.calendar_month,
                   color: Colors.black,
-                  size: 30,
                 ),
               ),
-              label: 'Calendar',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.green,
-          selectedIconTheme: IconThemeData(
-            size: 35,
-            color: Color(0xFFE1FF3C),
+            ],
           ),
-          onTap: _onItemTapped,
-          type: BottomNavigationBarType.fixed,
         ),
       ),
     );

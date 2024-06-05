@@ -1,47 +1,47 @@
 import 'dart:convert';
 
+import 'package:CheckMate/config_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+import 'loginController.dart';
+
 class AddController extends GetxController {
-  Future<void> fetchAttendanceHistory() async {
+  RxList<dynamic> attendanceData = <dynamic>[].obs;
+  int currentPage = 0;
+  bool hasMoreData = true;
+  bool isLoading = false;
+  LoginController controller = Get.find();
+
+  Future<void> fetchAttendanceHistory({bool isRefresh = false}) async {
+    final id = controller.userInfo['userId'].toString();
+    if (isLoading) return;
+
     try {
-      // Send HTTP GET request to the API endpoint
+      isLoading = true;
+
+      // If refreshing, reset the currentPage and clear the existing data
+      if (isRefresh) {
+        currentPage = 1;
+        attendanceData.clear();
+        hasMoreData = true;
+      }
+
+      // Send HTTP GET request to the API endpoint with the current page
       final response = await http.get(
-        Uri.parse('http://10.103.1.6:8000/api/v1/attendance'),
+        Uri.parse(Config.getAttendanceRouteById + '/$id?page=$currentPage'),
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> jsonData = jsonDecode(response.body)['data'];
+        List<dynamic> jsonData = jsonDecode(response.body)['datas'];
 
-        // Optionally filter the data based on some criteria
-        // For example, if you want to filter by user ID
-        final userId = retrieveUserId();
-        if (userId != null) {
-          List<dynamic> filteredData =
-              jsonData.where((data) => data['UserId'] == userId).toList();
-
-          // Prepare the arguments to pass to the next page
-          Map<String, dynamic> arguments = {
-            'attendanceData': filteredData,
-          };
-          print('hi');
-
-          // Navigate to the attendance page with the filtered data
-          Get.toNamed(
-            '/attendance',
-            arguments: arguments,
-          );
+        // If no more data is returned, set hasMoreData to false
+        if (jsonData.isEmpty) {
+          hasMoreData = false;
         } else {
-          // If no filtering is required, pass all data
-          Get.toNamed(
-            '/addtence',
-            arguments: {
-              'attendanceData': jsonData,
-            },
-          );
+          attendanceData.addAll(jsonData);
+          currentPage++;
         }
       } else {
         // Show a snackbar in case of a connection error
@@ -68,12 +68,58 @@ class AddController extends GetxController {
         margin: EdgeInsets.all(10),
         borderRadius: 10,
       );
+    } finally {
+      isLoading = false;
     }
   }
+}
 
-  dynamic retrieveUserId() {
-    final box = GetStorage();
-    Map<String, dynamic> userInfo = box.read('userInfo') ?? {};
-    return userInfo['userId'];
+// In your widget where you want to display the data
+class AttendancePage extends StatefulWidget {
+  @override
+  _AttendancePageState createState() => _AttendancePageState();
+}
+
+class _AttendancePageState extends State<AttendancePage> {
+  final AddController addController = Get.put(AddController());
+
+  @override
+  void initState() {
+    super.initState();
+    addController.fetchAttendanceHistory();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Attendance History')),
+      body: Obx(() {
+        if (addController.attendanceData.isEmpty && addController.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        return NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent &&
+                addController.hasMoreData &&
+                !addController.isLoading) {
+              addController.fetchAttendanceHistory();
+            }
+            return true;
+          },
+          child: ListView.builder(
+            itemCount: addController.attendanceData.length,
+            itemBuilder: (context, index) {
+              final item = addController.attendanceData[index];
+              return ListTile(
+                title: Text(item['leaveType']),
+                subtitle: Text(item['createdAt']), // Adjust as needed
+              );
+            },
+          ),
+        );
+      }),
+    );
   }
 }

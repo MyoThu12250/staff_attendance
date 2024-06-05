@@ -1,17 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:CheckMate/config_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:project_ui/Controller/loginController.dart';
+
+import 'loginController.dart';
 
 LoginController loginController = Get.find();
 
 class LeaveController extends GetxController with SingleGetTickerProviderMixin {
   static const _pageSize = 10;
   final id = loginController.userInfo['userId'];
+  final acount = loginController.userInfo['annualLeave'];
+  final mcount = loginController.userInfo['medicalLeave'];
 
   final PagingController<int, dynamic> pagingController =
       PagingController(firstPageKey: 0);
@@ -41,14 +45,13 @@ class LeaveController extends GetxController with SingleGetTickerProviderMixin {
     isloading.value = true;
     try {
       final response = await http.get(
-        Uri.parse(
-            'http://10.103.0.226:8000/api/v1/leaveRecord/$id?page=$pageKey'),
+        Uri.parse(Config.getLeaveRecordByIdRoute + '/$id?page=$pageKey'),
       );
-
+      print(response.statusCode);
       if (response.statusCode == 200) {
         print(id);
         final jsonData = jsonDecode(response.body);
-        final List<dynamic> newItems = jsonData['leaveListByUserId'] ?? [];
+        final List<dynamic> newItems = jsonData['datas'] ?? [];
 
         if (pageKey == 0) {
           Rlist.clear();

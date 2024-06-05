@@ -1,66 +1,49 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import 'datecontroller.dart';
-
-void main() {
-  runApp(MaterialApp(
-    home: DatePickerScreen(),
-  ));
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
 }
 
-class DatePickerScreen extends StatelessWidget {
-  final DateController dateController = Get.put(DateController());
+class _MyAppState extends State<MyApp> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Received a message in the foreground!');
+      // Handle foreground messages
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Opened a message in the background!');
+      // Handle background messages
+    });
+
+    _firebaseMessaging.requestPermission();
+    _firebaseMessaging.getToken().then((String? token) {
+      assert(token != null);
+      print("Firebase Messaging Token: $token");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Leave Form'),
+          title: Text('FCM Demo'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Obx(() => ListTile(
-                    title: Text(
-                        'From Date: ${dateController.fromDate.value.toLocal()}'
-                            .split(' ')[0]),
-                    trailing: Icon(Icons.calendar_today),
-                    onTap: () async {
-                      DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: dateController.fromDate.value,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2101),
-                      );
-                      if (picked != null &&
-                          picked != dateController.fromDate.value)
-                        dateController.setFromDate(picked);
-                    },
-                  )),
-              Obx(() => ListTile(
-                    title: Text(
-                        'To Date: ${dateController.toDate.value.toLocal()}'
-                            .split(' ')[0]),
-                    trailing: Icon(Icons.calendar_today),
-                    onTap: () async {
-                      DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: dateController.toDate.value,
-                        firstDate: dateController.fromDate.value,
-                        lastDate: DateTime(2101),
-                      );
-                      if (picked != null &&
-                          picked != dateController.toDate.value)
-                        dateController.setToDate(picked);
-                    },
-                  )),
-            ],
-          ),
+        body: Center(
+          child: Text('Push Notifications with FCM'),
         ),
       ),
     );
   }
+}
+
+void main() {
+  runApp(MyApp());
 }

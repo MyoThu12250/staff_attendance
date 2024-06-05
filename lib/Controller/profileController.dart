@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:CheckMate/Controller/loginController.dart';
+import 'package:CheckMate/config_route.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,12 +12,15 @@ import 'package:image_picker/image_picker.dart';
 class ProfileController extends GetxController {
   var imageUrl = ''.obs;
   var isLoading = false.obs;
-
+  var url = ''.obs;
   final box = GetStorage();
+  LoginController controller = Get.put(LoginController());
 
   @override
   void onInit() {
+    controller.loadProfileData();
     super.onInit();
+    getURl();
     String storedUrl = box.read('profile_image_url') ?? '';
     if (storedUrl.isNotEmpty) {
       imageUrl.value = storedUrl;
@@ -63,21 +68,49 @@ class ProfileController extends GetxController {
   }
 
   Future<void> sendImageUrlToApi(String url) async {
+    final id = controller.userInfo['userId'].toString();
     box.write('profile_image_url', url);
     isLoading = true.obs;
     try {
       final response = await http.post(
-        Uri.parse('http://10.103.0.142:8000/api/v1/updateProfileImage'),
-        body: {'imageUrl': url, 'id': '15'},
+        Uri.parse(Config.updateProfileRoute),
+        body: {'imageUrl': url, 'id': id},
       );
-
       if (response.statusCode == 200) {
-        Get.snackbar('Success', 'Profile image updated successfully');
+        getURl();
+        Get.snackbar(
+          'Success',
+          'Profile image updated successfully',
+          backgroundColor: Colors.lightGreenAccent,
+        );
       } else {
         Get.snackbar('Error', 'Failed to update profile image');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to send image URL to API: $e');
+    }
+  }
+
+  Future<void> getURl() async {
+    final ids = controller.userInfo['userId'].toString();
+    isLoading.value = true;
+    try {
+      final response = await http.post(
+        Uri.parse(Config.getUpdateProfileRoute),
+        body: {'id': ids},
+      );
+
+      if (response.statusCode == 202) {
+        url.value = response.body;
+      } else {
+        Get.snackbar('Error', 'Failed to Load Image',
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to Get Image,Check Your Connection',
+          backgroundColor: Colors.red);
+    } finally {
+      isLoading.value = false;
     }
   }
 }

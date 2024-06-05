@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'annualLeave.dart';
 import 'medicalLeave.dart';
@@ -18,15 +19,16 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
   Widget build(BuildContext context) {
     var leaveType = widget.leaveDetail['leaveType'];
     var status = widget.leaveDetail['status'];
-    var date = widget.leaveDetail['createdAt'];
+    var date = DateTime.parse(widget.leaveDetail['createdAt']);
     var reason = widget.leaveDetail['reasons'];
     var from = widget.leaveDetail['from'];
     var to = widget.leaveDetail['to'];
+    var formattedDate = DateFormat('yyyy-MM-dd').format(date);
     IconData getIcon(String status) {
       switch (status.toLowerCase()) {
         case 'pending':
           return Icons.pending;
-        case 'accepted':
+        case 'approved':
           return Icons.check_circle;
         case 'rejected':
           return Icons.cancel;
@@ -39,7 +41,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
       switch (status.toLowerCase()) {
         case 'pending':
           return Colors.grey;
-        case 'accepted':
+        case 'approved':
           return Colors.green;
         case 'rejected':
           return Colors.red;
@@ -135,7 +137,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 50.0),
                       child: Text(
-                        date,
+                        formattedDate,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
@@ -161,15 +163,6 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         ),
                       ],
                     ),
-                    // Text(
-                    //   maxLines: 2,
-                    //   overflow: TextOverflow.ellipsis,
-                    //   'From- ${from}  To- ${to}',
-                    //   style: TextStyle(
-                    //     fontSize: 16,
-                    //     color: Colors.grey,
-                    //   ),
-                    // ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 50.0),
                       child: Row(
@@ -210,8 +203,12 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         onPressed: () {
                           leaveType.toLowerCase().trim() ==
                                   'Medical Leave'.toLowerCase().trim()
-                              ? Get.off(MedicalLeave())
-                              : Get.off(AnnualLeave());
+                              ? Get.off(MedicalLeave(
+                                  isedit: true,
+                                  leaveDetail: widget.leaveDetail))
+                              : Get.off(AnnualLeave(
+                                  isedit: true,
+                                  leaveDetail: widget.leaveDetail));
                         },
                         child: Text(
                           'Edit',
@@ -263,119 +260,3 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
     );
   }
 }
-
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-//
-// import '../Controller/leaveController.dart';
-// import 'annualLeave.dart';
-// import 'leave.dart';
-// import 'medicalLeave.dart';
-//
-// class LeaveDetailPage extends StatefulWidget {
-//   int? index;
-//
-//   LeaveDetailPage({
-//     Key? key,
-//     this.index,
-//   }) : super(key: key);
-//
-//   @override
-//   State<LeaveDetailPage> createState() => _LeaveDetailPageState();
-// }
-//
-// class _LeaveDetailPageState extends State<LeaveDetailPage> {
-//   LeaveController c = Get.find();
-//
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     leaveType = c.Rlist[widget.index!]['leaveType'];
-//     status = c.Rlist[widget.index!]['status'];
-//     reason = c.Rlist[widget.index!]['reasons'];
-//     date = c.Rlist[widget.index!]['createdAt'].toString();
-//     from = c.Rlist[widget.index!]['from'].toString();
-//     to = c.Rlist[widget.index!]['to'].toString();
-//     print(widget.index);
-//     print(leaveType);
-//     print(status);
-//     print(reason);
-//     print(date);
-//     print(from);
-//     print(to);
-//   }
-//
-//   var leaveType;
-//   var status;
-//   var reason;
-//   var date;
-//   var from;
-//   var to;
-//
-//   IconData getIcon(String status) {
-//     switch (status.toLowerCase()) {
-//       case 'pending':
-//         return Icons.pending;
-//       case 'accepted':
-//         return Icons.check_circle;
-//       case 'rejected':
-//         return Icons.cancel;
-//       default:
-//         return Icons.error;
-//     }
-//   }
-//
-//   Color getColor(String status) {
-//     switch (status.toLowerCase()) {
-//       case 'pending':
-//         return Colors.grey;
-//       case 'accepted':
-//         return Colors.green;
-//       case 'rejected':
-//         return Colors.red;
-//       default:
-//         return Colors.transparent;
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return WillPopScope(
-//       onWillPop: () async {
-//         Get.off(Leave());
-//         return false;
-//       },
-//       child: Scaffold(
-//         appBar: AppBar(
-//           leading: IconButton(
-//             onPressed: () {
-//               Get.off(Leave());
-//             },
-//             icon: Icon(Icons.arrow_back_ios_new),
-//           ),
-//         ),
-//
-//     );
-//   }
-// }
-// body: Padding(
-// padding: const EdgeInsets.all(16.0),
-// child: Column(
-// crossAxisAlignment: CrossAxisAlignment.start,
-// children: [
-// Text('Leave Type: ${leaveType}', style: TextStyle(fontSize: 20)),
-// SizedBox(height: 10),
-// Text('Reason: ${reason}', style: TextStyle(fontSize: 20)),
-// SizedBox(height: 10),
-// Text('From: ${from}', style: TextStyle(fontSize: 20)),
-// SizedBox(height: 10),
-// Text('To: ${to}', style: TextStyle(fontSize: 16)),
-// Text('To: ${date}', style: TextStyle(fontSize: 16)),
-// SizedBox(height: 10),
-// Text('Leave Type: ${widget.leaveDetail['leaveType']}',
-// style: TextStyle(fontSize: 16)),
-// // Add more details as necessary
-// ],
-// ),
-// ),

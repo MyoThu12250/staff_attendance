@@ -1,9 +1,10 @@
+import 'package:CheckMate/pages/sendingrequest.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:project_ui/pages/sendingrequest.dart';
+import 'package:intl/intl.dart';
 
 import '../Controller/leaveController.dart';
 import '../pages/annualLeave.dart';
@@ -13,19 +14,23 @@ import 'calender.dart';
 import 'homepage.dart';
 
 class Leave extends StatefulWidget {
+  late final Map<String, dynamic> leaveDetail;
+
+  Leave({required this.leaveDetail});
+
   @override
   State<Leave> createState() => _LeaveState();
 }
 
-String status = 'Pending';
+// String status = 'Pending';
 
-final String leaveType = 'Annual Leave';
+// final String leaveType = 'Annual Leave';
 
 IconData getIcon(String status) {
   switch (status.toLowerCase()) {
     case 'pending':
       return Icons.pending;
-    case 'accepted':
+    case 'approved':
       return Icons.check_circle;
     case 'rejected':
       return Icons.cancel;
@@ -38,7 +43,7 @@ Color getColor(String status) {
   switch (status.toLowerCase()) {
     case 'pending':
       return Colors.grey;
-    case 'accepted':
+    case 'approved':
       return Colors.green;
     case 'rejected':
       return Colors.red;
@@ -64,7 +69,9 @@ class _LeaveState extends State<Leave> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.off(HomePage());
+        Get.off(HomePage(
+          leaveDetail: {},
+        ));
         return false;
       },
       child: Scaffold(
@@ -73,7 +80,7 @@ class _LeaveState extends State<Leave> {
           title: Text('Leave History'),
         ),
         body: _controller.isloading == true
-            ? CircularProgressIndicator()
+            ? Center(child: CircularProgressIndicator())
             : Column(
                 children: [
                   Row(
@@ -126,24 +133,14 @@ class _LeaveState extends State<Leave> {
                 Icons.medication,
                 color: Colors.pink,
               ),
-              labelWidget: Text('Leave Details'),
+              labelWidget: Text('Medical leave'),
               onTap: () {
                 Get.off(
-                    LeaveDetailPage(
+                    MedicalLeave(
+                      isedit: false,
                       leaveDetail: {},
                     ),
                     transition: Transition.fadeIn);
-              },
-            ),
-            SpeedDialChild(
-              elevation: 0,
-              child: Icon(
-                Icons.medication,
-                color: Colors.pink,
-              ),
-              labelWidget: Text('Medical leave'),
-              onTap: () {
-                Get.off(MedicalLeave(), transition: Transition.fadeIn);
               },
             ),
             SpeedDialChild(
@@ -154,7 +151,10 @@ class _LeaveState extends State<Leave> {
               ),
               labelWidget: Text('Annual leave'),
               onTap: () {
-                Get.off(AnnualLeave());
+                Get.off(AnnualLeave(
+                  isedit: false,
+                  leaveDetail: {},
+                ));
               },
             ),
           ],
@@ -167,7 +167,11 @@ class _LeaveState extends State<Leave> {
               IconButton(
                 iconSize: 35,
                 onPressed: () {
-                  Get.off(HomePage(), transition: Transition.fadeIn);
+                  Get.off(
+                      HomePage(
+                        leaveDetail: {},
+                      ),
+                      transition: Transition.fadeIn);
                 },
                 icon: Image.asset(
                   'assets/icons/home.png',
@@ -178,7 +182,11 @@ class _LeaveState extends State<Leave> {
               IconButton(
                 iconSize: 35,
                 onPressed: () {
-                  Get.off(Leave(), transition: Transition.fadeIn);
+                  Get.off(
+                      Leave(
+                        leaveDetail: widget.leaveDetail,
+                      ),
+                      transition: Transition.fadeIn);
                 },
                 icon: Image.asset(
                   'assets/icons/leave.png',
@@ -189,7 +197,11 @@ class _LeaveState extends State<Leave> {
               IconButton(
                 iconSize: 35,
                 onPressed: () {
-                  Get.off(RequestPage(), transition: Transition.fadeIn);
+                  Get.off(
+                      RequestPage(
+                        attendanceDetail: {},
+                      ),
+                      transition: Transition.fadeIn);
                 },
                 icon: Image.asset(
                   'assets/icons/attendance_history.png',
@@ -200,7 +212,11 @@ class _LeaveState extends State<Leave> {
               IconButton(
                 iconSize: 35,
                 onPressed: () {
-                  Get.off(Calender(), transition: Transition.fadeIn);
+                  Get.off(
+                      Calender(
+                        leaveDetail: {},
+                      ),
+                      transition: Transition.fadeIn);
                 },
                 icon: Icon(
                   Icons.calendar_month,
@@ -232,8 +248,11 @@ class LeaveListView extends StatelessWidget {
               Get.to(LeaveDetailPage(leaveDetail: item));
             },
             child: ListTile(
-              title: Text(item['reasons']),
-              subtitle: Text('Status: ${item['status']}'),
+              title: Text(item['leaveType']),
+              subtitle: Text(
+                DateFormat('yyyy-MM-dd')
+                    .format(DateTime.parse(item['createdAt'])),
+              ),
               trailing: Icon(
                 getIcon(item['status']),
                 color: getColor(item['status']),
@@ -243,49 +262,37 @@ class LeaveListView extends StatelessWidget {
         ),
       );
     } else {
-      return Obx(() {
-        return ListView.builder(
-          itemCount: leaves.length,
-          itemBuilder: (context, index) {
-            final item = leaves[index];
-            return GestureDetector(
-              onTap: () {
-                Get.to(LeaveDetailPage(leaveDetail: item));
-              },
-              child: ListTile(
-                title: Text(item['reasons']),
-                subtitle: Text('Status: ${item['status']}'),
-                trailing: item['status'].toString() == 'Pending'
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              leaveType.toLowerCase().trim() ==
-                                      'Medical Leave'.toLowerCase().trim()
-                                  ? Get.off(MedicalLeave())
-                                  : Get.off(AnnualLeave());
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.green,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
-                      )
-                    : null,
-              ),
-            );
-          },
-        );
-      });
+      return Obx(
+        () {
+          return ListView.builder(
+            itemCount: leaves.length,
+            itemBuilder: (context, index) {
+              final item = leaves[index];
+              return GestureDetector(
+                onTap: () {
+                  Get.to(LeaveDetailPage(leaveDetail: item));
+                },
+                child: ListTile(
+                  title: Text(item['leaveType']),
+                  subtitle: Text(
+                    DateFormat('yyyy-MM-dd').format(
+                      DateTime.parse(
+                        item['createdAt'],
+                      ),
+                    ),
+                  ),
+                  trailing: Icon(
+                    getIcon(item['status']),
+                    color: getColor(
+                      item['status'],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
     }
   }
 }

@@ -1,7 +1,9 @@
+import 'package:CheckMate/pages/sendingrequest.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:project_ui/pages/sendingrequest.dart';
+
+import '../Controller/leaveController.dart';
 
 class RequestPageForm extends StatefulWidget {
   const RequestPageForm({super.key});
@@ -11,19 +13,18 @@ class RequestPageForm extends StatefulWidget {
 }
 
 class _RequestPageFormState extends State<RequestPageForm> {
+  DateTime? _selectedDateTime;
   TextEditingController _name = TextEditingController();
-  DateTime ? _date ;
-  TextEditingController _reason = TextEditingController();
+  DateTime? _date;
 
+  TextEditingController _reason = TextEditingController();
+  String dropdownValue = 'Check In';
 
   bool _validate() {
- final String name = _name.text;
+    final String name = _name.text;
     final String reason = _reason.text;
- final date = DateFormat('yyyy-MM-dd').format(_date!);
-    if (name.isNotEmpty &&
-        date.isNotEmpty &&
-        reason.isNotEmpty
-       ) {
+    final date = DateFormat('yyyy-MM-dd').format(_date!);
+    if (name.isNotEmpty && date.isNotEmpty && reason.isNotEmpty) {
       return true;
     } else {
       showDialog(
@@ -45,6 +46,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
       return false;
     }
   }
+
   Future<void> _selectedDatef() async {
     final _pickedDate = await showDatePicker(
         context: context,
@@ -57,14 +59,47 @@ class _RequestPageFormState extends State<RequestPageForm> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    final Rcount = loginController.userInfo['attendanceLeave'];
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Get.off(
+                RequestPage(
+                  attendanceDetail: {},
+                ),
+              );
+            },
+            icon: Icon(Icons.arrow_back_ios_new),
+          ),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(
+                height: 20,
+              ),
+              Rcount != 0
+                  ? Text(
+                      'You have ${Rcount} attempt to request',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    )
+                  : Text(
+                      'You have nothing attempts to request',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.red,
+                      ),
+                    ),
+              SizedBox(
+                height: 80,
+              ),
               Center(
                 child: Text(
                   'Attendance Request Form',
@@ -77,17 +112,19 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 55.0),
-                        child: Icon(Icons.person),
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
+                        child: Icon(Icons.access_time),
                       ),
                       // SizedBox(),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50.0),
-                        child: Icon(Icons.calendar_month),
-                      ),
-                      // SizedBox(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50.0),
+                        padding: const EdgeInsets.symmetric(vertical: 80.0),
                         child: Icon(Icons.my_library_books),
                       ),
                     ],
@@ -95,48 +132,52 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50.0),
-                        child: SizedBox(
-                          width: 300,
-                          child: TextField(
-                            controller: _name,
-                            decoration: InputDecoration(
-                              labelText: 'Name',
-                              hintText: 'Enter name',
-                              border: OutlineInputBorder(),
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
+                        child: Center(
+                          child: SizedBox(
+                            width: 150,
+                            child: DropdownButton<String>(
+                              value: dropdownValue,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownValue = newValue!;
+                                });
+                              },
+                              items: <String>['Check In', 'Check Out', 'Both']
+                                  .map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: SizedBox(
-
-                          width:300,
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Container(
+                          width: 300,
                           child: TextField(
+                            onTap: () {
+                              _selectedDatef();
+                            },
                             controller: TextEditingController(
-                              text: _date != null
-                                  ? '${_date!.day}/${_date!.month}/${_date!.year}'
+                              text: _selectedDateTime != null
+                                  ? '${_selectedDateTime!.day}/${_selectedDateTime!.month}/${_selectedDateTime!.year}'
                                   : null,
                             ),
                             readOnly: true,
                             decoration: InputDecoration(
+                              labelText: 'Date',
+                              suffixIcon: Icon(Icons.calendar_month),
                               border: OutlineInputBorder(),
-                              labelText: 'From',
-                              hintText: 'From',
-                              suffixIcon: Icon(
-                                Icons.date_range,
-                                size: 20,
-                              ),
                             ),
-                            onTap: () {
-                              _selectedDatef();
-                            },
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
                         child: SizedBox(
                           width: 300,
                           height: 120,
@@ -155,9 +196,6 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 20,
-              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     elevation: 6, backgroundColor: Color(0xFFE1FF3C)),
@@ -165,9 +203,13 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   'Submit',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                onPressed: () {
-               _validate();
-                },
+                onPressed: Rcount == 0
+                    ? null
+                    : () {
+                        Get.off(RequestPage(
+                          attendanceDetail: {},
+                        ));
+                      },
               ),
             ],
           ),

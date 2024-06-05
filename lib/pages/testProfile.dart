@@ -10,47 +10,54 @@ import '../Controller/profileController.dart';
 import 'changePassword.dart';
 import 'homepage.dart';
 
-class ProfilePage extends StatelessWidget {
-  final ProfileController _controller = Get.put(ProfileController());
-  LeaveController lontroller = Get.put(LeaveController());
-  ImageUploadController controller = Get.put(ImageUploadController());
-  final LoginController loginController = Get.find();
-  final box = GetStorage();
-
+class ProfilePage extends StatefulWidget {
   ProfilePage() {
     loginController.loadProfileData();
   }
 
-  void _logout() {
-    box.erase();
-    Get.offAllNamed('/');
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _controller.getURl();
   }
+
+  final ProfileController _controller = Get.put(ProfileController());
+
+  LeaveController lontroller = Get.put(LeaveController());
+
+  ImageUploadController controller = Get.put(ImageUploadController());
+
+  final LoginController loginController = Get.find();
+
+  final box = GetStorage();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.off(HomePage());
+        Get.off(HomePage(
+          leaveDetail: {},
+        ));
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              Get.off(HomePage());
+              Get.off(HomePage(leaveDetail: {}));
             },
             icon: Icon(Icons.arrow_back_ios_new),
           ),
-          // actions: [
-          //   IconButton(
-          //     icon: Icon(Icons.logout),
-          //     onPressed: _logout,
-          //   ),
-          // ],
         ),
         // backgroundColor: Colors.white60,
-        body: Padding(
-          padding: EdgeInsets.all(16.0),
+        body: Container(
+          color: Colors.blueGrey[300],
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -63,12 +70,12 @@ class ProfilePage extends StatelessWidget {
                         : Container(
                             height: 200,
                             width: 400,
-                            child: _controller.imageUrl.value.isEmpty
+                            child: _controller.url.value.isEmpty
                                 ? Image.asset(
                                     fit: BoxFit.fitWidth,
                                     'assets/images/default_profile.jpg')
                                 : Image.network(
-                                    _controller.imageUrl.value,
+                                    _controller.url.value,
                                     fit: BoxFit.fitWidth,
                                   ),
                           ),
@@ -82,11 +89,10 @@ class ProfilePage extends StatelessWidget {
                                 child: CircleAvatar(
                                   backgroundColor: Colors.grey,
                                   radius: 80,
-                                  backgroundImage: _controller
-                                          .imageUrl.value.isEmpty
+                                  backgroundImage: _controller.url.value.isEmpty
                                       ? AssetImage(
                                           'assets/images/default_profile.jpg')
-                                      : NetworkImage(_controller.imageUrl.value)
+                                      : NetworkImage(_controller.url.value)
                                           as ImageProvider,
                                   child: Stack(
                                     children: [
@@ -128,56 +134,79 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 80),
-              // Center(
-              //   child: Text(
-              //     'User Information',
-              //     style: TextStyle(
-              //         fontSize: 24,
-              //         fontWeight: FontWeight.bold,
-              //         color: Colors.black),
-              //   ),
-              // ),
               SizedBox(height: 30),
-              Obx(
-                () => Text(
-                    style: TextStyle(
-                        // fontStyle: FontStyle.italic,
-                        color: Colors.black,
-                        fontSize: 21),
-                    'Name: ${loginController.userInfo['username']}'),
-              ),
-              SizedBox(height: 30),
-              Obx(
-                () => Text(
-                    style: TextStyle(
-                        // fontStyle: FontStyle.italic,
-                        color: Colors.black,
-                        fontSize: 21),
-                    'Email: ${loginController.userInfo['email']}'),
-              ),
-              SizedBox(height: 30),
-              Obx(
-                () => Text(
-                    style: TextStyle(color: Colors.black, fontSize: 21),
-                    'Employee Id: ${loginController.userInfo['employeeId']}'),
-              ),
-              SizedBox(height: 30),
-              Obx(
-                () => Text(
-                    style: TextStyle(
-                        // fontStyle: FontStyle.italic,
-                        color: Colors.black,
-                        fontSize: 21),
-                    'Date Of Birth : ${loginController.userInfo['DOB']}'),
-              ),
-              SizedBox(height: 30),
-              Obx(
-                () => Text(
-                    style: TextStyle(
-                        // fontStyle: FontStyle.italic,
-                        color: Colors.black,
-                        fontSize: 21),
-                    'Address: ${loginController.userInfo['address']}'),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Text(
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 21,
+                          fontFamily: 'Epilogue',
+                        ),
+                        'Name: ${loginController.userInfo['username']}',
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Text(
+                          style: TextStyle(
+                            // fontStyle: FontStyle.italic,
+                            color: Colors.black,
+                            fontSize: 21,
+                            fontFamily: 'Epilogue',
+                          ),
+                          'Email: ${loginController.userInfo['email']}'),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Text(
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 21,
+                            fontFamily: 'Epilogue',
+                          ),
+                          'Employee Id: ${loginController.userInfo['employeeId']}'),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Text(
+                          style: TextStyle(
+                            // fontStyle: FontStyle.italic,
+                            color: Colors.black,
+                            fontSize: 21,
+                            fontFamily: 'Epilogue',
+                          ),
+                          'Date Of Birth : ${loginController.userInfo['DOB']}'),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Text(
+                          style: TextStyle(
+                            // fontStyle: FontStyle.italic,
+                            color: Colors.black,
+                            fontSize: 21,
+                            fontFamily: 'Epilogue',
+                          ),
+                          'Address: ${loginController.userInfo['address']}'),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 30,
@@ -192,9 +221,14 @@ class ProfilePage extends StatelessWidget {
                         foregroundColor: Colors.white,
                       ),
                       onPressed: () {
-                        _logout();
+                        loginController.logout();
                       },
-                      child: Text("Log Out"),
+                      child: Text(
+                        "Log Out",
+                        style: TextStyle(
+                          fontFamily: 'Epilogue',
+                        ),
+                      ),
                     ),
                   ),
                   TextButton(
@@ -203,7 +237,10 @@ class ProfilePage extends StatelessWidget {
                     },
                     child: Text(
                       'Reset Password',
-                      style: TextStyle(color: Colors.pink),
+                      style: TextStyle(
+                        color: Colors.pink,
+                        fontFamily: 'Epilogue',
+                      ),
                     ),
                   ),
                 ],
@@ -248,41 +285,3 @@ class BottomSheetOptions extends StatelessWidget {
     );
   }
 }
-
-// class ProfilePage extends StatelessWidget {
-//   final ProfileController _controller = Get.put(ProfileController());
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Profile Setup')),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Obx(() => _controller.imageUrl.isNotEmpty
-//                 ? Image.network(_controller.imageUrl.value)
-//                 : Icon(Icons.person, size: 100)),
-//             SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () => _controller.pickImage(ImageSource.gallery),
-//               child: Text('Choose from Gallery'),
-//             ),
-//             SizedBox(height: 10),
-//             ElevatedButton(
-//               onPressed: () => _controller.pickImage(ImageSource.camera),
-//               child: Text('Take a Photo'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp();
-//   await GetStorage.init();
-//   runApp(GetMaterialApp(home: ProfilePage()));
-// }

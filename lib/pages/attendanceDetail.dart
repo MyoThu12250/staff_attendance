@@ -1,181 +1,127 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:project_ui/pages/sendingrequest.dart';
+import 'package:intl/intl.dart';
 
-class AttendanceHistoryDetail extends StatefulWidget {
-  const AttendanceHistoryDetail({super.key});
+class AttendanceDetailPage extends StatelessWidget {
+  final Map<String, dynamic> attendanceDetail;
 
-  @override
-  State<AttendanceHistoryDetail> createState() =>
-      _AttendanceHistoryDetailState();
-}
+  AttendanceDetailPage({required this.attendanceDetail});
 
-class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
   @override
   Widget build(BuildContext context) {
-    // String? inT;
-    String? inT = '9:30';
-    String? outT = '3:30';
-    // String? outT;
-    // String? Lin = '1:00';
-    String? Lin;
-    // String? Eout = '1:00';
-    String? Eout;
-    return WillPopScope(
-      onWillPop: () async {
-        Get.off(RequestPage());
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Get.off(RequestPage());
-            },
-            icon: Icon(Icons.arrow_back_ios_new),
-          ),
-        ),
-        body: Column(
+    var inTime = attendanceDetail['in_time'];
+    var outTime = attendanceDetail['out_time'];
+    var lateTime = attendanceDetail['late_in_time'];
+    var earlyTime = attendanceDetail['early_out_time'];
+    var date = DateTime.parse(attendanceDetail['date']);
+    var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Attendance Detail'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 40.0),
-                                        child: Text(
-                                          'Date :',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        'In-time :',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 40.0),
-                                        child: Text(
-                                          'Out-time :',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        'Early-in :',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 40.0),
-                                        child: Text(
-                                          'Early-out :',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: 240,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 40.0),
-                                        child: Text(
-                                          '12/2/2024',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        '${inT}AM',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 40.0),
-                                        child: Text(
-                                          '${outT}PM',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        Lin == null ? '-' : '${Lin}',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 40.0),
-                                        child: Text(
-                                          Eout == null ? '-' : '${Eout}',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    color: Colors.black,
-                    thickness: 0.5,
-                  );
-                },
-                itemCount: 1,
-              ),
-            )
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Date',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  formattedDate.toString(),
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'In Time',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  inTime.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Out Time',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  outTime.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Early Out Time',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  earlyTime.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Late Out Time',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  lateTime.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

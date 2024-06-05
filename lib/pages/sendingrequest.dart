@@ -1,354 +1,275 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-// import 'package:get/get.dart';
-// import 'package:project_ui/Controller/attendanceController.dart';
-// import 'package:project_ui/pages/calender.dart';
-// import 'package:project_ui/pages/homepage.dart';
-// import 'package:project_ui/pages/leave.dart';
-// import 'package:project_ui/pages/requestPageForm.dart';
-//
-// class RequestPage extends StatefulWidget {
-//   const RequestPage({super.key});
-//
-//   @override
-//   State<RequestPage> createState() => _RequestPageState();
-// }
-//
-// class _RequestPageState extends State<RequestPage> {
-//   final AddController controller = Get.put(AddController());
-//
-//   void initState() {
-//     super.initState();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final Map<String, dynamic>? arguments =
-//         Get.arguments as Map<String, dynamic>?;
-//
-//     final List<dynamic> filteredData = arguments?['filteredData'] ?? [];
-//     // int _countLeft = 0; // attendance count
-//     int _selectedIndex = 2;
-//
-//     void _onItemTapped(int index) {
-//       setState(() {
-//         _selectedIndex = index;
-//       });
-//     }
-//
-//     return WillPopScope(
-//       onWillPop: () async {
-//         Get.off(HomePage());
-//         return false;
-//       },
-//       child: Scaffold(
-//         appBar: AppBar(
-//           centerTitle: true,
-//           title: Text('Attendance History'),
-//         ),
-//         body: Column(
-//           children: [
-//             Expanded(
-//               child: ListView.builder(
-//                 itemCount: filteredData.length,
-//                 itemBuilder: (context, index) {
-//                   var item = filteredData[index];
-//                   return Expanded(
-//                     child: Column(
-//                       children: [
-//                         Padding(
-//                           padding: const EdgeInsets.symmetric(
-//                               vertical: 10.0, horizontal: 10),
-//                           child: ListTile(
-//                             title: Column(
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               children: [
-//                                 Text('In time : ' + item['in_time']),
-//                                 SizedBox(
-//                                   height: 10,
-//                                 ),
-//                                 Text('Out time : ' + item['out_time']),
-//                                 SizedBox(
-//                                   height: 10,
-//                                 ),
-//                                 Text('Date : ' + item['date']),
-//                               ],
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   );
-//                 },
-//               ),
-//             )
-//           ],
-//         ),
-//         floatingActionButton: SpeedDial(
-//           child: Icon(Icons.add),
-//           onPress: () {
-//             // controller.fetchAttendanceHistory();
-//             Get.to(RequestPageForm());
-//           },
-//         ),
-//         bottomNavigationBar: BottomNavigationBar(
-//           items: <BottomNavigationBarItem>[
-//             BottomNavigationBarItem(
-//               // label: 'Home',
-//               // icon: IconButton(
-//               //   onPressed: () {
-//               //     Get.off(HomePage(), transition: Transition.fadeIn);
-//               //   },
-//               //   icon: Image.asset(
-//               //     'assets/icons/home.png',
-//               //     color: Colors.black,
-//               //     width: 30,
-//               //   ),
-//               // ),
-//               icon: InkWell(
-//                 onTap: () {
-//                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
-//                   Get.off(HomePage(), transition: Transition.fadeIn);
-//                 },
-//                 child: Image.asset(
-//                   'assets/icons/home.png',
-//                   width: 30,
-//                   color: Colors.black,
-//                 ),
-//               ),
-//               label: 'Home',
-//             ),
-//             BottomNavigationBarItem(
-//               // label: 'Leave',
-//               // icon: IconButton(
-//               //   onPressed: () {},
-//               //   icon: Image.asset(
-//               //     'assets/icons/leave.png',
-//               //     width: 30,
-//               //     color: Colors.black,
-//               //   ),
-//               // )
-//               icon: InkWell(
-//                 onTap: () {
-//                   Get.off(Leave(), transition: Transition.fadeIn);
-//                 },
-//                 child: Image.asset(
-//                   'assets/icons/leave.png',
-//                   width: 30,
-//                   color: Colors.black,
-//                 ),
-//               ),
-//               label: 'Leave',
-//             ),
-//             BottomNavigationBarItem(
-//               // label: 'Attendance',
-//               // icon: IconButton(
-//               //     onPressed: () {},
-//               //     icon: Image.asset(
-//               //       'assets/icons/attendance_history.png',
-//               //       width: 30,
-//               //       color: Colors.green,
-//               //     ))
-//               icon: InkWell(
-//                 onTap: () {
-//                   Get.off(RequestPage(), transition: Transition.fadeIn);
-//                 },
-//                 child: Image.asset(
-//                   'assets/icons/attendance_history.png',
-//                   width: 30,
-//                 ),
-//               ),
-//               label: 'Attendance',
-//             ),
-//             BottomNavigationBarItem(
-//               // label: 'Calendar',
-//               // icon: IconButton(
-//               //   onPressed: () {},
-//               //   icon: Icon(
-//               //     Icons.calendar_month,
-//               //     color: Colors.black,
-//               //   ),
-//               // ),
-//               icon: InkWell(
-//                 onTap: () {
-//                   Get.off(Calender(), transition: Transition.fadeIn);
-//                 },
-//                 child: Icon(
-//                   Icons.calendar_month,
-//                   color: Colors.black,
-//                   size: 30,
-//                 ),
-//               ),
-//               label: 'Calendar',
-//             ),
-//           ],
-//           currentIndex: _selectedIndex,
-//           selectedItemColor: Colors.green,
-//           selectedIconTheme: IconThemeData(
-//             size: 35,
-//             color: Color(0xFFE1FF3C),
-//           ),
-//           onTap: _onItemTapped,
-//           type: BottomNavigationBarType.fixed,
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:CheckMate/pages/requestPageForm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
-import 'package:project_ui/pages/requestPageForm.dart';
 
+import '../Controller/attendanceController.dart';
 import 'attendanceDetail.dart';
 import 'calender.dart';
 import 'homepage.dart';
 import 'leave.dart';
 
 class RequestPage extends StatefulWidget {
-  const RequestPage({super.key});
+  late final Map<String, dynamic> attendanceDetail;
+
+  RequestPage({required this.attendanceDetail});
 
   @override
-  State<RequestPage> createState() => _RequestPageState();
+  _AttendancePageState createState() => _AttendancePageState();
 }
 
-class _RequestPageState extends State<RequestPage> {
-  String _selectedItem = 'Check In';
+class _AttendancePageState extends State<RequestPage> {
+  final AddController addController = Get.put(AddController());
+
+  @override
+  void initState() {
+    super.initState();
+    addController.fetchAttendanceHistory();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var intime = widget.attendanceDetail['in_time'];
+    var outtime = widget.attendanceDetail['out_time'];
     return WillPopScope(
       onWillPop: () async {
-        Get.off(HomePage());
+        Get.off(HomePage(leaveDetail: {}));
         return false;
       },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Attendance History'),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: 1,
-                itemBuilder: (context, index) {
-                  return Expanded(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 10),
-                          child: GestureDetector(
-                            onTap: () {
-                              Get.off(AttendanceHistoryDetail());
-                            },
-                            child: ListTile(
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Date : 12/2/2024',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text('Attendance History'),
+          ),
+          body: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 60,
+                      color: Colors.lightGreenAccent,
+                      child: TabBar(
+                        tabs: [
+                          Text('Attendance History'),
+                          Text('Attendance Request History'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    Obx(
+                      () {
+                        if (addController.attendanceData.isEmpty &&
+                            addController.isLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        return NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollInfo) {
+                            if (scrollInfo.metrics.pixels ==
+                                    scrollInfo.metrics.maxScrollExtent &&
+                                addController.hasMoreData &&
+                                !addController.isLoading) {
+                              addController.fetchAttendanceHistory();
+                            }
+                            return true;
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: ListView.separated(
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              separatorBuilder: (context, index) {
+                                return const Divider(
+                                  thickness: 0.5,
+                                  color: Colors.black,
+                                );
+                              },
+                              itemCount: addController.attendanceData.length,
+                              itemBuilder: (context, index) {
+                                final item =
+                                    addController.attendanceData[index];
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: ListTile(
+                                    leading: item['in_time'] != null &&
+                                            item['in_time'].isNotEmpty &&
+                                            item['out_time'] != null &&
+                                            item['out_time'].isNotEmpty
+                                        ? CircleAvatar(
+                                            backgroundColor: Colors.greenAccent,
+                                            child: Icon(Icons.done))
+                                        : CircleAvatar(
+                                            backgroundColor: Colors.pink,
+                                            child: Icon(Icons.close),
+                                          ),
+                                    title: Text('Date: ${item['date']}'),
+                                    subtitle: Text(
+                                        'In Time: ${item['in_time'] ?? 'N/A'}\nOut Time: ${item['out_time'] ?? 'N/A'}'),
+                                    onTap: () {
+                                      Get.to(() => AttendanceDetailPage(
+                                          attendanceDetail: item));
+                                    },
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'In time : 9:30',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Out time : 3:30',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            )
-          ],
-        ),
-        floatingActionButton: SpeedDial(
-          child: Icon(Icons.add),
-          children: [
-            SpeedDialChild(
-              elevation: 0,
-              child: Icon(Icons.medication),
-              labelWidget: Text('Request Form'),
-              onTap: () {
-                Get.off(RequestPageForm());
-              },
-            ),
-          ],
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                iconSize: 35,
-                onPressed: () {
-                  Get.off(HomePage(), transition: Transition.fadeIn);
-                },
-                icon: Image.asset(
-                  'assets/icons/home.png',
-                  color: Colors.black,
-                  width: 35,
-                ),
-              ),
-              IconButton(
-                iconSize: 35,
-                onPressed: () {
-                  Get.off(Leave(), transition: Transition.fadeIn);
-                },
-                icon: Image.asset(
-                  'assets/icons/leave.png',
-                  color: Colors.black,
-                  width: 35,
-                ),
-              ),
-              IconButton(
-                iconSize: 35,
-                onPressed: () {
-                  Get.off(RequestPage(), transition: Transition.fadeIn);
-                },
-                icon: Image.asset(
-                  'assets/icons/attendance_history.png',
-                  color: Colors.green,
-                  width: 35,
-                ),
-              ),
-              IconButton(
-                iconSize: 35,
-                onPressed: () {
-                  Get.off(Calender(), transition: Transition.fadeIn);
-                },
-                icon: Icon(
-                  Icons.calendar_month,
-                  color: Colors.black,
+                    Obx(
+                      () {
+                        if (addController.attendanceData.isEmpty &&
+                            addController.isLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        return NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollInfo) {
+                            if (scrollInfo.metrics.pixels ==
+                                    scrollInfo.metrics.maxScrollExtent &&
+                                addController.hasMoreData &&
+                                !addController.isLoading) {
+                              addController.fetchAttendanceHistory();
+                            }
+                            return true;
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: ListView.separated(
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              separatorBuilder: (context, index) {
+                                return const Divider(
+                                  thickness: 0.5,
+                                  color: Colors.black,
+                                );
+                              },
+                              itemCount: addController.attendanceData.length,
+                              itemBuilder: (context, index) {
+                                final item =
+                                    addController.attendanceData[index];
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: ListTile(
+                                    leading: item['in_time'] != null &&
+                                            item['in_time'].isNotEmpty &&
+                                            item['out_time'] != null &&
+                                            item['out_time'].isNotEmpty
+                                        ? CircleAvatar(
+                                            backgroundColor: Colors.greenAccent,
+                                            child: Icon(Icons.done))
+                                        : CircleAvatar(
+                                            backgroundColor: Colors.pink,
+                                            child: Icon(Icons.close),
+                                          ),
+                                    title: Text('Date: ${item['date']}'),
+                                    subtitle: Text(
+                                        'In Time: ${item['in_time'] ?? 'N/A'}\nOut Time: ${item['out_time'] ?? 'N/A'}'),
+                                    onTap: () {
+                                      Get.to(() => AttendanceDetailPage(
+                                          attendanceDetail: item));
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],
+          ),
+          floatingActionButton: SpeedDial(
+            child: Icon(Icons.add),
+            children: [
+              SpeedDialChild(
+                elevation: 0,
+                child: Icon(Icons.medication),
+                labelWidget: Text('Request Form'),
+                onTap: () {
+                  Get.off(RequestPageForm());
+                },
+              ),
+            ],
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(
+                        HomePage(
+                          leaveDetail: {},
+                        ),
+                        transition: Transition.fadeIn);
+                  },
+                  icon: Image.asset(
+                    'assets/icons/home.png',
+                    color: Colors.black,
+                    width: 35,
+                  ),
+                ),
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(
+                        Leave(
+                          leaveDetail: {},
+                        ),
+                        transition: Transition.fadeIn);
+                  },
+                  icon: Image.asset(
+                    'assets/icons/leave.png',
+                    color: Colors.black,
+                    width: 35,
+                  ),
+                ),
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(
+                        RequestPage(
+                          attendanceDetail: {},
+                        ),
+                        transition: Transition.fadeIn);
+                  },
+                  icon: Image.asset(
+                    'assets/icons/attendance_history.png',
+                    color: Colors.green,
+                    width: 35,
+                  ),
+                ),
+                IconButton(
+                  iconSize: 35,
+                  onPressed: () {
+                    Get.off(
+                        Calender(
+                          leaveDetail: {},
+                        ),
+                        transition: Transition.fadeIn);
+                  },
+                  icon: Icon(
+                    Icons.calendar_month,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

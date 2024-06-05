@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:CheckMate/pages/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:project_ui/pages/homepage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,7 +17,9 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(Duration(seconds: 3), () {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => HomePage(),
+        builder: (context) => HomePage(
+          leaveDetail: {},
+        ),
       ));
     });
   }
@@ -27,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: Image.asset(
-          'assets/images/novaling.png',
+          'assets/images/hero.jpg',
           color: Colors.black,
         ),
       ),

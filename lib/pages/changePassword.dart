@@ -1,6 +1,6 @@
+import 'package:CheckMate/pages/testProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_ui/pages/testProfile.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});

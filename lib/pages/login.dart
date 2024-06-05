@@ -33,7 +33,7 @@ class LoginPage extends StatelessWidget {
                     filled: true,
                     prefixIcon: Icon(Icons.person),
                     fillColor: Colors.white,
-                    hintText: 'Username',
+                    hintText: 'employeeId',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
