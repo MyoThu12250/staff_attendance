@@ -63,7 +63,7 @@ class LoginController extends GetxController {
             backgroundColor: Color(0xF44336FF));
       }
     } catch (e) {
-      Get.snackbar('Login Error', 'User name or Password Wrong',
+      Get.snackbar('Login Error', 'Network',
           backgroundColor: Color(0xF44336FF));
     } finally {
       isLoading.value = false;

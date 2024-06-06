@@ -34,11 +34,13 @@ class _MedicalLeaveState extends State<MedicalLeave> {
       _reasonController.text = widget.leaveDetail['reasons'];
       _selectedDateTimef = DateTime.parse(widget.leaveDetail['from']);
       _selectedDateTimet = DateTime.parse(widget.leaveDetail['to']);
-      _attatchController.text = widget.leaveDetail['attachmentUrl'] ?? 'photo';
+      // imageController.imageFile.value = widget.leaveDetail['attachnment'];
+
+      // _attatchController.text = widget.leaveDetail['attachmentUrl'] ?? 'photo';
     }
   }
 
-  bool? isLoading = false;
+  RxBool isLoading = false.obs;
 
   final ImageUploadController imageController =
       Get.put(ImageUploadController());
@@ -47,14 +49,15 @@ class _MedicalLeaveState extends State<MedicalLeave> {
   DateTime? _selectedDateTimef;
   DateTime? _selectedDateTimet;
   TextEditingController _reasonController = TextEditingController();
-  TextEditingController _attatchController = TextEditingController();
+
+  // TextEditingController _attatchController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   final List<String> items = ['Medical Leave', 'Annual Leave'];
   String selectedValue = 'Medical Leave';
 
   Future<void> _sendData() async {
     // is Loading
-    isLoading = true;
+    isLoading.value = true;
     print(imageController.imageUrl.value);
     final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
     final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
@@ -77,7 +80,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
 
     print(response.statusCode);
     if (response.statusCode == 200) {
-      isLoading = false;
+      isLoading.value = false;
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -132,9 +135,11 @@ class _MedicalLeaveState extends State<MedicalLeave> {
 
   void _onSubmit() async {
     if (_validate()) {
+      isLoading.value = true;
       await imageController.uploadImage();
 
       if (imageController.imageUrl.value != null) {
+        isLoading.value = true;
         _sendData();
       } else {
         print("Error: Could not retrieve the download URL");
@@ -149,12 +154,13 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     String _fromDate = _selectedDateTimef.toString();
     String _toDate = _selectedDateTimet.toString();
     String _reason = _reasonController.text;
-    String _attatch = _attatchController.text.toString();
+
+    RxString _filename = imageController.fileName;
     if (_leavetype.isNotEmpty &&
         _fromDate.isNotEmpty &&
         _toDate.isNotEmpty &&
         _reason.isNotEmpty &&
-        _attatch.isNotEmpty) {
+        _filename.isNotEmpty) {
       return true;
     } else {
       showDialog(
@@ -184,237 +190,263 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     Size size = mediaQuery.size;
     double screenWidth = size.width;
     double screenHeight = size.height;
-    return Scaffold(
-      appBar: AppBar(),
-      body: MediaQuery(
-        data: MediaQuery.of(context),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Container(
-            width: screenWidth,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 40,
-                  ),
-                  mcount == 0
-                      ? Center(
-                          child: Text(
-                            'You have nothing attempt left',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.red,
+    return WillPopScope(
+      onWillPop: () async {
+        Get.off(
+          Leave(
+            leaveDetail: {},
+          ),
+        );
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Get.off(Leave(leaveDetail: {}));
+              },
+              icon: Icon(Icons.arrow_back)),
+        ),
+        body: MediaQuery(
+          data: MediaQuery.of(context),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Container(
+              width: screenWidth,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 40,
+                    ),
+                    mcount == 0
+                        ? Center(
+                            child: Text(
+                              'You have nothing attempt left',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                        )
-                      : Center(
-                          child: Text(
-                            'Remaining Medical Leave attempt : ${mcount}',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 90.0),
-                    child: Container(
-                      width: screenWidth,
-                      child: Column(
-                        children: [
-                          Container(
-                            width: screenWidth,
-                            height: screenHeight * .1,
-                            child: Center(
-                              child: Text(
-                                'Medical Leave Form',
-                                style: TextStyle(fontSize: 25),
+                          )
+                        : Center(
+                            child: Text(
+                              'Remaining Medical Leave attempt : ${mcount}',
+                              style: TextStyle(
+                                fontSize: 20,
                               ),
                             ),
                           ),
-                          SingleChildScrollView(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: 100,
-                                          height: 95,
-                                          child: Icon(Icons.access_time),
-                                        ),
-                                        Container(
-                                          width: 100,
-                                          height: 95,
-                                          child: Icon(Icons.library_books),
-                                        ),
-                                        Container(
-                                          width: 100,
-                                          height: 95,
-                                          child: Icon(Icons.link),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 320,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: 320,
-                                          height: 95,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              SizedBox(
-                                                height: 70,
-                                                width: 150,
-                                                child: TextField(
-                                                  controller:
-                                                      TextEditingController(
-                                                    text: _selectedDateTimef !=
-                                                            null
-                                                        ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
-                                                        : null,
-                                                  ),
-                                                  readOnly: true,
-                                                  decoration: InputDecoration(
-                                                    border:
-                                                        OutlineInputBorder(),
-                                                    labelText: 'From',
-                                                    hintText: 'From',
-                                                    suffixIcon: Icon(
-                                                      Icons.date_range,
-                                                      size: 20,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    _selectedDatef();
-                                                  },
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 70,
-                                                width: 150,
-                                                child: TextField(
-                                                  controller:
-                                                      TextEditingController(
-                                                    text: _selectedDateTimet !=
-                                                            null
-                                                        ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
-                                                        : null,
-                                                  ),
-                                                  readOnly: true,
-                                                  decoration: InputDecoration(
-                                                    border:
-                                                        OutlineInputBorder(),
-                                                    labelText: 'to',
-                                                    hintText: 'to',
-                                                    suffixIcon: Icon(
-                                                      Icons.date_range,
-                                                      size: 20,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    _selectedDatet();
-                                                  },
-                                                ),
-                                              ),
-                                            ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50.0),
+                      child: Container(
+                        width: screenWidth,
+                        child: Column(
+                          children: [
+                            Container(
+                              width: screenWidth,
+                              height: screenHeight * .1,
+                              child: Center(
+                                child: Text(
+                                  'Medical Leave Form',
+                                  style: TextStyle(fontSize: 25),
+                                ),
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: 100,
+                                            height: 95,
+                                            child: Icon(Icons.access_time),
                                           ),
-                                        ),
-                                        Container(
-                                          width: 320,
-                                          height: 95,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: TextField(
-                                              controller: _reasonController,
-                                              maxLines: null,
-                                              expands: true,
-                                              decoration: InputDecoration(
-                                                labelText: 'Reason',
-                                                hintText: 'Enter Reason ',
-                                                border: OutlineInputBorder(),
+                                          Container(
+                                            width: 100,
+                                            height: 95,
+                                            child: Icon(Icons.library_books),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 50.0),
+                                            child: Container(
+                                              width: 100,
+                                              height: 95,
+                                              child: Icon(Icons.link),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 320,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: 320,
+                                            height: 95,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                SizedBox(
+                                                  height: 70,
+                                                  width: 150,
+                                                  child: TextField(
+                                                    controller:
+                                                        TextEditingController(
+                                                      text: _selectedDateTimef !=
+                                                              null
+                                                          ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
+                                                          : null,
+                                                    ),
+                                                    readOnly: true,
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                      labelText: 'From',
+                                                      hintText: 'From',
+                                                      suffixIcon: Icon(
+                                                        Icons.date_range,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      _selectedDatef();
+                                                    },
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 70,
+                                                  width: 150,
+                                                  child: TextField(
+                                                    controller:
+                                                        TextEditingController(
+                                                      text: _selectedDateTimet !=
+                                                              null
+                                                          ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
+                                                          : null,
+                                                    ),
+                                                    readOnly: true,
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                      labelText: 'to',
+                                                      hintText: 'to',
+                                                      suffixIcon: Icon(
+                                                        Icons.date_range,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      _selectedDatet();
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 320,
+                                            height: 95,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: TextField(
+                                                controller: _reasonController,
+                                                maxLines: null,
+                                                expands: true,
+                                                decoration: InputDecoration(
+                                                  labelText: 'Reason',
+                                                  hintText: 'Enter Reason ',
+                                                  border: OutlineInputBorder(),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        // Container(
-                                        //   width: 320,
-                                        //   height: 95,
-                                        //   child: Center(
-                                        //     child: SizedBox(
-                                        //       width: 320,
-                                        //       child: Padding(
-                                        //         padding:
-                                        //             const EdgeInsets.all(8.0),
-                                        //         child: TextField(
-                                        //           controller:
-                                        //               _attatchController,
-                                        //           decoration: InputDecoration(
-                                        //               border:
-                                        //                   OutlineInputBorder(),
-                                        //               hintText: 'Choose File',
-                                        //               suffixIcon:
-                                        //                   Icon(Icons.link)),
-                                        //           readOnly: true,
-                                        //           onTap: () async {
-                                        //             String fileName =
-                                        //                 await imageController
-                                        //                     .pickImage();
-                                        //             _attatchController.text =
-                                        //                 fileName;
-                                        //           },
-                                        //         ),
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                      ],
+                                          Container(
+                                            height: 200,
+                                            width: 200,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Obx(() {
+                                                  if (imageController
+                                                          .imageFile.value !=
+                                                      null) {
+                                                    return Container(
+                                                      height: 150,
+                                                      width: 150,
+                                                      child: Image.file(
+                                                        imageController
+                                                            .imageFile.value!,
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return Text(
+                                                        'Choose image..');
+                                                  }
+                                                }),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    imageController.pickImage();
+                                                  },
+                                                  icon: Icon(Icons.link),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: SizedBox(
-                              width: 130,
-                              child: ElevatedButton(
-                                onPressed: mcount == 0
-                                    ? null
-                                    : () async {
-                                        setState(() {
-                                          isLoading == false
-                                              ? CircularProgressIndicator()
-                                              : null;
-                                        });
-                                        _onSubmit();
-                                      },
-                                child: Text(
-                                  'Submit',
-                                  style: TextStyle(color: Colors.black),
+                                  ],
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                    elevation: 8,
-                                    backgroundColor: Color(0xFFE1FF3C)),
                               ),
                             ),
-                          ),
-                        ],
+                            Obx(
+                              () => isLoading.value == true
+                                  ? CircularProgressIndicator()
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 20.0),
+                                      child: SizedBox(
+                                        width: 130,
+                                        child: ElevatedButton(
+                                          onPressed: mcount == 0
+                                              ? null
+                                              : () async {
+                                                  _onSubmit();
+                                                },
+                                          child: Text(
+                                            'Submit',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                              elevation: 8,
+                                              backgroundColor:
+                                                  Color(0xFFE1FF3C)),
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -435,7 +467,6 @@ class _MedicalLeaveState extends State<MedicalLeave> {
         _selectedDateTimef = _pickedDate;
         if (_selectedDateTimet != null &&
             _pickedDate.isAfter(_selectedDateTimet!)) {
-          // Reset the "to" date if it's after the newly selected "from" date
           _selectedDateTimet = null;
         }
       });
@@ -453,7 +484,6 @@ class _MedicalLeaveState extends State<MedicalLeave> {
       setState(() {
         if (_selectedDateTimef != null &&
             _pickedDate.isBefore(_selectedDateTimef!)) {
-          // Do not update the "to" date if it's before the "from" date
           return;
         }
         _selectedDateTimet = _pickedDate;

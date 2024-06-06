@@ -6,48 +6,35 @@ import 'package:image_picker/image_picker.dart';
 
 class ImageUploadController extends GetxController {
   var selectedImagePath = ''.obs;
-  final _picker = ImagePicker();
-  late File _imageFile;
+  var imageFile = Rx<File?>(null);
   var imageUrl = ''.obs;
   var fileName = ''.obs;
-  var imageFile = Rx<File?>(null);
 
-  Future<void> PImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      selectedImagePath.value = image.path;
-    } else {
-      selectedImagePath.value = '';
-    }
-  }
-
-  Future<String> pickImage() async {
+  Future<void> pickImage() async {
     try {
-      // to pick the image
-      final pickedFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
-        _imageFile = File(pickedFile.path) as File;
+        File file = File(pickedFile.path);
+        imageFile.value = file;
         fileName.value = pickedFile.name;
-        return fileName.value;
       } else {
         // Handle the case when no image is picked
         fileName.value = '';
-        return '';
+        imageFile.value = null;
       }
     } catch (e) {
       print("Image pick error: $e");
       fileName.value = '';
-      return '';
+      imageFile.value = null;
     }
   }
 
   Future<void> uploadImage() async {
     try {
-      if (_imageFile == null) {
+      if (imageFile.value == null) {
         throw Exception('No image selected');
       }
       final fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -56,7 +43,7 @@ class ImageUploadController extends GetxController {
           .ref()
           .child('images')
           .child('$fileName.jpg');
-      await ref.putFile(_imageFile as File);
+      await ref.putFile(imageFile.value!);
       imageUrl.value = await ref.getDownloadURL();
       print('Image uploaded to Firebase: $imageUrl');
 

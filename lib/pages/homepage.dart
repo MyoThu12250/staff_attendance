@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:CheckMate/pages/sendingrequest.dart';
+import 'package:CheckMate/pages/attdanceHistory.dart';
 import 'package:CheckMate/pages/testProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -383,78 +383,81 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 40.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  width: screenWidth * 0.35,
-                                  // Responsive width
-                                  height: screenHeight * 0.07,
-
-                                  // Responsive height
-                                  child: Obx(
-                                    () => ElevatedButton(
-                                      onPressed: () {
-                                        locationController
-                                            .sendLocationToServerin(context);
-                                      },
-                                      child: const Text(
-                                        'Check in ',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Epilogue',
-                                        ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        elevation: 8,
-                                        backgroundColor:
-                                            disablein.value == false
-                                                ? Colors.black
-                                                : Color(0xFFE1FF3C),
+                          Obx(
+                            () => locationController.isLoading.value == true
+                                ? Center(
+                                    child: SizedBox(
+                                      height: 80,
+                                      width: 80,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.red,
+                                        strokeWidth: 6,
                                       ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: screenWidth * 0.35,
-                                  // Responsive width
-                                  height: screenHeight * 0.07,
-                                  // Responsive height
-                                  child: Obx(
-                                    () => ElevatedButton(
-                                      onPressed: dateTimeController
-                                                  .isButtonDisabled.value ==
-                                              true
-                                          ? null
-                                          : () {
-                                              print('0');
+                                  )
+                                : Padding(
+                                    padding: EdgeInsets.only(top: 40.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SizedBox(
+                                          width: screenWidth * 0.35,
+                                          // Responsive width
+                                          height: screenHeight * 0.07,
+                                          // Responsive height
+                                          child: ElevatedButton(
+                                            onPressed: locationController
+                                                    .isLoading.value
+                                                ? null
+                                                : () {
+                                                    locationController
+                                                        .sendLocationToServerin(
+                                                            context);
+                                                  },
+                                            child: const Text(
+                                              'Check in',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Epilogue',
+                                              ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              elevation: 8,
+                                              backgroundColor:
+                                                  Color(0xFFE1FF3C),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: screenWidth * 0.35,
+                                          height: screenHeight * 0.07,
+                                          child: ElevatedButton(
+                                            onPressed: () {
                                               locationController
                                                   .sendLocationToServerout(
                                                       context);
                                             },
-                                      child: Text(
-                                        'Check out',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Epilogue',
+                                            child: const Text(
+                                              'Check out',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Epilogue',
+                                              ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              elevation: 8,
+                                              backgroundColor: Colors.pink,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        elevation: 8,
-                                        backgroundColor: Colors.pinkAccent,
-                                        // backgroundColor: Color(0xFFE1FF3C),
-                                      ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
                           ),
                         ],
                       );

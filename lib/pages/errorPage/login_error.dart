@@ -101,8 +101,6 @@ class LoginErrorPage extends StatelessWidget {
               ),
               onPressed: () {
                 Get.off(LoginPage());
-                //login method again
-                // get back to login page
               },
               child: Text(
                 'Login Again',

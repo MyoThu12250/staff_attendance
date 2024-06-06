@@ -8,11 +8,11 @@ class AttendanceDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var inTime = attendanceDetail['in_time'];
-    var outTime = attendanceDetail['out_time'];
-    var lateTime = attendanceDetail['late_in_time'];
-    var earlyTime = attendanceDetail['early_out_time'];
-    var date = DateTime.parse(attendanceDetail['date']);
+    var inTime = attendanceDetail['in_time'] ?? 'N/A';
+    var outTime = attendanceDetail['out_time'] ?? 'N/A';
+    var lateTime = attendanceDetail['late_in_time'] ?? 'N/A';
+    var earlyTime = attendanceDetail['early_out_time'] ?? 'N/A';
+    var date = DateTime.parse(attendanceDetail['date'] ?? 'N/A');
     var formattedDate = DateFormat('yyyy-MM-dd').format(date);
 
     return Scaffold(

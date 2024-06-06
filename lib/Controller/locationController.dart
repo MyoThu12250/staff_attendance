@@ -13,12 +13,16 @@ final LatLng center = LatLng(16.81605105, 96.12887631);
 final double radius = 300.0;
 
 class LocationController extends GetxController {
+  RxBool isLoading = false.obs;
+
   // Observable to track if the point is within range
   final isInRange = false.obs;
   Rx<Position?> currentLocation = Rx<Position?>(null);
   String status = (DateTime.now().hour < 12) ? "In" : "Out";
 
   void sendLocationToServerin(BuildContext context) async {
+    isLoading.value = true;
+
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
     currentLocation.value = position;
@@ -39,6 +43,7 @@ class LocationController extends GetxController {
         if (isValid) {
           dateTimeController.sendDateTimeToServerin(context);
         }
+        isLoading.value = false;
         print(response.statusCode);
         print('Location sent successfully');
       } else {
@@ -87,6 +92,7 @@ class LocationController extends GetxController {
   }
 
   void sendLocationToServerout(BuildContext context) async {
+    isLoading.value = true;
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
     currentLocation.value = position;
@@ -107,6 +113,8 @@ class LocationController extends GetxController {
         if (isValid) {
           dateTimeController.sendDateTimeToServerout(context);
         }
+
+        isLoading.value = false;
         print(response.statusCode);
         print('Location sent successfully');
       } else {

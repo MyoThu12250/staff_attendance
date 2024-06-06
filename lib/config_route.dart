@@ -25,4 +25,6 @@ class Config {
   static const String updateProfileRoute = '$baseUrl/updateProfileImage';
   static const String getUpdateProfileRoute =
       '$baseUrl/updateProfileImage/getUpdatedImage';
+  static const String getAttdanceRequestHistoryRoute =
+      '$baseUrl/attendanceRequest';
 }

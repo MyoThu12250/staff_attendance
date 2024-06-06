@@ -1,4 +1,4 @@
-import 'package:CheckMate/pages/sendingrequest.dart';
+import 'package:CheckMate/pages/attdanceHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
@@ -69,9 +69,11 @@ class _LeaveState extends State<Leave> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.off(HomePage(
-          leaveDetail: {},
-        ));
+        Get.off(
+          HomePage(
+            leaveDetail: {},
+          ),
+        );
         return false;
       },
       child: Scaffold(
@@ -243,28 +245,36 @@ class LeaveListView extends StatelessWidget {
       return PagedListView<int, dynamic>(
         pagingController: pagingController!,
         builderDelegate: PagedChildBuilderDelegate<dynamic>(
-          itemBuilder: (context, item, index) => GestureDetector(
-            onTap: () {
-              Get.to(LeaveDetailPage(leaveDetail: item));
-            },
-            child: ListTile(
-              title: Text(item['leaveType']),
-              subtitle: Text(
-                DateFormat('yyyy-MM-dd')
-                    .format(DateTime.parse(item['createdAt'])),
+          itemBuilder: (context, item, index) => Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Get.to(LeaveDetailPage(leaveDetail: item));
+                },
+                child: ListTile(
+                  title: Text(item['leaveType']),
+                  subtitle: Text(
+                    DateFormat('yyyy-MM-dd')
+                        .format(DateTime.parse(item['createdAt'])),
+                  ),
+                  trailing: Icon(
+                    getIcon(item['status']),
+                    color: getColor(item['status']),
+                  ),
+                ),
               ),
-              trailing: Icon(
-                getIcon(item['status']),
-                color: getColor(item['status']),
-              ),
-            ),
+              index.isOdd ? Divider() : Divider(),
+            ],
+          ),
+          noItemsFoundIndicatorBuilder: (context) => Center(
+            child: Text('No leave records found'),
           ),
         ),
       );
     } else {
       return Obx(
         () {
-          return ListView.builder(
+          return ListView.separated(
             itemCount: leaves.length,
             itemBuilder: (context, index) {
               final item = leaves[index];
@@ -288,6 +298,12 @@ class LeaveListView extends StatelessWidget {
                     ),
                   ),
                 ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Divider(
+                color: Colors.black,
+                thickness: 0.5,
               );
             },
           );

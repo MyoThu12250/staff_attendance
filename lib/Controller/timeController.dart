@@ -57,7 +57,7 @@ class DateTimeController extends GetxController {
   }
 
   void sendDateTimeToServerin(BuildContext context) async {
-    String status = (DateTime.now().hour < 12) ? "In" : "Out";
+    String status = "in";
     var now = DateTime.now();
     var formatter = DateFormat('yyyy-MM-dd HH:mm');
     String formattedDateTime = formatter.format(now);
@@ -69,14 +69,14 @@ class DateTimeController extends GetxController {
         {
           'dateTime': formattedDateTime,
           'userId': userID,
-          'checkingStatus': 'in'
+          'checkingStatus': status
         },
       ),
       headers: {'Content-Type': 'application/json'},
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      disableButtonFor6Hours();
+      // disableButtonFor6Hours();
 
       // Enable the button after 6 hours
 
@@ -119,6 +119,42 @@ class DateTimeController extends GetxController {
 
       print(response.statusCode);
       print('Date and time sent successfully');
+    } else if (response.statusCode == 401) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shadowColor: Colors.red[800],
+            elevation: 30,
+            title: Text(
+              "Unsuccessful Check " + status,
+              style: TextStyle(color: Colors.red[800]),
+            ),
+            content: Text(
+              "You Already Check" + status,
+              style: TextStyle(color: Colors.red[400]),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  elevation: 8,
+                  backgroundColor: Colors.red,
+                ),
+                child: Text(
+                  "OK",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     } else {
       showDialog(
         context: context,
@@ -138,7 +174,7 @@ class DateTimeController extends GetxController {
               TextButton(
                 style: TextButton.styleFrom(
                   elevation: 8,
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.red,
                 ),
                 child: Text(
                   "OK",
@@ -164,7 +200,7 @@ class DateTimeController extends GetxController {
   }
 
   void sendDateTimeToServerout(BuildContext context) async {
-    String status = (DateTime.now().hour < 12) ? "In" : "Out";
+    String status = "Out";
     var now = DateTime.now();
     var formatter = DateFormat('yyyy-MM-dd HH:mm');
     String formattedDateTime = formatter.format(now);
@@ -227,26 +263,62 @@ class DateTimeController extends GetxController {
 
       print(response.statusCode);
       print('Date and time sent successfully');
-    } else {
+    } else if (response.statusCode == 401) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shadowColor: Colors.green[800],
+            shadowColor: Colors.red[800],
             elevation: 30,
             title: Text(
-              "UnSuccessful Check " + status,
-              style: TextStyle(color: Colors.green[800]),
+              "Unsuccessful Check " + status,
+              style: TextStyle(color: Colors.red[800]),
             ),
             content: Text(
-              "UnSuccessful.",
-              style: TextStyle(color: Colors.green[400]),
+              "You Already Check " + status,
+              style: TextStyle(color: Colors.red[400]),
             ),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
                   elevation: 8,
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.red,
+                ),
+                child: Text(
+                  "OK",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shadowColor: Colors.red[800],
+            elevation: 30,
+            title: Text(
+              "Unsuccessful Check " + status,
+              style: TextStyle(color: Colors.red[800]),
+            ),
+            content: Text(
+              "Unsuccessful.",
+              style: TextStyle(color: Colors.red[400]),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  elevation: 8,
+                  backgroundColor: Colors.red,
                 ),
                 child: Text(
                   "OK",
@@ -264,7 +336,6 @@ class DateTimeController extends GetxController {
         },
       );
       isButtonDisabled.value = false;
-
       print(response.statusCode);
       print(formattedDateTime);
       print('Failed to send date and time. Error: ${response.reasonPhrase}');

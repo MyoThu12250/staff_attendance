@@ -1,4 +1,5 @@
-import 'package:CheckMate/pages/requestPageForm.dart';
+import 'package:CheckMate/pages/attdanceRequestForm.dart';
+import 'package:CheckMate/pages/attdanceRequestHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
@@ -125,67 +126,7 @@ class _AttendancePageState extends State<RequestPage> {
                         );
                       },
                     ),
-                    Obx(
-                      () {
-                        if (addController.attendanceData.isEmpty &&
-                            addController.isLoading) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-
-                        return NotificationListener<ScrollNotification>(
-                          onNotification: (ScrollNotification scrollInfo) {
-                            if (scrollInfo.metrics.pixels ==
-                                    scrollInfo.metrics.maxScrollExtent &&
-                                addController.hasMoreData &&
-                                !addController.isLoading) {
-                              addController.fetchAttendanceHistory();
-                            }
-                            return true;
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: ListView.separated(
-                              physics: const BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              separatorBuilder: (context, index) {
-                                return const Divider(
-                                  thickness: 0.5,
-                                  color: Colors.black,
-                                );
-                              },
-                              itemCount: addController.attendanceData.length,
-                              itemBuilder: (context, index) {
-                                final item =
-                                    addController.attendanceData[index];
-                                return GestureDetector(
-                                  onTap: () {},
-                                  child: ListTile(
-                                    leading: item['in_time'] != null &&
-                                            item['in_time'].isNotEmpty &&
-                                            item['out_time'] != null &&
-                                            item['out_time'].isNotEmpty
-                                        ? CircleAvatar(
-                                            backgroundColor: Colors.greenAccent,
-                                            child: Icon(Icons.done))
-                                        : CircleAvatar(
-                                            backgroundColor: Colors.pink,
-                                            child: Icon(Icons.close),
-                                          ),
-                                    title: Text('Date: ${item['date']}'),
-                                    subtitle: Text(
-                                        'In Time: ${item['in_time'] ?? 'N/A'}\nOut Time: ${item['out_time'] ?? 'N/A'}'),
-                                    onTap: () {
-                                      Get.to(() => AttendanceDetailPage(
-                                          attendanceDetail: item));
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    RequestHistoryPage()
                   ],
                 ),
               ),
