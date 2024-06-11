@@ -13,12 +13,12 @@ final LatLng center = LatLng(16.81605105, 96.12887631);
 final double radius = 300.0;
 
 class LocationController extends GetxController {
+  String checks = '';
   RxBool isLoading = false.obs;
 
   // Observable to track if the point is within range
   final isInRange = false.obs;
   Rx<Position?> currentLocation = Rx<Position?>(null);
-  String status = (DateTime.now().hour < 12) ? "In" : "Out";
 
   void sendLocationToServerin(BuildContext context) async {
     isLoading.value = true;
@@ -42,8 +42,50 @@ class LocationController extends GetxController {
         bool isValid = checkIsValid(check);
         if (isValid) {
           dateTimeController.sendDateTimeToServerin(context);
+        } else if (isValid == false) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                shadowColor: Colors.red,
+                elevation: 30,
+                title: Text(
+                  "Unsuccessful ",
+                  style: TextStyle(
+                    color: Colors.red[800],
+                  ),
+                ),
+                content: Text(
+                  " Unsuccessful Check In, Out of Range  ",
+                  style: TextStyle(
+                    color: Colors.red[400],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      elevation: 8,
+                    ),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      // dateTimeController.sendDateTimeToServer();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
         }
         isLoading.value = false;
+
         print(response.statusCode);
         print('Location sent successfully');
       } else {
@@ -60,7 +102,7 @@ class LocationController extends GetxController {
                 ),
               ),
               content: Text(
-                " Unsuccessful Check " + status + " Connection Error",
+                " Unsuccessful Check In, Check Your Connection   ",
                 style: TextStyle(
                   color: Colors.red[400],
                   fontWeight: FontWeight.bold,
@@ -112,8 +154,48 @@ class LocationController extends GetxController {
         bool isValid = checkIsValid(check);
         if (isValid) {
           dateTimeController.sendDateTimeToServerout(context);
+        } else if (isValid == false) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                shadowColor: Colors.red,
+                elevation: 30,
+                title: Text(
+                  "Unsuccessful ",
+                  style: TextStyle(
+                    color: Colors.red[800],
+                  ),
+                ),
+                content: Text(
+                  " Unsuccessful Check Out, Out of Range  ",
+                  style: TextStyle(
+                    color: Colors.red[400],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      elevation: 8,
+                    ),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      // dateTimeController.sendDateTimeToServer();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
         }
-
         isLoading.value = false;
         print(response.statusCode);
         print('Location sent successfully');
@@ -131,7 +213,7 @@ class LocationController extends GetxController {
                 ),
               ),
               content: Text(
-                " Unsuccessful Check " + status + " Connection Error",
+                " Unsuccessful Check Out , Check Your connection ",
                 style: TextStyle(
                   color: Colors.red[400],
                   fontWeight: FontWeight.bold,

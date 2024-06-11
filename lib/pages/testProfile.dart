@@ -50,6 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
+              // Get.back();
               Get.off(HomePage(leaveDetail: {}));
             },
             icon: Icon(Icons.arrow_back_ios_new),
@@ -233,7 +234,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Get.off(ChangePassword());
+                      // Get.off(ChangePassword());
+                      Get.to(ChangePassword());
                     },
                     child: Text(
                       'Reset Password',

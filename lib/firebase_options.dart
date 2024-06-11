@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'globalta-1ccbf.appspot.com',
     iosBundleId: 'com.example.projectUi',
   );
-
 }

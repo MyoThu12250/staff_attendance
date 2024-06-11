@@ -1,6 +1,9 @@
 import 'package:CheckMate/pages/testProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+import '../config_route.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});
@@ -10,31 +13,157 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
+  RxBool isLoading = false.obs;
+  TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   TextEditingController _newPassword = TextEditingController();
   TextEditingController _reNewPassword = TextEditingController();
 
   bool _obscureText = false;
 
-  void validate() {
-    String password = _password.text.toString();
-    String newPassword = _newPassword.text.toString();
-    String reNewPassword = _reNewPassword.text.toString();
-    if (password.isNotEmpty &&
-        newPassword.isNotEmpty &&
-        reNewPassword.isNotEmpty) {
-      // current password check
-      if (newPassword != reNewPassword) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('New password and confirm password must be same')));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Successful change password')));
-      }
+  Future<void> password() async {
+    // is Loading
+    isLoading.value = true;
+    final String email = _email.text.toString();
+    final String oldpassword = _password.text.toString();
+    final String newPassword = _newPassword.text.toString();
+    final response = await http.post(
+      Uri.parse(Config.resetPasswordRoute),
+      body: {
+        'email': email,
+        'oldPassword': oldpassword,
+        'newPassword': newPassword
+      },
+    );
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      isLoading.value = false;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text('Your Password Successfully Changed'),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.lightGreenAccent)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.offAllNamed('/profile'); // Close the dialog.
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else if (response.statusCode == 404) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text(' Unsuccessfully'),
+            content: Text('Your Email  is Incorrect Please Try Again'),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.back(); // Close the dialog.
+                },
+              ),
+            ],
+          );
+        },
+      );
+      // Handle error response
+      print('Failed to send data');
+    } else if (response.statusCode == 401) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text(' Unsuccessfully'),
+            content: Text('Old Password is Incorrect Please Try Again'),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.back(); // Close the dialog.
+                },
+              ),
+            ],
+          );
+        },
+      );
+      // Handle error response
+      print('Failed to send data');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Missing data or check password')));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text(' Unsuccessfully'),
+            content: Text('Connection Error Please Try Again'),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.back(); // Close the dialog.
+                },
+              ),
+            ],
+          );
+        },
+      );
+      // Handle error response
+      print('Failed to send data');
     }
+  }
+
+  bool validate() {
+    String password = _password.text.trim();
+    String email = _email.text.trim();
+    String newPassword = _newPassword.text.trim();
+    String reNewPassword = _reNewPassword.text.trim();
+
+    if (password.isEmpty ||
+        email.isEmpty ||
+        newPassword.isEmpty ||
+        reNewPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('All fields are required')),
+      );
+      return false;
+    }
+
+    if (newPassword != reNewPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text('New password and confirm password must be the same')),
+      );
+      return false;
+    }
+
+    return true;
   }
 
   @override
@@ -48,7 +177,8 @@ class _ChangePasswordState extends State<ChangePassword> {
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              Get.off(ProfilePage());
+              Get.back();
+              // Get.off(ProfilePage());
             },
             icon: Icon(Icons.arrow_back_ios_new),
           ),
@@ -68,6 +198,17 @@ class _ChangePasswordState extends State<ChangePassword> {
                       width: 300,
                       child: Column(
                         children: [
+                          SizedBox(
+                            width: 280,
+                            child: TextField(
+                              controller: _email,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                prefixIcon: Icon(Icons.mail),
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                             child: SizedBox(
@@ -128,7 +269,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                validate();
+                                validate() ? password() : print('object');
                               },
                               child: Text('Save'),
                             ),

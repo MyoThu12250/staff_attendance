@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class AttendanceDetailPage extends StatelessWidget {
@@ -18,6 +19,12 @@ class AttendanceDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Attendance Detail'),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

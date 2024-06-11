@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:CheckMate/Controller/circleController.dart';
 import 'package:CheckMate/pages/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  SplashScreen({super.key});
+
+  RangeController rangeController = Get.put(RangeController());
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();

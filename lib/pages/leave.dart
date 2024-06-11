@@ -59,6 +59,9 @@ class _LeaveState extends State<Leave> {
     // TODO: implement initState
     super.initState();
     GetStorage.init();
+    // setState(() {
+    //   _controller.Leave(1);
+    // });
 
     WidgetsFlutterBinding.ensureInitialized();
   }
@@ -79,7 +82,14 @@ class _LeaveState extends State<Leave> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
+          leadingWidth: 60,
           title: Text('Leave History'),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 12.0),
+            child: Image.asset(
+              'assets/icons/appIcon.png',
+            ),
+          ),
         ),
         body: _controller.isloading == true
             ? Center(child: CircularProgressIndicator())
@@ -137,9 +147,9 @@ class _LeaveState extends State<Leave> {
               ),
               labelWidget: Text('Medical leave'),
               onTap: () {
-                Get.off(
+                Get.to(
                     MedicalLeave(
-                      isedit: false,
+                      isedit: false.obs,
                       leaveDetail: {},
                     ),
                     transition: Transition.fadeIn);
@@ -153,7 +163,7 @@ class _LeaveState extends State<Leave> {
               ),
               labelWidget: Text('Annual leave'),
               onTap: () {
-                Get.off(AnnualLeave(
+                Get.to(AnnualLeave(
                   isedit: false,
                   leaveDetail: {},
                 ));

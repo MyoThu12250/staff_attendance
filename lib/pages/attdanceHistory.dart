@@ -42,7 +42,14 @@ class _AttendancePageState extends State<RequestPage> {
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
+            leadingWidth: 60,
             title: Text('Attendance History'),
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Image.asset(
+                'assets/icons/appIcon.png',
+              ),
+            ),
           ),
           body: Column(
             children: [
@@ -98,7 +105,6 @@ class _AttendancePageState extends State<RequestPage> {
                                 final item =
                                     addController.attendanceData[index];
                                 return GestureDetector(
-                                  onTap: () {},
                                   child: ListTile(
                                     leading: item['in_time'] != null &&
                                             item['in_time'].isNotEmpty &&

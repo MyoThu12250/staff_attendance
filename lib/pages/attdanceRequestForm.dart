@@ -1,9 +1,11 @@
 import 'package:CheckMate/pages/attdanceHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../Controller/leaveController.dart';
+import '../config_route.dart';
 
 class RequestPageForm extends StatefulWidget {
   const RequestPageForm({super.key});
@@ -16,15 +18,78 @@ class _RequestPageFormState extends State<RequestPageForm> {
   DateTime? _selectedDateTime;
   TextEditingController _name = TextEditingController();
   DateTime? _date;
+  RxBool isLoading = false.obs;
 
   TextEditingController _reason = TextEditingController();
-  String dropdownValue = 'Check In';
+  RxString dropdownValue = 'Check In'.obs;
+
+  Future<void> _sendData() async {
+    isLoading.value = true;
+    final id = loginController.userInfo['userId'].toString();
+    final date = DateFormat('yyyy-MM-dd').format(_date!);
+    String reason;
+    if (dropdownValue.value == 'Check In') {
+      print(dropdownValue.value);
+      reason = 'late_in_time';
+    } else if (dropdownValue.value == 'Check Out') {
+      print(dropdownValue.value);
+      reason = 'late_out_time';
+    } else {
+      reason = 'late';
+      print('keoeo'); // For "Both" or any other case
+    }
+
+    final response = await http.post(
+      Uri.parse(Config.createAttendanceRequestRoute),
+      body: {'reason': reason, 'data': date, 'UserId': id},
+    );
+    print(response.statusCode);
+    isLoading.value = false;
+    if (response.statusCode == 200) {
+      _showDialog('Attendance Request Submitted Successfully', 'Successfully',
+          Colors.lightGreenAccent);
+    } else if (response.statusCode == 400) {
+      _showDialog('Unsuccessful',
+          'You already Created Attendance Request For this day', Colors.red);
+    } else {
+      _showDialog(
+          'Unsuccessful', 'Check Your Connection and Try Again', Colors.red);
+    }
+  }
+
+  void _showDialog(String title, String content, Color color) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 8,
+          title: Text(title),
+          content: Container(
+            width: 300,
+            height: 60,
+            child: Text(content),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(color)),
+              child: Text('Ok'),
+              onPressed: () {
+                Get.off(RequestPage(attendanceDetail: {})); // Close the dialog.
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   bool _validate() {
     final String name = _name.text;
-    final String reason = _reason.text;
+    final String reason = dropdownValue.value;
     final date = DateFormat('yyyy-MM-dd').format(_date!);
-    if (name.isNotEmpty && date.isNotEmpty && reason.isNotEmpty) {
+    if (date.isNotEmpty && reason.isNotEmpty) {
       return true;
     } else {
       showDialog(
@@ -85,7 +150,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
               ),
               Rcount != 0
                   ? Text(
-                      'You have ${Rcount} attempt to request',
+                      'You have $Rcount attempt to request',
                       style: TextStyle(
                         fontSize: 20,
                       ),
@@ -122,7 +187,6 @@ class _RequestPageFormState extends State<RequestPageForm> {
                         padding: const EdgeInsets.symmetric(vertical: 40.0),
                         child: Icon(Icons.access_time),
                       ),
-                      // SizedBox(),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 80.0),
                         child: Icon(Icons.my_library_books),
@@ -131,31 +195,33 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   ),
                   Column(
                     children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      //   child: Center(
+                      //     child: SizedBox(
+                      //       width: 150,
+                      //       child: Obx(
+                      //         () => DropdownButton<String>(
+                      //           value: dropdownValue.value,
+                      //           onChanged: (String? newValue) {
+                      //             dropdownValue.value = newValue!;
+                      //           },
+                      //           items: <String>[
+                      //             'Check In',
+                      //             'Check Out'
+                      //           ].map<DropdownMenuItem<String>>((String value) {
+                      //             return DropdownMenuItem<String>(
+                      //               value: value,
+                      //               child: Text(value),
+                      //             );
+                      //           }).toList(),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40.0),
-                        child: Center(
-                          child: SizedBox(
-                            width: 150,
-                            child: DropdownButton<String>(
-                              value: dropdownValue,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dropdownValue = newValue!;
-                                });
-                              },
-                              items: <String>['Check In', 'Check Out', 'Both']
-                                  .map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        padding: const EdgeInsets.symmetric(vertical: 70.0),
                         child: Container(
                           width: 300,
                           child: TextField(
@@ -163,8 +229,8 @@ class _RequestPageFormState extends State<RequestPageForm> {
                               _selectedDatef();
                             },
                             controller: TextEditingController(
-                              text: _selectedDateTime != null
-                                  ? '${_selectedDateTime!.day}/${_selectedDateTime!.month}/${_selectedDateTime!.year}'
+                              text: _date != null
+                                  ? '${_date!.day}/${_date!.month}/${_date!.year}'
                                   : null,
                             ),
                             readOnly: true,
@@ -177,21 +243,44 @@ class _RequestPageFormState extends State<RequestPageForm> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40.0),
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
                         child: SizedBox(
-                          width: 300,
-                          height: 120,
-                          child: TextField(
-                            controller: _reason,
-                            maxLines: null,
-                            expands: true,
-                            decoration: InputDecoration(
-                                labelText: 'Reason',
-                                hintText: 'Enter reason',
-                                border: OutlineInputBorder()),
+                          width: 250,
+                          child: Obx(
+                            () => DropdownButton<String>(
+                              value: dropdownValue.value,
+                              onChanged: (String? newValue) {
+                                dropdownValue.value = newValue!;
+                              },
+                              items: <String>[
+                                'Check In',
+                                'Check Out'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
                       ),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      //   child: SizedBox(
+                      //     width: 300,
+                      //     height: 120,
+                      //     child: TextField(
+                      //       controller: _reason,
+                      //       maxLines: null,
+                      //       expands: true,
+                      //       decoration: InputDecoration(
+                      //           labelText: 'Reason',
+                      //           hintText: 'Enter reason',
+                      //           border: OutlineInputBorder()),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],
@@ -206,9 +295,9 @@ class _RequestPageFormState extends State<RequestPageForm> {
                 onPressed: Rcount == 0
                     ? null
                     : () {
-                        Get.off(RequestPage(
-                          attendanceDetail: {},
-                        ));
+                        if (_validate()) {
+                          _sendData();
+                        }
                       },
               ),
             ],

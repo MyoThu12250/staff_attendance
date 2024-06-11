@@ -30,17 +30,14 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     // TODO: implement initState
     super.initState();
     if (widget.isedit == true) {
-      _reasonController.text = widget.leaveDetail['reasons'];
+      final String id = widget.leaveDetail['id'].toString();
+      _reasonController =
+          TextEditingController(text: widget.leaveDetail['reasons']);
+      ;
       _selectedDateTimef = DateTime.parse(widget.leaveDetail['from']);
       _selectedDateTimet = DateTime.parse(widget.leaveDetail['to']);
     }
   }
-
-  DateTime? _selectedDateTimef;
-  DateTime? _selectedDateTimet;
-  TextEditingController _reasonController = TextEditingController();
-
-  RxBool isLoading = false.obs;
 
   Future<void> _sendData() async {
     isLoading.value = true;
@@ -84,7 +81,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                         Colors.lightGreenAccent)),
                 child: Text('Ok'),
                 onPressed: () {
-                  Get.off(Leave(
+                  Get.offAll(Leave(
                     leaveDetail: widget.leaveDetail,
                   )); // Close the dialog.
                 },
@@ -123,39 +120,43 @@ class _AnnualLeaveState extends State<AnnualLeave> {
         },
       );
     } else {
-      if (response.statusCode == 400) {
-        isLoading.value = false;
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              elevation: 8,
-              title: Text('Unsuccessful'),
-              content: Container(
-                width: 300,
-                height: 60,
-                child: Text("Check Your Connection and Try Again"),
+      isLoading.value = false;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text('Unsuccessful'),
+            content: Container(
+              width: 300,
+              height: 60,
+              child: Text("Check Your Connection and Try Again"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.off(Leave(
+                    leaveDetail: widget.leaveDetail,
+                  )); // Close the dialog.
+                },
               ),
-              actions: <Widget>[
-                TextButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.red)),
-                  child: Text('Ok'),
-                  onPressed: () {
-                    Get.off(Leave(
-                      leaveDetail: widget.leaveDetail,
-                    )); // Close the dialog.
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
+            ],
+          );
+        },
+      );
     }
   }
+
+  DateTime? _selectedDateTimef;
+  DateTime? _selectedDateTimet;
+  TextEditingController _reasonController = TextEditingController();
+
+  RxBool isLoading = false.obs;
 
   bool _validate() {
     final testdate = _selectedDateTimef!.day.toInt() + 3;
@@ -163,8 +164,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     String _fromDate = _selectedDateTimef.toString();
     String _toDate = _selectedDateTimet.toString();
     String _reason = _reasonController.text;
-    if ((_fromDate.isNotEmpty && _toDate.isNotEmpty && _reason.isNotEmpty) &&
-        testdate > testdate1 + 3) {
+    if (_fromDate.isNotEmpty && _toDate.isNotEmpty && _reason.isNotEmpty) {
       return true;
     } else {
       showDialog(
@@ -187,6 +187,44 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     }
   }
 
+  Future<void> Update() async {
+    isLoading.value = true;
+    final recordId = widget.leaveDetail['id'];
+    final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
+    final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
+
+    final String reason = _reasonController.text;
+    final String leavetype = 'Annual Leave';
+    try {
+      final response = await http.put(
+        Uri.parse('${Config.updateLeaveRecordByIdRoute}/$recordId'),
+        body: {
+          'reasons': reason,
+          'from': fromdate,
+          'to': todate,
+          'leaveType': leavetype
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Get.snackbar('Success', 'Update successful',
+            backgroundColor: Colors.greenAccent,
+            duration: const Duration(seconds: 4));
+        Get.offAllNamed('/leave');
+      } else {
+        // Handle server error
+        print('Failed to update: ${response.statusCode}');
+        Get.snackbar('Fail', 'Unable to update. Please try again.',
+            backgroundColor: Colors.red, duration: const Duration(seconds: 4));
+      }
+    } catch (e) {
+      // Handle network error
+      print('Error updating: $e');
+      Get.snackbar('Error', 'An error occurred. Please try again.',
+          backgroundColor: Colors.red, duration: const Duration(seconds: 4));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final acount = loginController.userInfo['annualLeave'];
@@ -203,9 +241,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
-                Get.off(Leave(
-                  leaveDetail: widget.leaveDetail,
-                ));
+                Get.back();
               },
               icon: Icon(Icons.arrow_back),
             ),
@@ -382,24 +418,37 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                           ? CircularProgressIndicator()
                           : SizedBox(
                               width: 130,
-                              child: ElevatedButton(
-                                onPressed: acount == 0
-                                    ? null
-                                    : () {
-                                        _validate()
-                                            ? _sendData()
-                                            : print("error");
+                              child: widget.isedit == true
+                                  ? ElevatedButton(
+                                      onPressed: () {
+                                        _validate() ? Update() : print("error");
                                       },
-                                child: Text(
-                                  'Submit',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    elevation: 8,
-                                    backgroundColor: Color(0xFFE1FF3C)),
-                              ),
+                                      child: Text(
+                                        'Update',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 8,
+                                          backgroundColor: Color(0xFFE1FF3C)),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: acount == 0
+                                          ? null
+                                          : () {
+                                              _validate()
+                                                  ? _sendData()
+                                                  : print("error");
+                                            },
+                                      child: Text(
+                                        'Submit',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 8,
+                                          backgroundColor: Color(0xFFE1FF3C)),
+                                    ),
                             ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -420,6 +469,10 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     if (_pickedDate != null) {
       setState(() {
         _selectedDateTimef = _pickedDate;
+        if (_selectedDateTimet != null &&
+            _pickedDate.isAfter(_selectedDateTimet!)) {
+          _selectedDateTimet = null;
+        }
       });
     }
   }
@@ -428,14 +481,13 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     final _pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDateTimet ?? _selectedDateTimef ?? DateTime.now(),
-      firstDate: _selectedDateTimef ?? DateTime.now().add(Duration(days: 4)),
+      firstDate: _selectedDateTimef ?? DateTime(2000),
       lastDate: DateTime(2100),
     );
     if (_pickedDate != null) {
       setState(() {
         if (_selectedDateTimef != null &&
             _pickedDate.isBefore(_selectedDateTimef!)) {
-          // Do not update the "to" date if it's before the "from" date
           return;
         }
         _selectedDateTimet = _pickedDate;

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Login',
+
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

@@ -16,11 +16,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // RangeController rangeController = Get.put(RangeController());
   LoginController controller = Get.put(LoginController());
 
   // bool _isLogin = true;
   void main() async {
-    controller.loadProfileData();
     controller.loadloginData();
     await GetStorage.init();
   }
@@ -30,11 +30,9 @@ class _SplashScreenState extends State<SplashScreen> {
     final box = GetStorage();
     bool islogin = box.read('isLogin') ?? false;
     Timer(const Duration(seconds: 3), () {
-      Get.off(islogin == true
-          ? HomePage(
-              leaveDetail: {},
-            )
-          : LoginPage());
+      Get.off(islogin == false && box.read('UserInfo') == null
+          ? LoginPage()
+          : HomePage(leaveDetail: {}));
     });
     return Scaffold(
       backgroundColor: Colors.white,

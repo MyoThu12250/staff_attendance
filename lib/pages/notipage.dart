@@ -105,8 +105,10 @@
 //     );
 //   }
 // }
+import 'package:CheckMate/Controller/loginController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'homepage.dart';
 import 'notiDetailPage.dart';
@@ -139,7 +141,23 @@ Color getColor(String status) {
   }
 }
 
-class NotiPage extends StatelessWidget {
+class NotiPage extends StatefulWidget {
+  @override
+  State<NotiPage> createState() => _NotiPageState();
+}
+
+LoginController c = Get.put(LoginController());
+final box = GetStorage();
+
+final String id = c.userInfo['userId'];
+
+class _NotiPageState extends State<NotiPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -153,9 +171,10 @@ class NotiPage extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              Get.off(HomePage(
-                leaveDetail: {},
-              ));
+              Get.back();
+              // Get.off(HomePage(
+              //   leaveDetail: {},
+              // ));
             },
             icon: Icon(Icons.arrow_back_ios_new),
           ),

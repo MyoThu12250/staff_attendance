@@ -19,7 +19,7 @@ class Config {
 
   static const String loginRoute = '$baseUrl/users/loginUser';
   static const String logoutByIdRoute = '$baseUrl/users/logout';
-  static const String resetPasswordRoute = '$baseUrl/users/resetPassword';
+  static const String resetPasswordRoute = '$baseUrl/users/resetPassword/';
   static const String mapCheckRoute = '$baseUrl/mapCheck';
   static const String refreshRoute = '$baseUrl/refresh';
   static const String updateProfileRoute = '$baseUrl/updateProfileImage';
@@ -27,4 +27,5 @@ class Config {
       '$baseUrl/updateProfileImage/getUpdatedImage';
   static const String getAttdanceRequestHistoryRoute =
       '$baseUrl/attendanceRequest';
+  static const String RangeRoute = '$baseUrl/location/getLoc';
 }

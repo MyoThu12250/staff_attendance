@@ -131,7 +131,7 @@ class DateTimeController extends GetxController {
               style: TextStyle(color: Colors.red[800]),
             ),
             content: Text(
-              "You Already Check" + status,
+              "You Already Check" + status + "For this Day",
               style: TextStyle(color: Colors.red[400]),
             ),
             actions: <Widget>[
@@ -275,7 +275,7 @@ class DateTimeController extends GetxController {
               style: TextStyle(color: Colors.red[800]),
             ),
             content: Text(
-              "You Already Check " + status,
+              "You Already Check " + status + "For this Day",
               style: TextStyle(color: Colors.red[400]),
             ),
             actions: <Widget>[

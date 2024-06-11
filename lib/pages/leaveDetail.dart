@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import '../config_route.dart';
 import 'annualLeave.dart';
 import 'medicalLeave.dart';
 
@@ -17,6 +19,7 @@ class LeaveDetailPage extends StatefulWidget {
 class _LeaveDetailPageState extends State<LeaveDetailPage> {
   @override
   Widget build(BuildContext context) {
+    var id = widget.leaveDetail['id'];
     var leaveType = widget.leaveDetail['leaveType'];
     var status = widget.leaveDetail['status'];
     var date = DateTime.parse(widget.leaveDetail['createdAt']);
@@ -24,6 +27,32 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
     var from = widget.leaveDetail['from'];
     var to = widget.leaveDetail['to'];
     var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    Future<void> Delete() async {
+      try {
+        final response = await http.delete(
+          Uri.parse('${Config.deleteLeaveRecordByIdRoute}/$id'),
+        );
+
+        if (response.statusCode == 200) {
+          Get.snackbar('Success', 'Your Leave Record Successfully Deleted.',
+              backgroundColor: Colors.greenAccent,
+              duration: const Duration(seconds: 4));
+          Get.offAllNamed('/leave');
+        } else {
+          // Handle server error
+          print('Failed to delete: ${response.statusCode}');
+          Get.snackbar('Fail', 'Unable to Delete. Please try again.',
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 4));
+        }
+      } catch (e) {
+        // Handle network error
+        print('Error Deleting: $e');
+        Get.snackbar('Error', 'An error occurred. Please try again.',
+            backgroundColor: Colors.red, duration: const Duration(seconds: 4));
+      }
+    }
+
     IconData getIcon(String status) {
       switch (status.toLowerCase()) {
         case 'pending':
@@ -53,6 +82,12 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Leave Detail'),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       body: Column(
         children: [
@@ -203,10 +238,10 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         onPressed: () {
                           leaveType.toLowerCase().trim() ==
                                   'Medical Leave'.toLowerCase().trim()
-                              ? Get.off(MedicalLeave(
-                                  isedit: true,
+                              ? Get.to(MedicalLeave(
+                                  isedit: true.obs,
                                   leaveDetail: widget.leaveDetail))
-                              : Get.off(AnnualLeave(
+                              : Get.to(AnnualLeave(
                                   isedit: true,
                                   leaveDetail: widget.leaveDetail));
                         },
@@ -226,18 +261,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                       width: 100,
                       child: ElevatedButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Perform delete method',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
-                              ),
-                              action: SnackBarAction(
-                                  label: 'Undo', onPressed: () {}),
-                            ),
-                          );
+                          Delete();
                         },
                         child: Text(
                           'Delete',

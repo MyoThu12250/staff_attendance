@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
+import '../Controller/circleController.dart';
 import '../Controller/locationController.dart';
 import '../Controller/loginController.dart';
 import '../Controller/permissionController.dart';
@@ -33,31 +34,19 @@ class _HomePageState extends State<HomePage> {
   final PermissionController permissionController =
       Get.put(PermissionController());
   final LoginController controller = Get.put(LoginController());
+
+  final RangeController rangeController = Get.put(RangeController());
   final DateTimeController dateTimeController = Get.put(DateTimeController());
   final LocationController locationController = Get.put(LocationController());
   var disablein = (DateTime.now().hour >= 7 && DateTime.now().hour <= 13).obs;
   var disableout = (DateTime.now().hour >= 14 && DateTime.now().hour <= 17).obs;
 
-  final Set<Marker> _marker = {
-    const Marker(
-      markerId: MarkerId('Times City'),
-      position: LatLng(14.81605205, 96.12887631),
-      infoWindow: InfoWindow(
-        title: 'Times City',
-        snippet: 'Office Tower',
-      ),
-    )
-  };
-
-  static const CameraPosition kGoogle = CameraPosition(
-    target: LatLng(16.81605105, 96.12887631),
-    zoom: 14.4746,
-  );
-
   @override
   void initState() {
     super.initState();
+
     controller.loadProfileData();
+    rangeController.fetchLocationData();
 
     permissionController.handleLocationPermission(context);
     _currentTime = DateTime.now();
@@ -75,6 +64,17 @@ class _HomePageState extends State<HomePage> {
     _timer.cancel();
     super.dispose();
   }
+
+  final Set<Marker> _marker = {
+    const Marker(
+      markerId: MarkerId('Times City'),
+      position: LatLng(14.81605205, 96.12887631),
+      infoWindow: InfoWindow(
+        title: 'Times City',
+        snippet: 'Office Tower',
+      ),
+    )
+  };
 
   Future<bool> _onWillPop(BuildContext context) async {
     return await showDialog(
@@ -117,14 +117,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex = 0;
-
-    void _onItemTapped(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-
+    var lat = rangeController.lat.value;
+    var lon = rangeController.lon.value;
     MediaQueryData mediaQuery = MediaQuery.of(context);
     Size size = mediaQuery.size;
     double screenWidth = size.width;
@@ -139,7 +133,7 @@ class _HomePageState extends State<HomePage> {
       onWillPop: () => _onWillPop(context),
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: false,
+          centerTitle: true,
           leadingWidth: 60,
           leading: Padding(
             padding: const EdgeInsets.only(left: 12.0),
@@ -149,87 +143,102 @@ class _HomePageState extends State<HomePage> {
           ),
           title: Text('Check Mate'),
           actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: CircleAvatar(
-                backgroundColor: Colors.black.withOpacity(0.095),
-                radius: 20,
-                child: Center(
-                  child: IconButton(
-                    onPressed: () {
-                      Get.off(ProfilePage());
-                    },
-                    icon: const Icon(
-                      Icons.person,
-                      size: 25,
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black.withOpacity(0.095),
+                    radius: 20,
+                    child: Center(
+                      child: IconButton(
+                        onPressed: () {
+                          Get.to(ProfilePage());
+                          // Get.off(ProfilePage());
+                        },
+                        icon: const Icon(
+                          Icons.person,
+                          size: 25,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            CircleAvatar(
-              backgroundColor: Colors.black.withOpacity(0.095),
-              radius: 20,
-              child: Center(
-                child: Stack(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.off(NotiPage());
-                      },
-                      icon: const Icon(
-                        Icons.notifications,
-                        size: 25,
-                      ),
-                    ),
-                    Positioned(
-                      left: 25,
-                      // right: 0,
-                      bottom: 20,
-                      // top: 0,
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.amber,
-                        child: Text(
-                          '2', // noti count
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
+                CircleAvatar(
+                  backgroundColor: Colors.black.withOpacity(0.095),
+                  radius: 20,
+                  child: Center(
+                    child: Stack(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.to(NotiPage());
+                          },
+                          icon: const Icon(
+                            Icons.notifications,
+                            size: 25,
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                        Positioned(
+                          left: 25,
+                          // right: 0,
+                          bottom: 20,
+                          // top: 0,
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.amber,
+                            child: Text(
+                              '2', // noti count
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 10,
+              ],
             ),
           ],
         ),
         body: Stack(
           children: [
             GoogleMap(
-              initialCameraPosition: kGoogle,
-              mapType: MapType.normal,
               myLocationEnabled: true,
               myLocationButtonEnabled: true,
-              compassEnabled: true,
+
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
-              markers: _marker,
+              // markers: _marker,
+              markers: {
+                Marker(
+                  markerId: MarkerId('Times City'),
+                  position: LatLng(
+                      rangeController.lat.value, rangeController.lon.value),
+                  infoWindow: InfoWindow(
+                    title: 'Times City',
+                    snippet: 'Office Tower',
+                  ),
+                ),
+              },
               circles: {
                 Circle(
                   circleId: CircleId("1"),
-                  radius: 789,
+                  radius: rangeController.range.value,
                   strokeColor: Colors.lightBlue,
                   strokeWidth: 1,
                   fillColor: Colors.lightBlue.withOpacity(0.5),
-                  center: LatLng(14.81605105, 96.12887631),
-                )
+                  center: LatLng(
+                      rangeController.lat.value, rangeController.lon.value),
+                ),
               },
+              initialCameraPosition: CameraPosition(
+                  target: LatLng(16.81669722489963, 96.128601508370990),
+                  zoom: 13),
             ),
             DraggableScrollableSheet(
               initialChildSize: 0.15,

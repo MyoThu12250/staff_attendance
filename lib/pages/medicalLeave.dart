@@ -11,7 +11,7 @@ import '../Controller/timeController.dart';
 import 'leave.dart';
 
 class MedicalLeave extends StatefulWidget {
-  bool isedit;
+  RxBool isedit;
   int? index;
   final Map<String, dynamic> leaveDetail;
 
@@ -26,17 +26,59 @@ class MedicalLeave extends StatefulWidget {
 final LeaveController controller = Get.put(LeaveController());
 
 class _MedicalLeaveState extends State<MedicalLeave> {
+  RxString attach = ''.obs;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.isedit == true) {
+    if (widget.isedit.value == true) {
       _reasonController.text = widget.leaveDetail['reasons'];
       _selectedDateTimef = DateTime.parse(widget.leaveDetail['from']);
       _selectedDateTimet = DateTime.parse(widget.leaveDetail['to']);
-      // imageController.imageFile.value = widget.leaveDetail['attachnment'];
+      attach.value = widget.leaveDetail['attachmentUrl'];
+    }
+  }
 
-      // _attatchController.text = widget.leaveDetail['attachmentUrl'] ?? 'photo';
+  Future<void> Update() async {
+    isLoading.value = true;
+
+    final id = widget.leaveDetail['id'].toString();
+    final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
+    final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
+    final String reason = _reasonController.text;
+    final String leavetype = 'Medical Leave';
+    final String attachment = imageController.imageUrl.value.toString();
+    try {
+      final response = await http.put(
+        Uri.parse('${Config.updateLeaveRecordByIdRoute}/$id'),
+        body: {
+          'reasons': reason,
+          'from': fromdate,
+          'to': todate,
+          'leaveType': leavetype,
+          'attachmentUrl': attachment
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Get.snackbar('Success', 'Your Leave Record Successfully Updated.',
+            backgroundColor: Colors.greenAccent,
+            duration: const Duration(seconds: 4));
+        Get.offAllNamed('/leave');
+      } else {
+        // Handle server error
+        print('Failed to Update: ${response.statusCode}');
+        Get.snackbar('Fail', 'Unable to Update. Please try again.',
+            backgroundColor: Colors.red, duration: const Duration(seconds: 4));
+      }
+    } catch (e) {
+      // Handle network error
+      print('Error Updating: $e');
+      Get.snackbar('Error', 'An error occurred. Please try again.',
+          backgroundColor: Colors.red, duration: const Duration(seconds: 4));
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -59,8 +101,8 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     // is Loading
     isLoading.value = true;
     print(imageController.imageUrl.value);
-    final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
-    final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
+    final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
+    final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
     final String reason = _reasonController.text;
     final String leavetype = 'Medical leave';
     final id = loginController.userInfo['userId'].toString();
@@ -77,7 +119,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
         'UserId': id
       },
     );
-
+    print(attachment);
     print(response.statusCode);
     if (response.statusCode == 200) {
       isLoading.value = false;
@@ -95,9 +137,34 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                         Colors.lightGreenAccent)),
                 child: Text('Ok'),
                 onPressed: () {
-                  Get.off(Leave(
-                    leaveDetail: {},
-                  )); // Close the dialog.
+                  Get.offAllNamed('/leave'); // Close the dialog.
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else if (response.statusCode == 400) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text('Unsuccessful '),
+            content: Container(
+              width: 300,
+              height: 60,
+              child: Text("You already Created Leave Record For this day"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.offAllNamed('/leave'); // Close the dialog.
                 },
               ),
             ],
@@ -112,6 +179,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
           return AlertDialog(
             elevation: 8,
             title: Text(' Unsuccessfully  '),
+            content: Text('Check Your Connection and Try Again'),
             actions: <Widget>[
               TextButton(
                 style: ButtonStyle(
@@ -119,7 +187,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                         MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
-                  Get.off(Leave(
+                  Get.offAll(Leave(
                     leaveDetail: {},
                   )); // Close the dialog.
                 },
@@ -130,6 +198,22 @@ class _MedicalLeaveState extends State<MedicalLeave> {
       );
       // Handle error response
       print('Failed to send data');
+    }
+  }
+
+  void _onUpdate() async {
+    if (_validate()) {
+      isLoading.value = true;
+      await imageController.uploadImage();
+
+      if (imageController.imageUrl.value != null) {
+        isLoading.value = true;
+        Update();
+      } else {
+        print("Error: Could not retrieve the download URL");
+      }
+    } else {
+      print("Enter Required Data");
     }
   }
 
@@ -151,14 +235,14 @@ class _MedicalLeaveState extends State<MedicalLeave> {
 
   bool _validate() {
     String _leavetype = selectedValue;
-    String _fromDate = _selectedDateTimef.toString();
-    String _toDate = _selectedDateTimet.toString();
+    String? _fromDate = _selectedDateTimef?.toString();
+    String? _toDate = _selectedDateTimet?.toString();
     String _reason = _reasonController.text;
 
     RxString _filename = imageController.fileName;
     if (_leavetype.isNotEmpty &&
-        _fromDate.isNotEmpty &&
-        _toDate.isNotEmpty &&
+        _fromDate != null &&
+        _toDate != null &&
         _reason.isNotEmpty &&
         _filename.isNotEmpty) {
       return true;
@@ -376,36 +460,54 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                           Container(
                                             height: 200,
                                             width: 200,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Obx(() {
-                                                  if (imageController
-                                                          .imageFile.value !=
-                                                      null) {
-                                                    return Container(
-                                                      height: 150,
-                                                      width: 150,
-                                                      child: Image.file(
-                                                        imageController
-                                                            .imageFile.value!,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    return Text(
-                                                        'Choose image..');
-                                                  }
-                                                }),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    imageController.pickImage();
-                                                  },
-                                                  icon: Icon(Icons.link),
-                                                ),
-                                              ],
+                                            child: Obx(
+                                              () => Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  (widget.isedit.value &&
+                                                          imageController
+                                                                  .imageFile
+                                                                  .value ==
+                                                              null)
+                                                      ? Container(
+                                                          height: 150,
+                                                          width: 150,
+                                                          child: Image.network(
+                                                              attach.value),
+                                                        )
+                                                      : Obx(() {
+                                                          if (imageController
+                                                                  .imageFile
+                                                                  .value ==
+                                                              null) {
+                                                            return Text(
+                                                                'Choose image..');
+                                                          } else {
+                                                            return Container(
+                                                                height: 150,
+                                                                width: 150,
+                                                                child:
+                                                                    Image.file(
+                                                                  imageController
+                                                                      .imageFile
+                                                                      .value!,
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                ));
+                                                          }
+                                                        }),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      imageController
+                                                          .pickImage();
+                                                    },
+                                                    icon: Icon(Icons.link),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -426,7 +528,9 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                           onPressed: mcount == 0
                                               ? null
                                               : () async {
-                                                  _onSubmit();
+                                                  widget.isedit.value == true
+                                                      ? _onUpdate()
+                                                      : _onSubmit();
                                                 },
                                           child: Text(
                                             'Submit',
