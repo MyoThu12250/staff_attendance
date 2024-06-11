@@ -5,10 +5,14 @@ import 'package:CheckMate/config_route.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'loginController.dart';
+
 class RangeController extends GetxController {
   var lat = 0.0.obs;
   var lon = 0.0.obs;
   var range = 0.0.obs;
+
+  LoginController loginController = Get.find();
 
   @override
   void onInit() {
@@ -17,7 +21,12 @@ class RangeController extends GetxController {
   }
 
   void fetchLocationData() async {
-    final response = await http.get(Uri.parse(Config.RangeRoute));
+    final response = await http.get(
+      Uri.parse(Config.RangeRoute),
+      headers: {
+        'Authorization': 'Bearer ${loginController.authorization.value}',
+      },
+    );
     if (response.statusCode == 200) {
       print('object');
       final data = jsonDecode(response.body);

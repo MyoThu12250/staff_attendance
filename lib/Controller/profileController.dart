@@ -74,6 +74,9 @@ class ProfileController extends GetxController {
     try {
       final response = await http.post(
         Uri.parse(Config.updateProfileRoute),
+        headers: {
+          'Authorization': 'Bearer ${controller.authorization.value}',
+        },
         body: {'imageUrl': url, 'id': id},
       );
       if (response.statusCode == 200) {
@@ -97,6 +100,9 @@ class ProfileController extends GetxController {
     try {
       final response = await http.post(
         Uri.parse(Config.getUpdateProfileRoute),
+        headers: {
+          'Authorization': 'Bearer ${controller.authorization.value}',
+        },
         body: {'id': ids},
       );
 

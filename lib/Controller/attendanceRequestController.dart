@@ -5,8 +5,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'loginController.dart';
+
 class RequestHistoryController extends GetxController {
   static const _pageSize = 10;
+
+  LoginController loginController = Get.find();
 
   final PagingController<int, dynamic> pagingController =
       PagingController(firstPageKey: 0);
@@ -20,7 +24,11 @@ class RequestHistoryController extends GetxController {
   Future<void> _fetchPage(int pageKey) async {
     try {
       final response = await http.get(
-          Uri.parse(Config.getAttdanceRequestHistoryRoute + '?page=$pageKey'));
+        Uri.parse(Config.getAttdanceRequestHistoryRoute + '?page=$pageKey'),
+        headers: {
+          'Authorization': 'Bearer ${loginController.authorization.value}',
+        },
+      );
       final data = json.decode(response.body);
       final newItems =
           data['datas']; // Adjust this based on the actual JSON structure

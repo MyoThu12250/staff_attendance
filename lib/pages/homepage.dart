@@ -143,64 +143,58 @@ class _HomePageState extends State<HomePage> {
           ),
           title: Text('Check Mate'),
           actions: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.black.withOpacity(0.095),
-                    radius: 20,
-                    child: Center(
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(ProfilePage());
-                          // Get.off(ProfilePage());
-                        },
-                        icon: const Icon(
-                          Icons.person,
-                          size: 25,
-                        ),
+            CircleAvatar(
+              backgroundColor: Colors.black.withOpacity(0.095),
+              radius: 20,
+              child: Center(
+                child: IconButton(
+                  onPressed: () {
+                    Get.to(ProfilePage());
+                    // Get.off(ProfilePage());
+                  },
+                  icon: const Icon(
+                    Icons.person,
+                    size: 25,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: CircleAvatar(
+                backgroundColor: Colors.black.withOpacity(0.095),
+                radius: 20,
+                child: Stack(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Get.to(NotiPage());
+                      },
+                      icon: const Icon(
+                        Icons.notifications,
+                        size: 25,
                       ),
                     ),
-                  ),
-                ),
-                CircleAvatar(
-                  backgroundColor: Colors.black.withOpacity(0.095),
-                  radius: 20,
-                  child: Center(
-                    child: Stack(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Get.to(NotiPage());
-                          },
-                          icon: const Icon(
-                            Icons.notifications,
-                            size: 25,
+                    Positioned(
+                      left: 22,
+                      // right: 0,
+                      bottom: 25,
+                      // top: 0,
+                      child: CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Colors.transparent,
+                        child: Text(
+                          '2', // noti count
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
                           ),
                         ),
-                        Positioned(
-                          left: 25,
-                          // right: 0,
-                          bottom: 20,
-                          // top: 0,
-                          child: CircleAvatar(
-                            radius: 10,
-                            backgroundColor: Colors.amber,
-                            child: Text(
-                              '2', // noti count
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                      ),
+                    )
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),

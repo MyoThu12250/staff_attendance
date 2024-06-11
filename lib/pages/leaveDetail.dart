@@ -31,6 +31,9 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
       try {
         final response = await http.delete(
           Uri.parse('${Config.deleteLeaveRecordByIdRoute}/$id'),
+          headers: {
+            'Authorization': 'Bearer ${loginController.authorization.value}',
+          },
         );
 
         if (response.statusCode == 200) {
@@ -109,11 +112,14 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         ),
                       ),
                     ),
-                    Text(
-                      'Reason',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        'Reason',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                     Padding(
@@ -126,11 +132,14 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         ),
                       ),
                     ),
-                    Text(
-                      'Duration',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        'Duration',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                     Padding(
@@ -161,12 +170,15 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         ),
                       ),
                     ),
-                    Text(
-                      maxLines: 1,
-                      reason.toString(),
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        maxLines: 1,
+                        reason.toString(),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                     Padding(

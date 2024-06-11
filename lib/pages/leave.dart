@@ -277,46 +277,53 @@ class LeaveListView extends StatelessWidget {
             ],
           ),
           noItemsFoundIndicatorBuilder: (context) => Center(
-            child: Text('No leave records found'),
+            child: Text('Empty leave record'),
           ),
         ),
       );
     } else {
       return Obx(
         () {
-          return ListView.separated(
-            itemCount: leaves.length,
-            itemBuilder: (context, index) {
-              final item = leaves[index];
-              return GestureDetector(
-                onTap: () {
-                  Get.to(LeaveDetailPage(leaveDetail: item));
-                },
-                child: ListTile(
-                  title: Text(item['leaveType']),
-                  subtitle: Text(
-                    DateFormat('yyyy-MM-dd').format(
-                      DateTime.parse(
-                        item['createdAt'],
+          return leaves.isEmpty
+              ? Center(
+                  child: Text(
+                    'Empty leave record',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                )
+              : ListView.separated(
+                  itemCount: leaves.length,
+                  itemBuilder: (context, index) {
+                    final item = leaves[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(LeaveDetailPage(leaveDetail: item));
+                      },
+                      child: ListTile(
+                        title: Text(item['leaveType']),
+                        subtitle: Text(
+                          DateFormat('yyyy-MM-dd').format(
+                            DateTime.parse(
+                              item['createdAt'],
+                            ),
+                          ),
+                        ),
+                        trailing: Icon(
+                          getIcon(item['status']),
+                          color: getColor(
+                            item['status'],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  trailing: Icon(
-                    getIcon(item['status']),
-                    color: getColor(
-                      item['status'],
-                    ),
-                  ),
-                ),
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return Divider(
-                color: Colors.black,
-                thickness: 0.5,
-              );
-            },
-          );
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(
+                      color: Colors.black,
+                      thickness: 0.5,
+                    );
+                  },
+                );
         },
       );
     }

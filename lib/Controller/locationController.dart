@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
+import 'loginController.dart';
+
 final DateTimeController dateTimeController = Get.put(DateTimeController());
 final LatLng center = LatLng(16.81605105, 96.12887631);
 final double radius = 300.0;
@@ -15,6 +17,8 @@ final double radius = 300.0;
 class LocationController extends GetxController {
   String checks = '';
   RxBool isLoading = false.obs;
+
+  LoginController loginController = Get.find();
 
   // Observable to track if the point is within range
   final isInRange = false.obs;
@@ -35,7 +39,10 @@ class LocationController extends GetxController {
           'lat': position.latitude,
           'lon': position.longitude,
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${loginController.authorization.value}',
+        },
       );
       if (response.statusCode == 200) {
         String check = response.body;
@@ -147,7 +154,10 @@ class LocationController extends GetxController {
           'lat': position.latitude,
           'lon': position.longitude,
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${loginController.authorization.value}',
+        },
       );
       if (response.statusCode == 200) {
         String check = response.body;

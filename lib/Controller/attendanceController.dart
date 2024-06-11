@@ -31,6 +31,9 @@ class AddController extends GetxController {
       // Send HTTP GET request to the API endpoint with the current page
       final response = await http.get(
         Uri.parse(Config.getAttendanceRouteById + '/$id?page=$currentPage'),
+        headers: {
+          'Authorization': 'Bearer ${controller.authorization.value}',
+        },
       );
 
       if (response.statusCode == 200) {

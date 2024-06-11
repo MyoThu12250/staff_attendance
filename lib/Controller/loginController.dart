@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:CheckMate/config_route.dart';
-import 'package:CheckMate/pages/notipage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -15,7 +14,9 @@ import '../pages/homepage.dart';
 
 class LoginController extends GetxController {
   var isLogin = false.obs;
+  var deviceid = ''.obs;
   var username = ''.obs;
+  var id = ''.obs;
   var password = ''.obs;
   var userInfo = {}.obs;
   var isLoading = false.obs;
@@ -23,6 +24,7 @@ class LoginController extends GetxController {
   final boxx = GetStorage();
   final _storage = FlutterSecureStorage();
   final _accessToken = ''.obs;
+  final authorization = ''.obs;
   final _refreshToken = ''.obs;
   final _accessTokenExpiryTime = DateTime.now().obs;
   final _refreshTokenExpiryTime = DateTime.now().obs;
@@ -38,12 +40,31 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
+    Future<void> post() async {
+      print('hi');
+      final response = await http.post(
+        Uri.parse(Config.fcmSendRoute),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${authorization.value}',
+        },
+        body: jsonEncode(<String, String>{
+          'userId': userInfo['userId'].toString(),
+          'token': deviceid.value,
+        }),
+      );
+
+      print(response.statusCode);
+      print('this is sending token');
+    }
+
     isLoading.value = true;
     try {
       final response = await http.post(
         Uri.parse(Config.loginRoute),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${authorization.value}',
         },
         body: jsonEncode(<String, String>{
           'employeeId': username.value,
@@ -56,6 +77,7 @@ class LoginController extends GetxController {
           leaveDetail: {},
         ));
         userInfo.value = jsonDecode(response.body)['userData'];
+        // id.value = userInfo['userId'];
         isLogin.value = true;
         boxx.write('isLogin', isLogin.value);
         box.write('userInfo', userInfo.value);
@@ -79,14 +101,10 @@ class LoginController extends GetxController {
 
         _firebaseMessaging.getToken().then((String? token) {
           assert(token != null);
-          // print("Firebase Messaging Token: $token");
-          http.post(
-            Uri.parse(Config.fcmSendRoute),
-            body: {
-              'id': id,
-              'token': token,
-            },
-          );
+          deviceid.value = token.toString();
+          print("Firebase Messaging Token: $token");
+
+          token != null && userInfo['userId'] != null ? post() : print('hhggf');
         });
       } else if (response.statusCode == 401) {
         Get.snackbar('Login Error', 'User name or Password Wrong',
@@ -112,6 +130,7 @@ class LoginController extends GetxController {
     await _storage.write(key: 'access_token', value: accessToken);
     await _storage.write(key: 'refresh_token', value: refreshToken);
     _accessToken.value = accessToken;
+    authorization.value = accessToken;
     _refreshToken.value = refreshToken;
     _accessTokenExpiryTime.value = JwtDecoder.getExpirationDate(accessToken);
     _refreshTokenExpiryTime.value = JwtDecoder.getExpirationDate(refreshToken);
@@ -122,6 +141,7 @@ class LoginController extends GetxController {
     final refreshToken = await _storage.read(key: 'refresh_token');
     if (accessToken != null && refreshToken != null) {
       _accessToken.value = accessToken;
+      authorization.value = accessToken;
       _refreshToken.value = refreshToken;
       _accessTokenExpiryTime.value = JwtDecoder.getExpirationDate(accessToken);
       _refreshTokenExpiryTime.value =
@@ -154,6 +174,7 @@ class LoginController extends GetxController {
         Uri.parse(Config.refreshRoute),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${authorization.value}',
         },
         body: jsonEncode(<String, String>{
           'refreshTokenFromUser': _refreshToken.value,
@@ -175,12 +196,15 @@ class LoginController extends GetxController {
   }
 
   Future<void> logout() async {
-    print(userInfo['userId']);
+    // print(userInfo['userId']);
     try {
       final response = await http.get(
         Uri.parse('${Config.logoutByIdRoute}/${userInfo['userId']}'),
+        headers: {
+          'Authorization': 'Bearer ${authorization.value}',
+        },
       );
-      print(response.statusCode);
+      // print(response.statusCode);
 
       if (response.statusCode == 200) {
         // Clear local storage and update state
@@ -200,7 +224,6 @@ class LoginController extends GetxController {
         await _storage.deleteAll();
         boxx.write('isLogin', false);
         box.erase();
-
         _accessToken.value = '';
         _refreshToken.value = '';
         _accessTokenExpiryTime.value = DateTime.now();

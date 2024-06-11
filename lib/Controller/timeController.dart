@@ -72,7 +72,10 @@ class DateTimeController extends GetxController {
           'checkingStatus': status
         },
       ),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${controller.authorization.value}',
+      },
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -216,7 +219,10 @@ class DateTimeController extends GetxController {
           'checkingStatus': 'out'
         },
       ),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${controller.authorization.value}',
+      },
     );
     print(response.statusCode);
     if (response.statusCode == 200) {

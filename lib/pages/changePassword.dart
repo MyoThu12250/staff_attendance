@@ -1,3 +1,4 @@
+import 'package:CheckMate/Controller/loginController.dart';
 import 'package:CheckMate/pages/testProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   TextEditingController _password = TextEditingController();
   TextEditingController _newPassword = TextEditingController();
   TextEditingController _reNewPassword = TextEditingController();
+  LoginController loginController = Get.find();
 
   bool _obscureText = false;
 
@@ -33,6 +35,9 @@ class _ChangePasswordState extends State<ChangePassword> {
         'email': email,
         'oldPassword': oldpassword,
         'newPassword': newPassword
+      },
+      headers: {
+        'Authorization': 'Bearer ${loginController.authorization.value}',
       },
     );
 
@@ -191,90 +196,117 @@ class _ChangePasswordState extends State<ChangePassword> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
                 child: Center(
-                  child: Card(
-                    margin: EdgeInsets.only(top: 120),
-                    elevation: 8,
-                    child: SizedBox(
-                      width: 300,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 280,
-                            child: TextField(
-                              controller: _email,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                prefixIcon: Icon(Icons.mail),
-                                border: OutlineInputBorder(),
-                              ),
+                  child: SizedBox(
+                    width: 340,
+                    child: Card(
+                      margin: EdgeInsets.only(top: 60),
+                      elevation: 8,
+                      child: SizedBox(
+                        width: 300,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 30,
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 30.0),
-                            child: SizedBox(
-                              width: 280,
-                              child: TextField(
-                                obscureText: !_obscureText,
-                                controller: _password,
-                                decoration: InputDecoration(
-                                  labelText: 'Old Password',
-                                  prefixIcon: Icon(Icons.https),
-                                  border: OutlineInputBorder(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: SizedBox(
+                                width: 280,
+                                child: TextField(
+                                  controller: _email,
+                                  decoration: InputDecoration(
+                                    labelText: 'Email',
+                                    prefixIcon: Icon(Icons.mail),
+                                    border: OutlineInputBorder(),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 280,
-                            child: TextField(
-                              obscureText: !_obscureText,
-                              controller: _newPassword,
-                              decoration: InputDecoration(
-                                labelText: 'New Password',
-                                prefixIcon: Icon(Icons.https),
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 30.0),
-                            child: SizedBox(
-                              width: 280,
-                              child: TextField(
-                                obscureText: !_obscureText,
-                                controller: _reNewPassword,
-                                decoration: InputDecoration(
-                                  labelText: 'Comfirm Password',
-                                  prefixIcon: Icon(Icons.https),
-                                  border: OutlineInputBorder(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              child: SizedBox(
+                                width: 280,
+                                child: TextField(
+                                  obscureText: !_obscureText,
+                                  controller: _password,
+                                  decoration: InputDecoration(
+                                    labelText: 'Old Password',
+                                    prefixIcon: Icon(Icons.https),
+                                    border: OutlineInputBorder(),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Checkbox(
-                                value: _obscureText,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _obscureText = value ?? false;
-                                  });
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: SizedBox(
+                                width: 280,
+                                child: TextField(
+                                  obscureText: !_obscureText,
+                                  controller: _newPassword,
+                                  decoration: InputDecoration(
+                                    labelText: 'New Password',
+                                    prefixIcon: Icon(Icons.https),
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              child: SizedBox(
+                                width: 280,
+                                child: TextField(
+                                  obscureText: !_obscureText,
+                                  controller: _reNewPassword,
+                                  decoration: InputDecoration(
+                                    labelText: 'Comfirm Password',
+                                    prefixIcon: Icon(Icons.https),
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Checkbox(
+                                    value: _obscureText,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        _obscureText = value ?? false;
+                                      });
+                                    },
+                                  ),
+                                  Text('Show Password'),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 30.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  validate() ? password() : print('object');
                                 },
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    fontFamily: 'Epilogue',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                              Text('Show Password'),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 30.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                validate() ? password() : print('object');
-                              },
-                              child: Text('Save'),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

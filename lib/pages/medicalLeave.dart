@@ -59,6 +59,9 @@ class _MedicalLeaveState extends State<MedicalLeave> {
           'leaveType': leavetype,
           'attachmentUrl': attachment
         },
+        headers: {
+          'Authorization': 'Bearer ${loginController.authorization.value}',
+        },
       );
 
       if (response.statusCode == 200) {
@@ -117,6 +120,9 @@ class _MedicalLeaveState extends State<MedicalLeave> {
         'leaveType': leavetype,
         'attachmentUrl': attachment,
         'UserId': id
+      },
+      headers: {
+        'Authorization': 'Bearer ${loginController.authorization.value}',
       },
     );
     print(attachment);

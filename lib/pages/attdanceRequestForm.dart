@@ -42,6 +42,9 @@ class _RequestPageFormState extends State<RequestPageForm> {
     final response = await http.post(
       Uri.parse(Config.createAttendanceRequestRoute),
       body: {'reason': reason, 'data': date, 'UserId': id},
+      headers: {
+        'Authorization': 'Bearer ${loginController.authorization.value}',
+      },
     );
     print(response.statusCode);
     isLoading.value = false;

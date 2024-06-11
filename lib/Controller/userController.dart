@@ -9,7 +9,10 @@ class UserController extends GetxController {
 
   Future<void> getData() async {
     var headers = {'Content-Type': 'application/json'};
-    var request = http.Request('POST', Uri.parse(Config.loginRoute));
+    var request = http.Request(
+      'POST',
+      Uri.parse(Config.loginRoute),
+    );
     request.body = json.encode({"username": "Nu Nu", "password": "password"});
     request.headers.addAll(headers);
 

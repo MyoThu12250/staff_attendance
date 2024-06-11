@@ -12,7 +12,7 @@ import 'loginController.dart';
 LoginController loginController = Get.find();
 
 class LeaveController extends GetxController with SingleGetTickerProviderMixin {
-  static const _pageSize = 10;
+  var _pageSize = 0.obs;
   final id = loginController.userInfo['userId'];
   final acount = loginController.userInfo['annualLeave'];
   final mcount = loginController.userInfo['medicalLeave'];
@@ -46,12 +46,16 @@ class LeaveController extends GetxController with SingleGetTickerProviderMixin {
     try {
       final response = await http.get(
         Uri.parse(Config.getLeaveRecordByIdRoute + '/$id?page=$pageKey'),
+        headers: {
+          'Authorization': 'Bearer ${loginController.authorization.value}',
+        },
       );
       print(response.statusCode);
       if (response.statusCode == 200) {
-        print(id);
         final jsonData = jsonDecode(response.body);
         final List<dynamic> newItems = jsonData['datas'] ?? [];
+        _pageSize.value = jsonData['totalPage'];
+        print(_pageSize.value);
 
         if (pageKey == 0) {
           Rlist.clear();
@@ -65,7 +69,7 @@ class LeaveController extends GetxController with SingleGetTickerProviderMixin {
         Plist.addAll(newItems.where((item) => item['status'] == "Pending"));
         allLeaves.addAll(newItems);
 
-        final isLastPage = newItems.length < _pageSize;
+        final isLastPage = newItems.length < _pageSize.value;
         if (isLastPage) {
           pagingController.appendLastPage(newItems);
         } else {

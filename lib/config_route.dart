@@ -28,4 +28,5 @@ class Config {
   static const String getAttdanceRequestHistoryRoute =
       '$baseUrl/attendanceRequest';
   static const String RangeRoute = '$baseUrl/location/getLoc';
+  static const String testRoute = '$baseUrl//test/';
 }

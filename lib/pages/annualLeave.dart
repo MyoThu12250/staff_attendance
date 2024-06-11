@@ -57,6 +57,9 @@ class _AnnualLeaveState extends State<AnnualLeave> {
         'leaveType': leavetype,
         'UserId': id
       },
+      headers: {
+        'Authorization': 'Bearer ${loginController.authorization.value}',
+      },
     );
     print(response.statusCode);
 
@@ -203,6 +206,9 @@ class _AnnualLeaveState extends State<AnnualLeave> {
           'from': fromdate,
           'to': todate,
           'leaveType': leavetype
+        },
+        headers: {
+          'Authorization': 'Bearer ${loginController.authorization.value}',
         },
       );
 

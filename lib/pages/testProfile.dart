@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -57,197 +59,205 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         // backgroundColor: Colors.white60,
-        body: Container(
-          color: Colors.blueGrey[300],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(
-                () => Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    _controller.isLoading.value
-                        ? Center(child: CircularProgressIndicator())
-                        : Container(
-                            height: 200,
-                            width: 400,
-                            child: _controller.url.value.isEmpty
-                                ? Image.asset(
-                                    fit: BoxFit.fitWidth,
-                                    'assets/images/default_profile.jpg')
-                                : Image.network(
-                                    _controller.url.value,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                          ),
-                    Positioned(
-                      child: Center(
-                        child: _controller.isLoading.value
-                            ? Center(child: CircularProgressIndicator())
-                            : CircleAvatar(
-                                radius: 85,
-                                backgroundColor: Colors.white,
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.grey,
-                                  radius: 80,
-                                  backgroundImage: _controller.url.value.isEmpty
-                                      ? AssetImage(
-                                          'assets/images/default_profile.jpg')
-                                      : NetworkImage(_controller.url.value)
-                                          as ImageProvider,
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        right: 0,
-                                        bottom: 0,
-                                        child: CircleAvatar(
-                                          radius: 25,
-                                          backgroundColor: Colors.white,
-                                          child: CircleAvatar(
-                                            radius: 20,
-                                            child: Center(
-                                              child: IconButton(
-                                                iconSize: 30.0,
-                                                color: Colors.black,
-                                                onPressed: () {
-                                                  showModalBottomSheet(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        BottomSheetOptions(
-                                                            _controller),
-                                                  );
-                                                  // _controller.pickImage(
-                                                  //     ImageSource.gallery);
-                                                },
-                                                icon: Icon(Icons.edit),
+        body: SingleChildScrollView(
+          child: Container(
+            height: 800,
+            color: Colors.blueGrey[300],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Obx(
+                  () => Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      _controller.isLoading.value
+                          ? Center(child: CircularProgressIndicator())
+                          : Container(
+                              height: 200,
+                              width: 400,
+                              child: _controller.url.value.isEmpty
+                                  ? Image.asset(
+                                      fit: BoxFit.fitWidth,
+                                      'assets/images/default_profile.jpg')
+                                  : Image.network(
+                                      _controller.url.value,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                            ),
+                      Positioned(
+                        top: 13,
+                        left: 110,
+                        child: Center(
+                          child: _controller.isLoading.value
+                              ? null
+                              : CircleAvatar(
+                                  radius: 85,
+                                  backgroundColor: Colors.green[300],
+                                  child: BackdropFilter(
+                                    filter:
+                                        ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.grey,
+                                      radius: 80,
+                                      backgroundImage: _controller
+                                              .url.value.isEmpty
+                                          ? AssetImage(
+                                              'assets/images/default_profile.jpg')
+                                          : NetworkImage(_controller.url.value)
+                                              as ImageProvider,
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            right: 0,
+                                            bottom: 0,
+                                            child: CircleAvatar(
+                                              radius: 25,
+                                              backgroundColor: Colors.white,
+                                              child: CircleAvatar(
+                                                radius: 20,
+                                                child: Center(
+                                                  child: IconButton(
+                                                    iconSize: 30.0,
+                                                    color: Colors.black,
+                                                    onPressed: () {
+                                                      showModalBottomSheet(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            BottomSheetOptions(
+                                                                _controller),
+                                                      );
+                                                    },
+                                                    icon: Icon(Icons.edit),
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 80),
+                SizedBox(height: 30),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(
+                      () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Text(
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 21,
+                            fontFamily: 'Epilogue',
+                          ),
+                          'Name: ${loginController.userInfo['username']}',
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Obx(
+                      () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Text(
+                            style: TextStyle(
+                              // fontStyle: FontStyle.italic,
+                              color: Colors.black,
+                              fontSize: 21,
+                              fontFamily: 'Epilogue',
+                            ),
+                            'Email: ${loginController.userInfo['email']}'),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Obx(
+                      () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Text(
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 21,
+                              fontFamily: 'Epilogue',
+                            ),
+                            'Employee Id: ${loginController.userInfo['employeeId']}'),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Obx(
+                      () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Text(
+                            style: TextStyle(
+                              // fontStyle: FontStyle.italic,
+                              color: Colors.black,
+                              fontSize: 21,
+                              fontFamily: 'Epilogue',
+                            ),
+                            'Date Of Birth : ${loginController.userInfo['DOB']}'),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Obx(
+                      () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Text(
+                            style: TextStyle(
+                              // fontStyle: FontStyle.italic,
+                              color: Colors.black,
+                              fontSize: 21,
+                              fontFamily: 'Epilogue',
+                            ),
+                            'Address: ${loginController.userInfo['address']}'),
                       ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(height: 80),
-              SizedBox(height: 30),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Text(
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 21,
-                          fontFamily: 'Epilogue',
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Center(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.pinkAccent,
+                          foregroundColor: Colors.white,
                         ),
-                        'Name: ${loginController.userInfo['username']}',
+                        onPressed: () {
+                          loginController.logout();
+                        },
+                        child: Text(
+                          "Log Out",
+                          style: TextStyle(
+                            fontFamily: 'Epilogue',
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 30),
-                  Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Text(
-                          style: TextStyle(
-                            // fontStyle: FontStyle.italic,
-                            color: Colors.black,
-                            fontSize: 21,
-                            fontFamily: 'Epilogue',
-                          ),
-                          'Email: ${loginController.userInfo['email']}'),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Text(
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 21,
-                            fontFamily: 'Epilogue',
-                          ),
-                          'Employee Id: ${loginController.userInfo['employeeId']}'),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Text(
-                          style: TextStyle(
-                            // fontStyle: FontStyle.italic,
-                            color: Colors.black,
-                            fontSize: 21,
-                            fontFamily: 'Epilogue',
-                          ),
-                          'Date Of Birth : ${loginController.userInfo['DOB']}'),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Text(
-                          style: TextStyle(
-                            // fontStyle: FontStyle.italic,
-                            color: Colors.black,
-                            fontSize: 21,
-                            fontFamily: 'Epilogue',
-                          ),
-                          'Address: ${loginController.userInfo['address']}'),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Center(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.pinkAccent,
-                        foregroundColor: Colors.white,
-                      ),
+                    TextButton(
                       onPressed: () {
-                        loginController.logout();
+                        // Get.off(ChangePassword());
+                        Get.to(ChangePassword());
                       },
                       child: Text(
-                        "Log Out",
+                        'Reset Password',
                         style: TextStyle(
+                          color: Colors.pink,
                           fontFamily: 'Epilogue',
                         ),
                       ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Get.off(ChangePassword());
-                      Get.to(ChangePassword());
-                    },
-                    child: Text(
-                      'Reset Password',
-                      style: TextStyle(
-                        color: Colors.pink,
-                        fontFamily: 'Epilogue',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
