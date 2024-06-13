@@ -52,6 +52,7 @@ class LocationController extends GetxController {
         } else if (isValid == false) {
           showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
                 shadowColor: Colors.red,
@@ -97,6 +98,7 @@ class LocationController extends GetxController {
         print('Location sent successfully');
       } else {
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -166,6 +168,7 @@ class LocationController extends GetxController {
           dateTimeController.sendDateTimeToServerout(context);
         } else if (isValid == false) {
           showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -211,6 +214,7 @@ class LocationController extends GetxController {
         print('Location sent successfully');
       } else {
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(

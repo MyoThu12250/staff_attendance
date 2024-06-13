@@ -107,7 +107,7 @@ class AttendanceDetailPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  earlyTime.toString(),
+                  earlyTime.toString() + ' minutes',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
@@ -122,14 +122,14 @@ class AttendanceDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Late Out Time',
+                    'Late in Time',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                     ),
                   ),
                   Text(
-                    lateTime.toString(),
+                    lateTime.toString() + ' minutes',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,

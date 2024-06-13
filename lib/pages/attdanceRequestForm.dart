@@ -26,22 +26,22 @@ class _RequestPageFormState extends State<RequestPageForm> {
   Future<void> _sendData() async {
     isLoading.value = true;
     final id = loginController.userInfo['userId'].toString();
-    final date = DateFormat('yyyy-MM-dd').format(_date!);
+    final date = DateFormat('yyyy-MM-dd').format(_date!).toString();
     String reason;
     if (dropdownValue.value == 'Check In') {
       print(dropdownValue.value);
-      reason = 'late_in_time';
+      reason = 'in_time_late';
     } else if (dropdownValue.value == 'Check Out') {
       print(dropdownValue.value);
-      reason = 'late_out_time';
+      reason = 'out_time_late';
     } else {
-      reason = 'late';
-      print('keoeo'); // For "Both" or any other case
+      reason = 'in_time_late';
+      // For "Both" or any other case
     }
-
+    print(reason);
     final response = await http.post(
       Uri.parse(Config.createAttendanceRequestRoute),
-      body: {'reason': reason, 'data': date, 'UserId': id},
+      body: {'reason': reason.toString(), 'date': date, 'UserId': id},
       headers: {
         'Authorization': 'Bearer ${loginController.authorization.value}',
       },
@@ -97,6 +97,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
     } else {
       showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Required'),

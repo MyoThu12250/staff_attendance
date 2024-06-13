@@ -10,7 +10,6 @@ import '../Controller/leaveController.dart';
 import '../pages/annualLeave.dart';
 import '../pages/leaveDetail.dart';
 import '../pages/medicalLeave.dart';
-import 'calender.dart';
 import 'homepage.dart';
 
 class Leave extends StatefulWidget {
@@ -221,20 +220,20 @@ class _LeaveState extends State<Leave> {
                   width: 35,
                 ),
               ),
-              IconButton(
-                iconSize: 35,
-                onPressed: () {
-                  Get.off(
-                      Calender(
-                        leaveDetail: {},
-                      ),
-                      transition: Transition.fadeIn);
-                },
-                icon: Icon(
-                  Icons.calendar_month,
-                  color: Colors.black,
-                ),
-              ),
+              // IconButton(
+              //   iconSize: 35,
+              //   onPressed: () {
+              //     Get.off(
+              //         Calender(
+              //           leaveDetail: {},
+              //         ),
+              //         transition: Transition.fadeIn);
+              //   },
+              //   icon: Icon(
+              //     Icons.calendar_month,
+              //     color: Colors.black,
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -277,7 +276,13 @@ class LeaveListView extends StatelessWidget {
             ],
           ),
           noItemsFoundIndicatorBuilder: (context) => Center(
-            child: Text('Empty leave record'),
+            child: Text(
+              'Empty leave record',
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'Epilogue',
+              ),
+            ),
           ),
         ),
       );
@@ -288,7 +293,10 @@ class LeaveListView extends StatelessWidget {
               ? Center(
                   child: Text(
                     'Empty leave record',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'Epilogue',
+                    ),
                   ),
                 )
               : ListView.separated(

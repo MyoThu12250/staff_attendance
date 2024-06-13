@@ -41,6 +41,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _loadImage(String url) async {
+      // Simulate network delay
+      await Future.delayed(Duration(seconds: 2));
+      // You can add more logic to check if the image actually exists
+    }
+
     return WillPopScope(
       onWillPop: () async {
         Get.off(HomePage(
@@ -82,6 +88,38 @@ class _ProfilePageState extends State<ProfilePage> {
                                   : Image.network(
                                       _controller.url.value,
                                       fit: BoxFit.fitWidth,
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        } else {
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      (loadingProgress
+                                                              .expectedTotalBytes ??
+                                                          1)
+                                                  : null,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      errorBuilder: (BuildContext context,
+                                          Object error,
+                                          StackTrace? stackTrace) {
+                                        return Center(
+                                          child: Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                            size: 50.0,
+                                          ),
+                                        );
+                                      },
                                     ),
                             ),
                       Positioned(
@@ -99,14 +137,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: CircleAvatar(
                                       backgroundColor: Colors.grey,
                                       radius: 80,
-                                      backgroundImage: _controller
-                                              .url.value.isEmpty
-                                          ? AssetImage(
-                                              'assets/images/default_profile.jpg')
-                                          : NetworkImage(_controller.url.value)
-                                              as ImageProvider,
                                       child: Stack(
                                         children: [
+                                          FutureBuilder(
+                                            future: _loadImage(
+                                                _controller.url.value),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              } else if (snapshot.hasError) {
+                                                return Center(
+                                                  child: Icon(
+                                                    Icons.error,
+                                                    color: Colors.red,
+                                                  ),
+                                                );
+                                              } else {
+                                                return CircleAvatar(
+                                                  radius: 80,
+                                                  backgroundImage: NetworkImage(
+                                                      _controller.url.value),
+                                                );
+                                              }
+                                            },
+                                          ),
                                           Positioned(
                                             right: 0,
                                             bottom: 0,
@@ -122,6 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     onPressed: () {
                                                       showModalBottomSheet(
                                                         context: context,
+                                                        isDismissible: true,
                                                         builder: (context) =>
                                                             BottomSheetOptions(
                                                                 _controller),

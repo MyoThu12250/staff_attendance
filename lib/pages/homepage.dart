@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:CheckMate/pages/attdanceHistory.dart';
 import 'package:CheckMate/pages/testProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../Controller/circleController.dart';
@@ -12,7 +14,6 @@ import '../Controller/locationController.dart';
 import '../Controller/loginController.dart';
 import '../Controller/permissionController.dart';
 import '../Controller/timeController.dart';
-import 'calender.dart';
 import 'leave.dart';
 import 'notipage.dart';
 
@@ -27,8 +28,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var check = DateTime.now().hour.obs;
-  late DateTime _currentTime;
-  late Timer _timer;
+
+  // late DateTime _currentTime;
+
+  // late Timer _timer;
   late Stream<DateTime> _timeStream;
   final Completer<GoogleMapController> _controller = Completer();
   final PermissionController permissionController =
@@ -44,40 +47,44 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _timeStream = _getTimeStream();
 
     controller.loadProfileData();
     rangeController.fetchLocationData();
 
     permissionController.handleLocationPermission(context);
-    _currentTime = DateTime.now();
-    _timeStream =
-        Stream<DateTime>.periodic(Duration(seconds: 1), (_) => DateTime.now());
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    //*** stable time ***//
+    // _currentTime = DateTime.now();
+    // _timeStream =
+    //     Stream<DateTime>.periodic(Duration(seconds: 1), (_) => DateTime.now());
+    // _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    //   if (mounted) {
+    //     setState(() {});
+    //   }
+    // });
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    // _timer.cancel();
     super.dispose();
   }
 
-  final Set<Marker> _marker = {
-    const Marker(
-      markerId: MarkerId('Times City'),
-      position: LatLng(14.81605205, 96.12887631),
-      infoWindow: InfoWindow(
-        title: 'Times City',
-        snippet: 'Office Tower',
-      ),
-    )
-  };
+  //
+  // final Set<Marker> _marker = {
+  //   const Marker(
+  //     markerId: MarkerId('Times City'),
+  //     position: LatLng(14.81605205, 96.12887631),
+  //     infoWindow: InfoWindow(
+  //       title: 'Times City',
+  //       snippet: 'Office Tower',
+  //     ),
+  //   )
+  // };
 
   Future<bool> _onWillPop(BuildContext context) async {
     return await showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) => AlertDialog(
             elevation: 20,
@@ -113,6 +120,29 @@ class _HomePageState extends State<HomePage> {
           ),
         ) ??
         false;
+  }
+
+  Stream<DateTime> _getTimeStream() async* {
+    while (true) {
+      try {
+        final response = await http
+            .get(Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Yangon'));
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final dateTimeString = data['datetime'];
+          final dateTime = DateTime.parse(dateTimeString)
+              .toUtc()
+              .add(Duration(hours: 6, minutes: 30)); // Adjust to UTC +6:30
+          yield dateTime;
+        } else {
+          throw Exception('Failed to load time');
+        }
+      } catch (e) {
+        yield DateTime.now().toUtc().add(Duration(
+            hours: 6, minutes: 30)); // Default to UTC +6:30 if there's an error
+      }
+      await Future.delayed(Duration(seconds: 1));
+    }
   }
 
   @override
@@ -168,7 +198,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        Get.to(NotiPage());
+                        Get.to(NotiPage(
+                          title: 'hi',
+                          body: 'hi',
+                        ));
                       },
                       icon: const Icon(
                         Icons.notifications,
@@ -272,7 +305,18 @@ class _HomePageState extends State<HomePage> {
                           StreamBuilder<DateTime>(
                             stream: _timeStream,
                             builder: (context, snapshot) {
-                              if (snapshot.hasData) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else if (snapshot.hasData) {
+                                final dateTime = snapshot.data!;
+                                final hour =
+                                    dateTime.hour.toString().padLeft(2, '0');
+                                final minute =
+                                    dateTime.minute.toString().padLeft(2, '0');
+                                // add global time
                                 return Row(
                                   children: [
                                     Padding(
@@ -291,9 +335,7 @@ class _HomePageState extends State<HomePage> {
                                             child: SizedBox(
                                               width: screenWidth * 0.21,
                                               child: Text(
-                                                DateFormat('h').format(
-                                                        snapshot.data!) +
-                                                    'h',
+                                                hour + 'h',
                                                 style: TextStyle(
                                                   fontSize: screenWidth * 0.12,
                                                   // Responsive font size
@@ -313,7 +355,7 @@ class _HomePageState extends State<HomePage> {
                                             width: screenWidth * 0.29,
                                             // Responsive width
                                             child: Text(
-                                              '${snapshot.data!.minute}m',
+                                              minute + 'm',
                                               style: TextStyle(
                                                 fontSize: screenWidth * 0.12,
                                                 fontWeight: FontWeight.bold,
@@ -324,7 +366,8 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 8.0),
+                                              vertical: 5.0,
+                                            ),
                                             child: Text(
                                               snapshot.data!.hour < 12
                                                   ? 'AM'
@@ -521,20 +564,20 @@ class _HomePageState extends State<HomePage> {
                   width: 35,
                 ),
               ),
-              IconButton(
-                iconSize: 35,
-                onPressed: () {
-                  Get.off(
-                      Calender(
-                        leaveDetail: {},
-                      ),
-                      transition: Transition.fadeIn);
-                },
-                icon: Icon(
-                  Icons.calendar_month,
-                  color: Colors.black,
-                ),
-              ),
+              // IconButton(
+              //   iconSize: 35,
+              //   onPressed: () {
+              //     Get.off(
+              //         Calender(
+              //           leaveDetail: {},
+              //         ),
+              //         transition: Transition.fadeIn);
+              //   },
+              //   icon: Icon(
+              //     Icons.calendar_month,
+              //     color: Colors.black,
+              //   ),
+              // ),
             ],
           ),
         ),

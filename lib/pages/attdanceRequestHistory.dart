@@ -52,15 +52,11 @@ class RequestHistoryPage extends StatelessWidget {
                 subtitle: Text(
                   DateFormat('yyyy-MM-dd').format(DateTime.parse(item['date'])),
                 ),
-                leading: item['status'] == 'Pending'
-                    // getIcon(color:getColor())
-                    ? CircleAvatar(
-                        backgroundColor: Colors.greenAccent,
-                        child: Icon(Icons.more_horiz))
-                    : CircleAvatar(
-                        backgroundColor: Colors.pink,
-                        child: Icon(Icons.close),
-                      ),
+                leading: Icon(
+                  size: 45,
+                  getIcon(item['status']),
+                  color: getColor(item['status']),
+                ),
               ),
             ),
             if (index < controller.pagingController.itemList!.length - 1)

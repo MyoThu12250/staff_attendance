@@ -19,6 +19,8 @@ class DateTimeController extends GetxController {
   DateTime? lastSuccessfulResponseTime;
   final box = GetStorage();
 
+  late Stream<DateTime> _timeStream;
+
   @override
   final LoginController controller = Get.put(LoginController());
 
@@ -26,6 +28,29 @@ class DateTimeController extends GetxController {
     super.onInit();
     _checkButtonState();
   }
+
+  // Stream<DateTime> _getTimeStream() async* {
+  //   while (true) {
+  //     try {
+  //       final response = await http
+  //           .get(Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Yangon'));
+  //       if (response.statusCode == 200) {
+  //         final data = jsonDecode(response.body);
+  //         final dateTimeString = data['datetime'];
+  //         final dateTime = DateTime.parse(dateTimeString)
+  //             .toUtc()
+  //             .add(Duration(hours: 6, minutes: 30)); // Adjust to UTC +6:30
+  //         yield dateTime;
+  //       } else {
+  //         throw Exception('Failed to load time');
+  //       }
+  //     } catch (e) {
+  //       yield DateTime.now().toUtc().add(Duration(
+  //           hours: 6, minutes: 30)); // Default to UTC +6:30 if there's an error
+  //     }
+  //     await Future.delayed(Duration(seconds: 1));
+  //   }
+  // }
 
   Future<void> _checkButtonState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -84,6 +109,7 @@ class DateTimeController extends GetxController {
       // Enable the button after 6 hours
 
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -124,6 +150,7 @@ class DateTimeController extends GetxController {
       print('Date and time sent successfully');
     } else if (response.statusCode == 401) {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -134,7 +161,7 @@ class DateTimeController extends GetxController {
               style: TextStyle(color: Colors.red[800]),
             ),
             content: Text(
-              "You Already Check" + status + "For this Day",
+              "You Already Check " + status + " For this Day",
               style: TextStyle(color: Colors.red[400]),
             ),
             actions: <Widget>[
@@ -160,6 +187,7 @@ class DateTimeController extends GetxController {
       );
     } else {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -231,6 +259,7 @@ class DateTimeController extends GetxController {
       // Enable the button after 6 hours
 
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -271,6 +300,7 @@ class DateTimeController extends GetxController {
       print('Date and time sent successfully');
     } else if (response.statusCode == 401) {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -281,7 +311,7 @@ class DateTimeController extends GetxController {
               style: TextStyle(color: Colors.red[800]),
             ),
             content: Text(
-              "You Already Check " + status + "For this Day",
+              "You Already Check " + status + " For this Day",
               style: TextStyle(color: Colors.red[400]),
             ),
             actions: <Widget>[
@@ -307,6 +337,7 @@ class DateTimeController extends GetxController {
       );
     } else {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(

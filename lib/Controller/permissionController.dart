@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-class PermissionController extends GetxController{
 
+class PermissionController extends GetxController {
   Future<bool> handleLocationPermission(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -11,11 +10,13 @@ class PermissionController extends GetxController{
     if (!serviceEnabled) {
       // Show dialog to enable location services
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Location Services Disabled"),
-            content: Text("Please enable location services to use this feature."),
+            content:
+                Text("Please enable location services to use this feature."),
             actions: <Widget>[
               TextButton(
                 child: Text("No Thanks"),
@@ -47,13 +48,14 @@ class PermissionController extends GetxController{
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Location Permission Required'),
-              content: Text('This app requires access to your location to function properly.'),
+              content: Text(
+                  'This app requires access to your location to function properly.'),
               actions: <Widget>[
                 TextButton(
                   child: Text('Cancel'),
@@ -66,11 +68,7 @@ class PermissionController extends GetxController{
                     onPressed: () async {
                       permission == LocationPermission.always;
                       Navigator.of(context).pop();
-                    }
-
-
-
-                ),
+                    }),
               ],
             );
           },
@@ -78,7 +76,8 @@ class PermissionController extends GetxController{
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      print('Location permissions are permanently denied, we cannot request permissions.');
+      print(
+          'Location permissions are permanently denied, we cannot request permissions.');
       return false;
     }
     return true;

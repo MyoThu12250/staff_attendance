@@ -254,6 +254,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
       return true;
     } else {
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -482,7 +483,49 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                                           height: 150,
                                                           width: 150,
                                                           child: Image.network(
-                                                              attach.value),
+                                                            attach.value,
+                                                            fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (BuildContext
+                                                                        context,
+                                                                    Widget
+                                                                        child,
+                                                                    ImageChunkEvent?
+                                                                        loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              } else {
+                                                                return Center(
+                                                                  child:
+                                                                      CircularProgressIndicator(
+                                                                    value: loadingProgress.expectedTotalBytes !=
+                                                                            null
+                                                                        ? loadingProgress.cumulativeBytesLoaded /
+                                                                            (loadingProgress.expectedTotalBytes ??
+                                                                                1)
+                                                                        : null,
+                                                                  ),
+                                                                );
+                                                              }
+                                                            },
+                                                            errorBuilder:
+                                                                (BuildContext
+                                                                        context,
+                                                                    Object
+                                                                        error,
+                                                                    StackTrace?
+                                                                        stackTrace) {
+                                                              return Center(
+                                                                child: Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .red,
+                                                                  size: 50.0,
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
                                                         )
                                                       : Obx(() {
                                                           if (imageController

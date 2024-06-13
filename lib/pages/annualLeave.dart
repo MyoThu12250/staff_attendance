@@ -71,11 +71,11 @@ class _AnnualLeaveState extends State<AnnualLeave> {
         builder: (BuildContext context) {
           return AlertDialog(
             elevation: 8,
-            title: Text('Annual Leave Request Submitted Successfully '),
+            title: Text('Successful'),
             content: Container(
               width: 300,
               height: 60,
-              child: Text("Successfully"),
+              child: Text("Annual Leave Request Submitted Successful"),
             ),
             actions: <Widget>[
               TextButton(
@@ -171,6 +171,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
       return true;
     } else {
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(

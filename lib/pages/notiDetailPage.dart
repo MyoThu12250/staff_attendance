@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import 'notipage.dart';
 
 class NotiDetailPage extends StatefulWidget {
   const NotiDetailPage({super.key});
@@ -43,14 +40,14 @@ class _NotiDetailPageState extends State<NotiDetailPage> {
 
     return WillPopScope(
       onWillPop: () async {
-        Get.off(NotiPage());
+        // Get.off(NotiPage());
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
               onPressed: () {
-                Get.off(NotiPage());
+                // Get.off(NotiPage());
               },
               icon: Icon(
                 Icons.arrow_back_ios_new,
