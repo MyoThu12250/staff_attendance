@@ -1,4 +1,5 @@
 import 'package:CheckMate/Controller/loginController.dart';
+import 'package:CheckMate/pages/session_expire.dart';
 import 'package:CheckMate/pages/testProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -91,13 +92,15 @@ class _ChangePasswordState extends State<ChangePassword> {
       // Handle error response
       print('Failed to send data');
     } else if (response.statusCode == 401) {
+      showSessionExpiredDialog();
+    } else if (response.statusCode == 403) {
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             elevation: 8,
-            title: Text(' Unsuccessfully'),
+            title: Text(' Unsuccessful'),
             content: Text('Old Password is Incorrect Please Try Again'),
             actions: <Widget>[
               TextButton(

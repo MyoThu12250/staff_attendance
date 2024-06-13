@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:CheckMate/config_route.dart';
+import 'package:CheckMate/pages/session_expire.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -29,16 +30,21 @@ class RequestHistoryController extends GetxController {
           'Authorization': 'Bearer ${loginController.authorization.value}',
         },
       );
-      final data = json.decode(response.body);
-      final newItems =
-          data['datas']; // Adjust this based on the actual JSON structure
 
-      final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
-        pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + 1;
-        pagingController.appendPage(newItems, nextPageKey);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final newItems =
+            data['datas']; // Adjust this based on the actual JSON structure
+
+        final isLastPage = newItems.length < _pageSize;
+        if (isLastPage) {
+          pagingController.appendLastPage(newItems);
+        } else {
+          final nextPageKey = pageKey + 1;
+          pagingController.appendPage(newItems, nextPageKey);
+        }
+      } else if (response.statusCode == 401) {
+        showSessionExpiredDialog();
       }
     } catch (error) {
       pagingController.error = error;

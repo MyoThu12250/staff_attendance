@@ -1,4 +1,5 @@
 import 'package:CheckMate/config_route.dart';
+import 'package:CheckMate/pages/session_expire.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -93,6 +94,8 @@ class _AnnualLeaveState extends State<AnnualLeave> {
           );
         },
       );
+    } else if (response.statusCode == 401) {
+      showSessionExpiredDialog();
     } else if (response.statusCode == 400) {
       showDialog(
         context: context,
@@ -218,6 +221,8 @@ class _AnnualLeaveState extends State<AnnualLeave> {
             backgroundColor: Colors.greenAccent,
             duration: const Duration(seconds: 4));
         Get.offAllNamed('/leave');
+      } else if (response.statusCode == 401) {
+        showSessionExpiredDialog();
       } else {
         // Handle server error
         print('Failed to update: ${response.statusCode}');

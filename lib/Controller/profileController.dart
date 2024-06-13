@@ -9,6 +9,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
+import '../pages/session_expire.dart';
+
 class ProfileController extends GetxController {
   var imageUrl = ''.obs;
   var isLoading = false.obs;
@@ -86,6 +88,8 @@ class ProfileController extends GetxController {
           'Profile image updated successfully',
           backgroundColor: Colors.lightGreenAccent,
         );
+      } else if (response.statusCode == 401) {
+        showSessionExpiredDialog();
       } else {
         Get.snackbar('Error', 'Failed to update profile image');
       }
@@ -108,6 +112,7 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 202) {
         url.value = response.body;
+      } else if (response.statusCode == 401) {
       } else {
         Get.snackbar('Error', 'Failed to Load Image',
             backgroundColor: Colors.red);

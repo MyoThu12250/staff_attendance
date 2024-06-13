@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:CheckMate/config_route.dart';
+import 'package:CheckMate/pages/session_expire.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -77,6 +78,8 @@ class LeaveController extends GetxController with SingleGetTickerProviderMixin {
           final nextPageKey = pageKey + 1;
           pagingController.appendPage(newItems, nextPageKey);
         }
+      } else if (response.statusCode == 401) {
+        showSessionExpiredDialog();
       } else {
         pagingController.error = 'Failed to load data';
       }

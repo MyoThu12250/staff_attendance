@@ -1,50 +1,75 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 
-class HomeScreen extends StatefulWidget {
+import 'noti_ddetail.dart';
+
+class MyHomePage extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+class _MyHomePageState extends State<MyHomePage> {
+  late FirebaseMessaging messaging;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
-    _firebaseMessaging.requestPermission();
+
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    var initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        if (response.payload != null) {
+          Get.to(() => NotiPage(notificationData: response.payload!));
+        }
+      },
+    );
+
+    messaging = FirebaseMessaging.instance;
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.notification != null) {
-        _showNotification(
-            message.notification!.title, message.notification!.body);
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'your_channel_id',
+              'your_channel_name',
+              channelDescription: 'your_channel_description',
+              icon: android.smallIcon,
+            ),
+          ),
+          payload: message.data['route'],
+        );
       }
     });
-  }
 
-  void _showNotification(String? title, String? body) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title ?? 'Notification'),
-        content: Text(body ?? 'No message body'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
+    messaging.getToken().then((token) {
+      print("Firebase Messaging Token: $token");
+      // Send this token to your server
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Firebase Notification Test'),
+        title: Text("FCM Demo"),
       ),
       body: Center(
-        child: Text('Waiting for notifications...'),
+        child: Text("Flutter Firebase Messaging"),
       ),
     );
   }

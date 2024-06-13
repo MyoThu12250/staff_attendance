@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:CheckMate/config_route.dart';
+import 'package:CheckMate/pages/session_expire.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -149,6 +150,8 @@ class DateTimeController extends GetxController {
       print(response.statusCode);
       print('Date and time sent successfully');
     } else if (response.statusCode == 401) {
+      showSessionExpiredDialog();
+    } else if (response.statusCode == 403) {
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -299,6 +302,8 @@ class DateTimeController extends GetxController {
       print(response.statusCode);
       print('Date and time sent successfully');
     } else if (response.statusCode == 401) {
+      showSessionExpiredDialog();
+    } else if (response.statusCode == 403) {
       showDialog(
         barrierDismissible: false,
         context: context,

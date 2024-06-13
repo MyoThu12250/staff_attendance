@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../pages/session_expire.dart';
 import 'loginController.dart';
 
 class AddController extends GetxController {
@@ -14,7 +15,8 @@ class AddController extends GetxController {
   bool isLoading = false;
   LoginController controller = Get.find();
 
-  Future<void> fetchAttendanceHistory({bool isRefresh = false}) async {
+  Future<void> fetchAttendanceHistory(BuildContext context,
+      {bool isRefresh = false}) async {
     final id = controller.userInfo['userId'].toString();
     if (isLoading) return;
 
@@ -35,6 +37,8 @@ class AddController extends GetxController {
           'Authorization': 'Bearer ${controller.authorization.value}',
         },
       );
+      print(response.statusCode);
+      print(controller.authorization.value);
 
       if (response.statusCode == 200) {
         List<dynamic> jsonData = jsonDecode(response.body)['datas'];
@@ -46,6 +50,8 @@ class AddController extends GetxController {
           attendanceData.addAll(jsonData);
           currentPage++;
         }
+      } else if (response.statusCode == 401) {
+        showSessionExpiredDialog();
       } else {
         // Show a snackbar in case of a connection error
         Get.snackbar(
@@ -89,7 +95,7 @@ class _AttendancePageState extends State<AttendancePage> {
   @override
   void initState() {
     super.initState();
-    addController.fetchAttendanceHistory();
+    addController.fetchAttendanceHistory(context);
   }
 
   @override
@@ -107,7 +113,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     scrollInfo.metrics.maxScrollExtent &&
                 addController.hasMoreData &&
                 !addController.isLoading) {
-              addController.fetchAttendanceHistory();
+              addController.fetchAttendanceHistory(context);
             }
             return true;
           },

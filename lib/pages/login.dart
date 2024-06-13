@@ -20,11 +20,10 @@ class LoginPage extends StatelessWidget {
                 Text(
                   'Login',
                   style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFE1FF3C)
-                      // color: Colors.lightGreenAccent,
-                      ),
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFE1FF3C),
+                  ),
                 ),
                 SizedBox(height: 20),
                 TextField(
@@ -40,18 +39,31 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                TextField(
-                  onChanged: (value) => controller.password.value = value,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.https_outlined),
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                Obx(
+                  () => TextField(
+                    onChanged: (value) => controller.password.value = value,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.https_outlined),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          controller.obscureText.value =
+                              !controller.obscureText.value;
+                        },
+                        icon: Icon(
+                          controller.obscureText.value
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
+                    obscureText: controller.obscureText.value,
                   ),
-                  obscureText: true,
                 ),
                 SizedBox(height: 20),
                 Obx(

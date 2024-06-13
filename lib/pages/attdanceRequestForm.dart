@@ -1,4 +1,5 @@
 import 'package:CheckMate/pages/attdanceHistory.dart';
+import 'package:CheckMate/pages/session_expire.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -51,6 +52,8 @@ class _RequestPageFormState extends State<RequestPageForm> {
     if (response.statusCode == 200) {
       _showDialog('Attendance Request Submitted Successfully', 'Successfully',
           Colors.lightGreenAccent);
+    } else if (response.statusCode == 401) {
+      showSessionExpiredDialog();
     } else if (response.statusCode == 400) {
       _showDialog('Unsuccessful',
           'You already Created Attendance Request For this day', Colors.red);

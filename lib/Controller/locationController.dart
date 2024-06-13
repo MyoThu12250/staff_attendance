@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
+import '../pages/session_expire.dart';
 import 'loginController.dart';
 
 final DateTimeController dateTimeController = Get.put(DateTimeController());
@@ -96,6 +97,8 @@ class LocationController extends GetxController {
 
         print(response.statusCode);
         print('Location sent successfully');
+      } else if (response.statusCode == 401) {
+        showSessionExpiredDialog();
       } else {
         showDialog(
           barrierDismissible: false,

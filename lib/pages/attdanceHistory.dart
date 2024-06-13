@@ -24,7 +24,7 @@ class _AttendancePageState extends State<RequestPage> {
   @override
   void initState() {
     super.initState();
-    addController.fetchAttendanceHistory();
+    addController.fetchAttendanceHistory(context);
   }
 
   @override
@@ -84,7 +84,7 @@ class _AttendancePageState extends State<RequestPage> {
                                     scrollInfo.metrics.maxScrollExtent &&
                                 addController.hasMoreData &&
                                 !addController.isLoading) {
-                              addController.fetchAttendanceHistory();
+                              addController.fetchAttendanceHistory(context);
                             }
                             return true;
                           },
@@ -207,7 +207,7 @@ class _AttendancePageState extends State<RequestPage> {
                 //         Calender(
                 //           leaveDetail: {},
                 //         ),
-                //         transition: Transition.fadeIn);
+                //         transitionc: Transition.fadeIn);
                 //   },
                 //   icon: Icon(
                 //     Icons.calendar_month,

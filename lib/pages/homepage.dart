@@ -48,10 +48,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _timeStream = _getTimeStream();
-
     controller.loadProfileData();
     rangeController.fetchLocationData();
-
     permissionController.handleLocationPermission(context);
     //*** stable time ***//
     // _currentTime = DateTime.now();
@@ -233,39 +231,41 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Stack(
           children: [
-            GoogleMap(
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
+            Obx(
+              () => GoogleMap(
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
 
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-              // markers: _marker,
-              markers: {
-                Marker(
-                  markerId: MarkerId('Times City'),
-                  position: LatLng(
-                      rangeController.lat.value, rangeController.lon.value),
-                  infoWindow: InfoWindow(
-                    title: 'Times City',
-                    snippet: 'Office Tower',
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+                // markers: _marker,
+                markers: {
+                  Marker(
+                    markerId: MarkerId('Times City'),
+                    position: LatLng(
+                        rangeController.lat.value, rangeController.lon.value),
+                    infoWindow: InfoWindow(
+                      title: 'Times City',
+                      snippet: 'Office Tower',
+                    ),
                   ),
-                ),
-              },
-              circles: {
-                Circle(
-                  circleId: CircleId("1"),
-                  radius: rangeController.range.value,
-                  strokeColor: Colors.lightBlue,
-                  strokeWidth: 1,
-                  fillColor: Colors.lightBlue.withOpacity(0.5),
-                  center: LatLng(
-                      rangeController.lat.value, rangeController.lon.value),
-                ),
-              },
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(16.81669722489963, 96.128601508370990),
-                  zoom: 13),
+                },
+                circles: {
+                  Circle(
+                    circleId: CircleId("1"),
+                    radius: rangeController.range.value,
+                    strokeColor: Colors.lightBlue,
+                    strokeWidth: 1,
+                    fillColor: Colors.lightBlue.withOpacity(0.5),
+                    center: LatLng(
+                        rangeController.lat.value, rangeController.lon.value),
+                  ),
+                },
+                initialCameraPosition: CameraPosition(
+                    target: LatLng(16.81669722489963, 96.128601508370990),
+                    zoom: 13),
+              ),
             ),
             DraggableScrollableSheet(
               initialChildSize: 0.15,
