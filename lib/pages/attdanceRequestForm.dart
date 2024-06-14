@@ -16,12 +16,10 @@ class RequestPageForm extends StatefulWidget {
 }
 
 class _RequestPageFormState extends State<RequestPageForm> {
-  DateTime? _selectedDateTime;
   TextEditingController _name = TextEditingController();
   DateTime? _date;
   RxBool isLoading = false.obs;
 
-  TextEditingController _reason = TextEditingController();
   RxString dropdownValue = 'Check In'.obs;
 
   Future<void> _sendData() async {
@@ -37,7 +35,6 @@ class _RequestPageFormState extends State<RequestPageForm> {
       reason = 'out_time_late';
     } else {
       reason = 'in_time_late';
-      // For "Both" or any other case
     }
     print(reason);
     final response = await http.post(
@@ -92,7 +89,6 @@ class _RequestPageFormState extends State<RequestPageForm> {
   }
 
   bool _validate() {
-    final String name = _name.text;
     final String reason = dropdownValue.value;
     final date = DateFormat('yyyy-MM-dd').format(_date!);
     if (date.isNotEmpty && reason.isNotEmpty) {
@@ -202,31 +198,6 @@ class _RequestPageFormState extends State<RequestPageForm> {
                   ),
                   Column(
                     children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 40.0),
-                      //   child: Center(
-                      //     child: SizedBox(
-                      //       width: 150,
-                      //       child: Obx(
-                      //         () => DropdownButton<String>(
-                      //           value: dropdownValue.value,
-                      //           onChanged: (String? newValue) {
-                      //             dropdownValue.value = newValue!;
-                      //           },
-                      //           items: <String>[
-                      //             'Check In',
-                      //             'Check Out'
-                      //           ].map<DropdownMenuItem<String>>((String value) {
-                      //             return DropdownMenuItem<String>(
-                      //               value: value,
-                      //               child: Text(value),
-                      //             );
-                      //           }).toList(),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 70.0),
                         child: Container(

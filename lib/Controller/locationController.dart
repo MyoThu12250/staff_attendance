@@ -21,7 +21,6 @@ class LocationController extends GetxController {
 
   LoginController loginController = Get.find();
 
-  // Observable to track if the point is within range
   final isInRange = false.obs;
   Rx<Position?> currentLocation = Rx<Position?>(null);
 
@@ -84,7 +83,6 @@ class LocationController extends GetxController {
                       ),
                     ),
                     onPressed: () {
-                      // dateTimeController.sendDateTimeToServer();
                       Navigator.of(context).pop();
                     },
                   ),
@@ -133,7 +131,6 @@ class LocationController extends GetxController {
                     ),
                   ),
                   onPressed: () {
-                    // dateTimeController.sendDateTimeToServer();
                     Navigator.of(context).pop();
                   },
                 ),
@@ -249,7 +246,6 @@ class LocationController extends GetxController {
                     ),
                   ),
                   onPressed: () {
-                    // dateTimeController.sendDateTimeToServer();
                     Navigator.of(context).pop();
                   },
                 ),
@@ -263,10 +259,8 @@ class LocationController extends GetxController {
 }
 
 bool checkIsValid(String jsonString) {
-  // Parse the JSON string into a map
   Map<String, dynamic> responseMap = jsonDecode(jsonString);
 
-  // Check the value of the "isValid" key
   bool isValid = responseMap['isValid'];
 
   return isValid;

@@ -2,8 +2,8 @@ import 'package:CheckMate/pages/attdanceHistory.dart';
 import 'package:CheckMate/pages/homepage.dart';
 import 'package:CheckMate/pages/leave.dart';
 import 'package:CheckMate/pages/login.dart';
+import 'package:CheckMate/pages/profile.dart';
 import 'package:CheckMate/pages/splashScreen.dart';
-import 'package:CheckMate/pages/testProfile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,37 +26,44 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final box = GetStorage();
-    final bool isLoggedIn = box.read('isLoggedIn') ?? false;
-
     return GetMaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/splash',
-      // initialRoute: isLoggedIn ? '/home' : '/',
       getPages: [
-        GetPage(name: '/', page: () => LoginPage()),
-        GetPage(name: '/profile', page: () => ProfilePage()),
         GetPage(
-            name: '/home',
-            page: () => HomePage(
-                  leaveDetail: {},
-                )),
+          name: '/',
+          page: () => LoginPage(),
+        ),
         GetPage(
-            name: '/leave',
-            page: () => Leave(
-                  leaveDetail: {},
-                )),
+          name: '/profile',
+          page: () => ProfilePage(),
+        ),
         GetPage(
-            name: '/addtence',
-            page: () => RequestPage(
-                  attendanceDetail: {},
-                )),
-        GetPage(name: '/splash', page: () => SplashScreen())
+          name: '/home',
+          page: () => HomePage(
+            leaveDetail: {},
+          ),
+        ),
+        GetPage(
+          name: '/leave',
+          page: () => Leave(
+            leaveDetail: {},
+          ),
+        ),
+        GetPage(
+          name: '/addtence',
+          page: () => RequestPage(
+            attendanceDetail: {},
+          ),
+        ),
+        GetPage(
+          name: '/splash',
+          page: () => SplashScreen(),
+        )
       ],
     );
   }

@@ -33,8 +33,7 @@ class RequestHistoryController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final newItems =
-            data['datas']; // Adjust this based on the actual JSON structure
+        final newItems = data['datas'];
 
         final isLastPage = newItems.length < _pageSize;
         if (isLastPage) {

@@ -92,8 +92,6 @@ class LeaveController extends GetxController with SingleGetTickerProviderMixin {
 
   @override
   void onClose() {
-    // pagingController.dispose();
-    // tabController.dispose();
     super.onClose();
   }
 }

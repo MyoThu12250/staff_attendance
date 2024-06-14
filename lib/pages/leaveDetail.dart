@@ -1,3 +1,4 @@
+import 'package:CheckMate/pages/half_day_leave.dart';
 import 'package:CheckMate/pages/session_expire.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -251,14 +252,19 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                       width: 100,
                       child: ElevatedButton(
                         onPressed: () {
-                          leaveType.toLowerCase().trim() ==
-                                  'Medical Leave'.toLowerCase().trim()
-                              ? Get.to(MedicalLeave(
-                                  isedit: true.obs,
-                                  leaveDetail: widget.leaveDetail))
-                              : Get.to(AnnualLeave(
-                                  isedit: true,
-                                  leaveDetail: widget.leaveDetail));
+                          if (leaveType.toLowerCase().trim() ==
+                              'Medical Leave'.toLowerCase().trim()) {
+                            Get.to(MedicalLeave(
+                                isedit: true.obs,
+                                leaveDetail: widget.leaveDetail));
+                          } else if (leaveType.toLowerCase().trim() ==
+                              'Annual Leave'.toLowerCase().trim()) {
+                            Get.to(AnnualLeave(
+                                isedit: true, leaveDetail: widget.leaveDetail));
+                          } else {
+                            Get.to(HalfDayLeave(
+                                isedit: true, leaveDetail: widget.leaveDetail));
+                          }
                         },
                         child: Text(
                           'Edit',

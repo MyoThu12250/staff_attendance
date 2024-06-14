@@ -22,15 +22,12 @@ class AddController extends GetxController {
 
     try {
       isLoading = true;
-
-      // If refreshing, reset the currentPage and clear the existing data
       if (isRefresh) {
         currentPage = 1;
         attendanceData.clear();
         hasMoreData = true;
       }
 
-      // Send HTTP GET request to the API endpoint with the current page
       final response = await http.get(
         Uri.parse(Config.getAttendanceRouteById + '/$id?page=$currentPage'),
         headers: {
@@ -43,7 +40,6 @@ class AddController extends GetxController {
       if (response.statusCode == 200) {
         List<dynamic> jsonData = jsonDecode(response.body)['datas'];
 
-        // If no more data is returned, set hasMoreData to false
         if (jsonData.isEmpty) {
           hasMoreData = false;
         } else {
@@ -53,7 +49,6 @@ class AddController extends GetxController {
       } else if (response.statusCode == 401) {
         showSessionExpiredDialog();
       } else {
-        // Show a snackbar in case of a connection error
         Get.snackbar(
           'Connection Error',
           'Failed to get Attendance History',
@@ -66,7 +61,6 @@ class AddController extends GetxController {
         );
       }
     } catch (e) {
-      // Handle any exceptions that occur during the HTTP request
       Get.snackbar(
         'Error',
         'An unexpected error occurred',
@@ -83,7 +77,6 @@ class AddController extends GetxController {
   }
 }
 
-// In your widget where you want to display the data
 class AttendancePage extends StatefulWidget {
   @override
   _AttendancePageState createState() => _AttendancePageState();
@@ -123,7 +116,7 @@ class _AttendancePageState extends State<AttendancePage> {
               final item = addController.attendanceData[index];
               return ListTile(
                 title: Text(item['leaveType']),
-                subtitle: Text(item['createdAt']), // Adjust as needed
+                subtitle: Text(item['createdAt']),
               );
             },
           ),

@@ -1,6 +1,6 @@
 import 'package:CheckMate/Controller/loginController.dart';
+import 'package:CheckMate/pages/profile.dart';
 import 'package:CheckMate/pages/session_expire.dart';
-import 'package:CheckMate/pages/testProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

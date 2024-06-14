@@ -40,10 +40,7 @@ class PermissionController extends GetxController {
         },
       );
     }
-    // if (!serviceEnabled) {
-    //   print('Location services are disabled. Please enable the services');
-    //   return false;
-    // }
+
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();

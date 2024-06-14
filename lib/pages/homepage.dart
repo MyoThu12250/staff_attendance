@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:CheckMate/pages/attdanceHistory.dart';
-import 'package:CheckMate/pages/testProfile.dart';
+import 'package:CheckMate/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,7 +15,6 @@ import '../Controller/loginController.dart';
 import '../Controller/permissionController.dart';
 import '../Controller/timeController.dart';
 import 'leave.dart';
-import 'notipage.dart';
 
 class HomePage extends StatefulWidget {
   late final Map<String, dynamic> leaveDetail;
@@ -171,62 +170,65 @@ class _HomePageState extends State<HomePage> {
           ),
           title: Text('Check Mate'),
           actions: [
-            CircleAvatar(
-              backgroundColor: Colors.black.withOpacity(0.095),
-              radius: 20,
-              child: Center(
-                child: IconButton(
-                  onPressed: () {
-                    Get.to(ProfilePage());
-                    // Get.off(ProfilePage());
-                  },
-                  icon: const Icon(
-                    Icons.person,
-                    size: 25,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: CircleAvatar(
+                backgroundColor: Colors.black.withOpacity(0.095),
+                radius: 20,
+                child: Center(
+                  child: IconButton(
+                    onPressed: () {
+                      Get.to(ProfilePage());
+                      // Get.off(ProfilePage());
+                    },
+                    icon: const Icon(
+                      Icons.person,
+                      size: 25,
+                    ),
                   ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: CircleAvatar(
-                backgroundColor: Colors.black.withOpacity(0.095),
-                radius: 20,
-                child: Stack(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.to(NotiPage(
-                          title: 'hi',
-                          body: 'hi',
-                        ));
-                      },
-                      icon: const Icon(
-                        Icons.notifications,
-                        size: 25,
-                      ),
-                    ),
-                    Positioned(
-                      left: 22,
-                      // right: 0,
-                      bottom: 25,
-                      // top: 0,
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.transparent,
-                        child: Text(
-                          '2', // noti count
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            //   child: CircleAvatar(
+            //     backgroundColor: Colors.black.withOpacity(0.095),
+            //     radius: 20,
+            //     child: Stack(
+            //       children: [
+            //         IconButton(
+            //           onPressed: () {
+            //             Get.to(NotiPage(
+            //               title: 'hi',
+            //               body: 'hi',
+            //             ));
+            //           },
+            //           icon: const Icon(
+            //             Icons.notifications,
+            //             size: 25,
+            //           ),
+            //         ),
+            //         Positioned(
+            //           left: 22,
+            //           // right: 0,
+            //           bottom: 25,
+            //           // top: 0,
+            //           child: CircleAvatar(
+            //             radius: 10,
+            //             backgroundColor: Colors.transparent,
+            //             child: Text(
+            //               '2', // noti count
+            //               style: TextStyle(
+            //                 fontSize: 12,
+            //                 color: Colors.black,
+            //               ),
+            //             ),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
         body: Stack(

@@ -21,7 +21,6 @@ class ImageUploadController extends GetxController {
         imageFile.value = file;
         fileName.value = pickedFile.name;
       } else {
-        // Handle the case when no image is picked
         fileName.value = '';
         imageFile.value = null;
       }

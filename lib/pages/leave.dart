@@ -1,4 +1,5 @@
 import 'package:CheckMate/pages/attdanceHistory.dart';
+import 'package:CheckMate/pages/half_day_leave.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
@@ -163,6 +164,20 @@ class _LeaveState extends State<Leave> {
               labelWidget: Text('Annual leave'),
               onTap: () {
                 Get.to(AnnualLeave(
+                  isedit: false,
+                  leaveDetail: {},
+                ));
+              },
+            ),
+            SpeedDialChild(
+              elevation: 0,
+              child: Icon(
+                Icons.access_time,
+                color: Colors.purpleAccent,
+              ),
+              labelWidget: Text('half-day leave'),
+              onTap: () {
+                Get.to(HalfDayLeave(
                   isedit: false,
                   leaveDetail: {},
                 ));

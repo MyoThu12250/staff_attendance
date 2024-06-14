@@ -1,4 +1,3 @@
-// config.dart
 class Config {
   static const String baseUrl = 'http://10.103.0.142:8000/api/v1';
   static const String createAttendanceRoute = '$baseUrl/attendance/click';

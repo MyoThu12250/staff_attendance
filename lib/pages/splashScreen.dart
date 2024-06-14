@@ -16,10 +16,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // RangeController rangeController = Get.put(RangeController());
   LoginController controller = Get.put(LoginController());
 
-  // bool _isLogin = true;
   void main() async {
     controller.loadloginData();
     await GetStorage.init();
@@ -43,7 +41,6 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Image.asset(
               width: 200,
               'assets/icons/appIcon.png',
-              // color: Colors.black,
             ),
           ),
           SizedBox(

@@ -29,8 +29,6 @@ class _AttendancePageState extends State<RequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    var intime = widget.attendanceDetail['in_time'];
-    var outtime = widget.attendanceDetail['out_time'];
     return WillPopScope(
       onWillPop: () async {
         Get.off(HomePage(leaveDetail: {}));
@@ -111,7 +109,8 @@ class _AttendancePageState extends State<RequestPage> {
                                             item['out_time'].isNotEmpty
                                         ? CircleAvatar(
                                             backgroundColor: Colors.greenAccent,
-                                            child: Icon(Icons.done))
+                                            child: Icon(Icons.done),
+                                          )
                                         : CircleAvatar(
                                             backgroundColor: Colors.pink,
                                             child: Icon(Icons.close),
@@ -120,8 +119,10 @@ class _AttendancePageState extends State<RequestPage> {
                                     subtitle: Text(
                                         'In Time: ${item['in_time'] ?? 'N/A'}\nOut Time: ${item['out_time'] ?? 'N/A'}'),
                                     onTap: () {
-                                      Get.to(() => AttendanceDetailPage(
-                                          attendanceDetail: item));
+                                      Get.to(
+                                        () => AttendanceDetailPage(
+                                            attendanceDetail: item),
+                                      );
                                     },
                                   ),
                                 );
@@ -200,20 +201,6 @@ class _AttendancePageState extends State<RequestPage> {
                     width: 35,
                   ),
                 ),
-                // IconButton(
-                //   iconSize: 35,
-                //   onPressed: () {
-                //     Get.off(
-                //         Calender(
-                //           leaveDetail: {},
-                //         ),
-                //         transitionc: Transition.fadeIn);
-                //   },
-                //   icon: Icon(
-                //     Icons.calendar_month,
-                //     color: Colors.black,
-                //   ),
-                // ),
               ],
             ),
           ),

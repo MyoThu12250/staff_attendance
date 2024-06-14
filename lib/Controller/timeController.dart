@@ -20,8 +20,6 @@ class DateTimeController extends GetxController {
   DateTime? lastSuccessfulResponseTime;
   final box = GetStorage();
 
-  late Stream<DateTime> _timeStream;
-
   @override
   final LoginController controller = Get.put(LoginController());
 
@@ -29,29 +27,6 @@ class DateTimeController extends GetxController {
     super.onInit();
     _checkButtonState();
   }
-
-  // Stream<DateTime> _getTimeStream() async* {
-  //   while (true) {
-  //     try {
-  //       final response = await http
-  //           .get(Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Yangon'));
-  //       if (response.statusCode == 200) {
-  //         final data = jsonDecode(response.body);
-  //         final dateTimeString = data['datetime'];
-  //         final dateTime = DateTime.parse(dateTimeString)
-  //             .toUtc()
-  //             .add(Duration(hours: 6, minutes: 30)); // Adjust to UTC +6:30
-  //         yield dateTime;
-  //       } else {
-  //         throw Exception('Failed to load time');
-  //       }
-  //     } catch (e) {
-  //       yield DateTime.now().toUtc().add(Duration(
-  //           hours: 6, minutes: 30)); // Default to UTC +6:30 if there's an error
-  //     }
-  //     await Future.delayed(Duration(seconds: 1));
-  //   }
-  // }
 
   Future<void> _checkButtonState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -105,10 +80,6 @@ class DateTimeController extends GetxController {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      // disableButtonFor6Hours();
-
-      // Enable the button after 6 hours
-
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -145,7 +116,6 @@ class DateTimeController extends GetxController {
           );
         },
       );
-      // print('out of range');
 
       print(response.statusCode);
       print('Date and time sent successfully');
@@ -259,8 +229,6 @@ class DateTimeController extends GetxController {
     if (response.statusCode == 200) {
       disableButtonFor6Hours();
 
-      // Enable the button after 6 hours
-
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -297,7 +265,6 @@ class DateTimeController extends GetxController {
           );
         },
       );
-      // print('out of range');
 
       print(response.statusCode);
       print('Date and time sent successfully');
