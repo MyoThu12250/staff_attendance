@@ -27,21 +27,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var check = DateTime.now().hour.obs;
-
-  // late DateTime _currentTime;
-
-  // late Timer _timer;
   late Stream<DateTime> _timeStream;
   final Completer<GoogleMapController> _controller = Completer();
   final PermissionController permissionController =
       Get.put(PermissionController());
   final LoginController controller = Get.put(LoginController());
-
   final RangeController rangeController = Get.put(RangeController());
   final DateTimeController dateTimeController = Get.put(DateTimeController());
   final LocationController locationController = Get.put(LocationController());
-  var disablein = (DateTime.now().hour >= 7 && DateTime.now().hour <= 13).obs;
-  var disableout = (DateTime.now().hour >= 14 && DateTime.now().hour <= 17).obs;
+
+  // var disablein = (DateTime.now().hour >= 7 && DateTime.now().hour <= 13).obs;
+  // var disableout = (DateTime.now().hour >= 14 && DateTime.now().hour <= 17).obs;
 
   @override
   void initState() {
@@ -310,8 +306,16 @@ class _HomePageState extends State<HomePage> {
                                 return Text('Error: ${snapshot.error}');
                               } else if (snapshot.hasData) {
                                 final dateTime = snapshot.data!;
-                                final hour =
-                                    dateTime.hour.toString().padLeft(2, '0');
+                                int hour = dateTime.hour;
+
+                                final period = hour >= 12 ? 'PM' : 'AM';
+                                hour = hour % 12;
+                                hour = hour == 0
+                                    ? 12
+                                    : hour; // Convert '0' hour to '12' for 12 AM and 12 PM
+                                final hourString =
+                                    hour.toString().padLeft(2, '0');
+
                                 final minute =
                                     dateTime.minute.toString().padLeft(2, '0');
                                 // add global time
@@ -333,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                                             child: SizedBox(
                                               width: screenWidth * 0.21,
                                               child: Text(
-                                                hour + 'h',
+                                                hourString + 'h',
                                                 style: TextStyle(
                                                   fontSize: screenWidth * 0.12,
                                                   // Responsive font size

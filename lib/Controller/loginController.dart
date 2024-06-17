@@ -196,7 +196,6 @@ class LoginController extends GetxController {
         await _storage.deleteAll();
         boxx.write('isLogin', false);
         box.erase();
-
         _accessToken.value = '';
         _refreshToken.value = '';
         _accessTokenExpiryTime.value = DateTime.now();

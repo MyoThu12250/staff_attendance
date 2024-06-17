@@ -61,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
               // Get.back();
               Get.off(HomePage(leaveDetail: {}));
             },
-            icon: Icon(Icons.arrow_back_ios_new),
+            icon: Icon(Icons.arrow_back),
           ),
         ),
         // backgroundColor: Colors.white60,

@@ -156,17 +156,53 @@ class _ChangePasswordState extends State<ChangePassword> {
         email.isEmpty ||
         newPassword.isEmpty ||
         reNewPassword.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('All fields are required')),
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text(' Required'),
+            content: Text('All Field are required.'),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.back(); // Close the dialog.
+                },
+              ),
+            ],
+          );
+        },
       );
       return false;
     }
 
     if (newPassword != reNewPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text('New password and confirm password must be the same')),
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 8,
+            title: Text(' unmatch'),
+            content: Text('New Password and Confirm Password must be same'),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red)),
+                child: Text('Ok'),
+                onPressed: () {
+                  Get.back(); // Close the dialog.
+                },
+              ),
+            ],
+          );
+        },
       );
       return false;
     }
@@ -188,7 +224,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               Get.back();
               // Get.off(ProfilePage());
             },
-            icon: Icon(Icons.arrow_back_ios_new),
+            icon: Icon(Icons.arrow_back),
           ),
           centerTitle: true,
           title: Text('Reset Password'),
@@ -267,7 +303,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                   obscureText: !_obscureText,
                                   controller: _reNewPassword,
                                   decoration: InputDecoration(
-                                    labelText: 'Comfirm Password',
+                                    labelText: 'Confirm Password',
                                     prefixIcon: Icon(Icons.https),
                                     border: OutlineInputBorder(),
                                   ),

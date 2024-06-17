@@ -279,7 +279,7 @@ class LeaveListView extends StatelessWidget {
                   title: Text(item['leaveType']),
                   subtitle: Text(
                     DateFormat('yyyy-MM-dd')
-                        .format(DateTime.parse(item['createdAt'])),
+                        .format(DateTime.parse(item['from'])),
                   ),
                   trailing: Icon(
                     getIcon(item['status']),
@@ -327,7 +327,7 @@ class LeaveListView extends StatelessWidget {
                         subtitle: Text(
                           DateFormat('yyyy-MM-dd').format(
                             DateTime.parse(
-                              item['createdAt'],
+                              item['from'],
                             ),
                           ),
                         ),

@@ -88,46 +88,57 @@ class _AttendancePageState extends State<RequestPage> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: ListView.separated(
-                              physics: const BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              separatorBuilder: (context, index) {
-                                return const Divider(
-                                  thickness: 0.5,
-                                  color: Colors.black,
-                                );
-                              },
-                              itemCount: addController.attendanceData.length,
-                              itemBuilder: (context, index) {
-                                final item =
-                                    addController.attendanceData[index];
-                                return GestureDetector(
-                                  child: ListTile(
-                                    leading: item['in_time'] != null &&
-                                            item['in_time'].isNotEmpty &&
-                                            item['out_time'] != null &&
-                                            item['out_time'].isNotEmpty
-                                        ? CircleAvatar(
-                                            backgroundColor: Colors.greenAccent,
-                                            child: Icon(Icons.done),
-                                          )
-                                        : CircleAvatar(
-                                            backgroundColor: Colors.pink,
-                                            child: Icon(Icons.close),
-                                          ),
-                                    title: Text('Date: ${item['date']}'),
-                                    subtitle: Text(
-                                        'In Time: ${item['in_time'] ?? 'N/A'}\nOut Time: ${item['out_time'] ?? 'N/A'}'),
-                                    onTap: () {
-                                      Get.to(
-                                        () => AttendanceDetailPage(
-                                            attendanceDetail: item),
+                            child: addController.attendanceData.isEmpty
+                                ? Center(
+                                    child: Text(
+                                    'Empty Attendance Data',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Epilogue',
+                                    ),
+                                  ))
+                                : ListView.separated(
+                                    physics: const BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    separatorBuilder: (context, index) {
+                                      return const Divider(
+                                        thickness: 0.5,
+                                        color: Colors.black,
+                                      );
+                                    },
+                                    itemCount:
+                                        addController.attendanceData.length,
+                                    itemBuilder: (context, index) {
+                                      final item =
+                                          addController.attendanceData[index];
+                                      return GestureDetector(
+                                        child: ListTile(
+                                          leading: item['in_time'] != null &&
+                                                  item['in_time'].isNotEmpty &&
+                                                  item['out_time'] != null &&
+                                                  item['out_time'].isNotEmpty
+                                              ? CircleAvatar(
+                                                  backgroundColor:
+                                                      Colors.greenAccent,
+                                                  child: Icon(Icons.done),
+                                                )
+                                              : CircleAvatar(
+                                                  backgroundColor: Colors.pink,
+                                                  child: Icon(Icons.close),
+                                                ),
+                                          title: Text('Date: ${item['date']}'),
+                                          subtitle: Text(
+                                              'In Time: ${item['in_time'] ?? 'N/A'}\nOut Time: ${item['out_time'] ?? 'N/A'}'),
+                                          onTap: () {
+                                            Get.to(
+                                              () => AttendanceDetailPage(
+                                                  attendanceDetail: item),
+                                            );
+                                          },
+                                        ),
                                       );
                                     },
                                   ),
-                                );
-                              },
-                            ),
                           ),
                         );
                       },

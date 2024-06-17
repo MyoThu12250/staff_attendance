@@ -195,7 +195,7 @@ class _HalfDayLeaveState extends State<HalfDayLeave> {
                 ),
               );
             },
-            icon: Icon(Icons.arrow_back_ios_new),
+            icon: Icon(Icons.arrow_back),
           ),
         ),
         body: SingleChildScrollView(

@@ -60,7 +60,8 @@ class RequestHistoryPage extends StatelessWidget {
               ),
             ),
             if (index < controller.pagingController.itemList!.length - 1)
-              Divider(), // Add Divider only if it's not the last item
+              Divider(),
+            // Add Divider only if it's not the last item
           ],
         ),
       ),
