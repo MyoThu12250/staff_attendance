@@ -31,8 +31,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     // TODO: implement initState
     super.initState();
     if (widget.isedit == true) {
-      _reasonController =
-          TextEditingController(text: widget.leaveDetail['reasons']);
+      _reasonController.text = widget.leaveDetail['reason'];
       ;
       _selectedDateTimef = DateTime.parse(widget.leaveDetail['from']);
       _selectedDateTimet = DateTime.parse(widget.leaveDetail['to']);

@@ -190,7 +190,7 @@ class LoginController extends GetxController {
   Future<void> logout() async {
     try {
       final response = await _makeGetRequest(
-          '${Config.logoutByIdRoute}/${userInfo['userId']}');
+          '${Config.logoutByIdRoute}/${userInfo['userId'].toString()}');
 
       if (response.statusCode == 200 || response.statusCode == 404) {
         await _storage.deleteAll();

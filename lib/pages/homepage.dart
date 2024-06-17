@@ -144,8 +144,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var lat = rangeController.lat.value;
-    var lon = rangeController.lon.value;
     MediaQueryData mediaQuery = MediaQuery.of(context);
     Size size = mediaQuery.size;
     double screenWidth = size.width;
@@ -237,11 +235,9 @@ class _HomePageState extends State<HomePage> {
               () => GoogleMap(
                 myLocationEnabled: true,
                 myLocationButtonEnabled: true,
-
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
-                // markers: _marker,
                 markers: {
                   Marker(
                     markerId: MarkerId('Times City'),

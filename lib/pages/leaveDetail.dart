@@ -25,7 +25,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
     var leaveType = widget.leaveDetail['leaveType'];
     var status = widget.leaveDetail['status'];
     var date = DateTime.parse(widget.leaveDetail['createdAt']);
-    var reason = widget.leaveDetail['reasons'];
+    var reason = widget.leaveDetail['reason'];
     var from = widget.leaveDetail['from'];
     var to = widget.leaveDetail['to'];
     var formattedDate = DateFormat('yyyy-MM-dd').format(date);

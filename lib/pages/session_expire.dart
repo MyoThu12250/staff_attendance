@@ -27,7 +27,7 @@ void showSessionExpiredDialog() {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
             child: Text('Ok'),
             onPressed: () {
-              controller.logout(); // Execute the provided logout callback
+              controller.logout();
             },
           ),
         ],

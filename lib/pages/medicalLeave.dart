@@ -34,7 +34,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     // TODO: implement initState
     super.initState();
     if (widget.isedit.value == true) {
-      _reasonController.text = widget.leaveDetail['reasons'];
+      _reasonController.text = widget.leaveDetail['reason'];
       _selectedDateTimef = DateTime.parse(widget.leaveDetail['from']);
       _selectedDateTimet = DateTime.parse(widget.leaveDetail['to']);
       attach.value = widget.leaveDetail['attachmentUrl'];

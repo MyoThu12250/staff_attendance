@@ -16,8 +16,8 @@ class Config {
   static const String updateLeaveRecordByIdRoute =
       '$baseUrl/leaveRecord/update';
 
-  static const String loginRoute = '$baseUrl/users/loginUser';
-  static const String logoutByIdRoute = '$baseUrl/users/logout';
+  static const String loginRoute = '$baseUrl/login/loginUser';
+  static const String logoutByIdRoute = '$baseUrl/login/logoutUser';
   static const String resetPasswordRoute = '$baseUrl/users/resetPassword/';
   static const String mapCheckRoute = '$baseUrl/mapCheck';
   static const String refreshRoute = '$baseUrl/refresh';

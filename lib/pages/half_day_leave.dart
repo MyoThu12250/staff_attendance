@@ -28,7 +28,7 @@ class _HalfDayLeaveState extends State<HalfDayLeave> {
     super.initState();
     if (widget.isedit == true) {
       dropdownValue.value = widget.leaveDetail['leaveType'];
-      _reasonController.text = widget.leaveDetail['reasons'];
+      _reasonController.text = widget.leaveDetail['reason'];
       _date = DateTime.parse(widget.leaveDetail['from']);
     }
   }
