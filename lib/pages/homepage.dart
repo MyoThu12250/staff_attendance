@@ -408,24 +408,24 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 90.0),
+                                const EdgeInsets.symmetric(horizontal: 80.0),
                             child: SingleChildScrollView(
                               child: Row(
                                 children: [
                                   Text(
                                     formattedDateMonth + ', ',
                                     style: TextStyle(
-                                        fontSize: 25, fontFamily: 'Epilogue'),
+                                        fontSize: 23, fontFamily: 'Epilogue'),
                                   ),
                                   Text(
                                     formattedDateDay + ', ',
                                     style: TextStyle(
-                                        fontSize: 25, fontFamily: 'Epilogue'),
+                                        fontSize: 23, fontFamily: 'Epilogue'),
                                   ),
                                   Text(
                                     formattedDateYear,
                                     style: TextStyle(
-                                        fontSize: 25, fontFamily: 'Epilogue'),
+                                        fontSize: 23, fontFamily: 'Epilogue'),
                                   ),
                                 ],
                               ),

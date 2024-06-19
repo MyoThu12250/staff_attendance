@@ -290,7 +290,44 @@ class _ProfilePageState extends State<ProfilePage> {
                           foregroundColor: Colors.white,
                         ),
                         onPressed: () {
-                          loginController.logout();
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              elevation: 20,
+                              shadowColor: Colors.red,
+                              title: Text(
+                                'Confirm Logout',
+                                style: TextStyle(
+                                  fontFamily: 'Epilogue',
+                                ),
+                              ),
+                              content: Text(
+                                'Do you really want to sign out?',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Epilogue',
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: Text('No'),
+                                ),
+                                TextButton(
+                                  onPressed: () => loginController.logout(),
+                                  child: Text(
+                                    'Yes',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                          // loginController.logout();
                         },
                         child: Text(
                           "Log Out",

@@ -128,7 +128,12 @@ class _MedicalLeaveState extends State<MedicalLeave> {
         'Authorization': 'Bearer ${loginController.authorization.value}',
       },
     );
+    print(reason);
+    print(fromdate);
+    print(todate);
+    print(leavetype);
     print(attachment);
+    print(id);
     print(response.statusCode);
 
     if (response.statusCode == 200) {

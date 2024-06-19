@@ -1,5 +1,5 @@
 class Config {
-  static const String baseUrl = 'http://10.103.1.9:8000/api/v1';
+  static const String baseUrl = 'http://10.103.1.147:8000/api/v1';
 
   static const String createAttendanceRoute = '$baseUrl/attendance/click';
 

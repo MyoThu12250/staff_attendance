@@ -112,6 +112,8 @@ flutter:
     - assets/icons/appIcon.png
     - assets/images/appLogo.jpg
     - assets/images/hero.jpg
+    - assets/images/401_login_error.png
+    - assets/images/connection_error.png
     - assets/fonts/
 
 

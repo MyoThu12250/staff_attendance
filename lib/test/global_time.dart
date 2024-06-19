@@ -21,8 +21,9 @@ class _TimeDisplayScreenState extends State<TimeDisplayScreen> {
   Stream<DateTime> _getTimeStream() async* {
     while (true) {
       try {
-        final response = await http
-            .get(Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Yangon'));
+        final response = await http.get(
+          Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Yangon'),
+        );
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
           final dateTimeString = data['datetime'];
@@ -59,15 +60,13 @@ class _TimeDisplayScreenState extends State<TimeDisplayScreen> {
             } else if (snapshot.hasData) {
               final dateTime = snapshot.data!;
 
-              // Convert 24-hour format to 12-hour format
               int hour = dateTime.hour;
               final period = hour >= 12 ? 'PM' : 'AM';
               hour = hour % 12;
-              hour = hour == 0
-                  ? 12
-                  : hour; // Convert '0' hour to '12' for 12 AM and 12 PM
+              hour = hour == 0 ? 12 : hour;
 
               final hourString = hour.toString().padLeft(2, '0');
+
               final minute = dateTime.minute.toString().padLeft(2, '0');
               final second = dateTime.second.toString().padLeft(2, '0');
 
