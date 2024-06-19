@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../alert_dialog.dart';
 
-class LoginErrorPage extends StatelessWidget {
-  const LoginErrorPage({super.key});
+class TimeOut extends StatelessWidget {
+  const TimeOut({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class LoginErrorPage extends StatelessWidget {
             backgroundColor: Colors.blue,
             toolbarHeight: 120,
             centerTitle: true,
-            title: Text('Login pages'),
+            title: Text('Error pages'),
           ),
         ),
       ),
@@ -75,7 +75,7 @@ class LoginErrorPage extends StatelessWidget {
             top: 220,
             right: 150,
             child: Text(
-              'Login Fail',
+              'Request Time Out',
               style: const TextStyle(
                 fontSize: 30,
                 color: Colors.black,
@@ -85,19 +85,19 @@ class LoginErrorPage extends StatelessWidget {
           ),
           Positioned(
             top: -30,
-            left: 15,
+            left: 10,
             child: Text(
-              '401',
+              '408',
               style: TextStyle(fontSize: 270),
             ),
           ),
           Positioned(
-            top: 80,
-            right: -120,
+            top: 260,
+            right: 70,
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
               child: Image.asset(
-                'assets/images/401_login_error.png',
+                'assets/images/time_out.png',
               ),
             ),
           ),
@@ -126,7 +126,7 @@ class LoginErrorPage extends StatelessWidget {
             bottom: 245,
             left: 40,
             child: Text(
-              'Try again to login \n Something was wrong',
+              'Request timed out.\nPlease try again.',
               style: TextStyle(
                 fontSize: 25,
                 color: Colors.red,

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../alert_dialog.dart';
 
-class LoginErrorPage extends StatelessWidget {
-  const LoginErrorPage({super.key});
+class ArticleMissedPage extends StatelessWidget {
+  const ArticleMissedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class LoginErrorPage extends StatelessWidget {
             backgroundColor: Colors.blue,
             toolbarHeight: 120,
             centerTitle: true,
-            title: Text('Login pages'),
+            title: Text('Error pages'),
           ),
         ),
       ),
@@ -75,7 +75,7 @@ class LoginErrorPage extends StatelessWidget {
             top: 220,
             right: 150,
             child: Text(
-              'Login Fail',
+              'Page Not Found',
               style: const TextStyle(
                 fontSize: 30,
                 color: Colors.black,
@@ -85,19 +85,20 @@ class LoginErrorPage extends StatelessWidget {
           ),
           Positioned(
             top: -30,
-            left: 15,
+            left: 25,
             child: Text(
-              '401',
+              '404',
               style: TextStyle(fontSize: 270),
             ),
           ),
           Positioned(
-            top: 80,
-            right: -120,
+            top: 250,
+            right: 70,
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
               child: Image.asset(
-                'assets/images/401_login_error.png',
+                width: 250,
+                'assets/images/404.png',
               ),
             ),
           ),
@@ -123,10 +124,10 @@ class LoginErrorPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 245,
+            bottom: 235,
             left: 40,
             child: Text(
-              'Try again to login \n Something was wrong',
+              "Oops! \nThe page \nyou're looking for \nisn't here.",
               style: TextStyle(
                 fontSize: 25,
                 color: Colors.red,

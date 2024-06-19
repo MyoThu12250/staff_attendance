@@ -10,7 +10,18 @@ class ConnectionError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56.0),
+        child: ClipPath(
+          clipper: BottomCornersClipper(),
+          child: AppBar(
+            backgroundColor: Colors.blue,
+            toolbarHeight: 120,
+            centerTitle: true,
+            title: Text('Error pages'),
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           Positioned(

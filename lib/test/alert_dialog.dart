@@ -1,5 +1,7 @@
+import 'package:CheckMate/test/error_pagesss/article_miss.dart';
 import 'package:CheckMate/test/error_pagesss/connection_error_page.dart';
 import 'package:CheckMate/test/error_pagesss/login_error_page.dart';
+import 'package:CheckMate/test/error_pagesss/time_out.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -54,11 +56,23 @@ class ErrorPages extends StatelessWidget {
               child: Text('ConnectionErrorPage'),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => TimeOut(),
+                  ),
+                );
+              },
               child: Text('ServerTimeOutPage'),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ArticleMissedPage(),
+                  ),
+                );
+              },
               child: Text('ArticleMissedPage'),
             ),
           ],

@@ -23,9 +23,11 @@ class RequestHistoryController extends GetxController {
   }
 
   Future<void> _fetchPage(int pageKey) async {
+    final id = loginController.userInfo['userId'].toString();
     try {
       final response = await http.get(
-        Uri.parse(Config.getAttdanceRequestHistoryRoute + '?page=$pageKey'),
+        Uri.parse(Config.getAttendanceRequestByIdRoute + '/$id?page=$pageKey'),
+        // Uri.parse(Config.getAttdanceRequestHistoryRoute + '?page=$pageKey'),
         headers: {
           'Authorization': 'Bearer ${loginController.authorization.value}',
         },

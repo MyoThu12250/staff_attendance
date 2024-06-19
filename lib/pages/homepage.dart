@@ -134,16 +134,16 @@ class _HomePageState extends State<HomePage> {
         yield DateTime.now().toUtc().add(Duration(
             hours: 6, minutes: 30)); // Default to UTC +6:30 if there's an error
       }
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 10));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    Size size = mediaQuery.size;
-    double screenWidth = size.width;
-    double screenHeight = size.height;
+    // MediaQueryData mediaQuery = MediaQuery.of(context);
+    // Size size = mediaQuery.size;
+    // double screenWidth = size.width;
+    // double screenHeight = size.height;
 
     DateTime now = DateTime.now();
     String formattedDateMonth = DateFormat('MMMM').format(now);
@@ -275,6 +275,12 @@ class _HomePageState extends State<HomePage> {
                     itemCount: 1,
                     itemBuilder: (context, index) {
                       String name = controller.userInfo['username'].toString();
+                      String displayName =
+                          name.length > 5 ? name.substring(0, 5) + '...' : name;
+                      String firstName = displayName.split(' ')[0];
+                      // Assuming the first name is the first word in displayName
+                      String nameToDisplay =
+                          displayName.length > 5 ? firstName : displayName;
                       String dateType =
                           DateTime.now().hour < 12 ? 'Morning' : 'Afternoon';
                       return Column(
@@ -287,7 +293,7 @@ class _HomePageState extends State<HomePage> {
                             height: 20,
                           ),
                           Text(
-                            'Good ${dateType + ' ' + name}',
+                            'Good ${dateType + ' ' + nameToDisplay},',
                             style: TextStyle(
                               fontSize: 25,
                               fontFamily: 'Epilogue',
@@ -335,11 +341,10 @@ class _HomePageState extends State<HomePage> {
                                               left: 80.0,
                                             ),
                                             child: SizedBox(
-                                              width: screenWidth * 0.21,
                                               child: Text(
                                                 hourString + 'h',
                                                 style: TextStyle(
-                                                  fontSize: screenWidth * 0.12,
+                                                  fontSize: 50,
                                                   // Responsive font size
                                                   fontWeight: FontWeight.bold,
                                                   fontFamily: 'Epilogue',
@@ -348,18 +353,19 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontSize: screenWidth * 0.1),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: Text(
+                                              ':',
+                                              style: TextStyle(fontSize: 40),
+                                            ),
                                           ),
                                           SizedBox(
-                                            width: screenWidth * 0.29,
-                                            // Responsive width
                                             child: Text(
                                               minute + 'm',
                                               style: TextStyle(
-                                                fontSize: screenWidth * 0.12,
+                                                fontSize: 50,
                                                 fontWeight: FontWeight.bold,
                                                 fontFamily: 'Epilogue',
                                                 color: Colors.green,
@@ -368,14 +374,13 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                              vertical: 5.0,
-                                            ),
+                                                vertical: 5.0, horizontal: 10),
                                             child: Text(
                                               snapshot.data!.hour < 12
                                                   ? 'AM'
                                                   : 'PM',
                                               style: TextStyle(
-                                                fontSize: screenWidth * 0.1,
+                                                fontSize: 40,
                                                 // Responsive font size
                                                 fontWeight: FontWeight.bold,
                                                 fontFamily: 'Epilogue',
@@ -450,10 +455,8 @@ class _HomePageState extends State<HomePage> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
                                         SizedBox(
-                                          width: screenWidth * 0.35,
-                                          // Responsive width
-                                          height: screenHeight * 0.07,
-                                          // Responsive height
+                                          width: 140,
+                                          height: 60,
                                           child: ElevatedButton(
                                             onPressed: locationController
                                                     .isLoading.value
@@ -480,8 +483,8 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: screenWidth * 0.35,
-                                          height: screenHeight * 0.07,
+                                          width: 140,
+                                          height: 60,
                                           child: ElevatedButton(
                                             onPressed: () {
                                               locationController
