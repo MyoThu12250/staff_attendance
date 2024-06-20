@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:CheckMate/config_route.dart';
 import 'package:CheckMate/pages/session_expire.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ import 'leave.dart';
 class MedicalLeave extends StatefulWidget {
   RxBool isedit;
   int? index;
+
   final Map<String, dynamic> leaveDetail;
 
   MedicalLeave(
@@ -28,6 +31,7 @@ final LeaveController controller = Get.put(LeaveController());
 
 class _MedicalLeaveState extends State<MedicalLeave> {
   RxString attach = ''.obs;
+  RxString count = ''.obs;
 
   @override
   void initState() {
@@ -39,6 +43,24 @@ class _MedicalLeaveState extends State<MedicalLeave> {
       _selectedDateTimet = DateTime.parse(widget.leaveDetail['to']);
       attach.value = widget.leaveDetail['attachmentUrl'];
     }
+    fetchLeaveCount();
+  }
+
+  Future<void> fetchLeaveCount() async {
+    final response = await http.get(
+      Uri.parse('${Config.count}/${loginController.userInfo['userId']}'),
+      headers: {
+        'Authorization': 'Bearer ${loginController.authorization.value}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      count.value = data['medicalLeave'].toString();
+    } else {
+      // Handle error
+      print('Failed to fetch leave count: ${response.statusCode}');
+    }
   }
 
   Future<void> Update() async {
@@ -49,7 +71,10 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
     final String reason = _reasonController.text;
     final String leavetype = 'Medical Leave';
-    final String attachment = imageController.imageUrl.value.toString();
+    String attachment = imageController.imageUrl.value.toString();
+    imageController.imageUrl.value.isEmpty
+        ? attachment = attach.value
+        : attachment = imageController.imageUrl.value.toString();
     try {
       final response = await http.put(
         Uri.parse('${Config.updateLeaveRecordByIdRoute}/$id'),
@@ -69,6 +94,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
         Get.snackbar('Success', 'Your Leave Record Successfully Updated.',
             backgroundColor: Colors.greenAccent,
             duration: const Duration(seconds: 4));
+
         Get.offAllNamed('/leave');
       } else if (response.statusCode == 401) {
         showSessionExpiredDialog();
@@ -104,31 +130,29 @@ class _MedicalLeaveState extends State<MedicalLeave> {
   String selectedValue = 'Medical Leave';
 
   Future<void> _sendData() async {
-    // is Loading
     isLoading.value = true;
-    print(imageController.imageUrl.value);
     final todate = DateFormat('yyyy-MM-dd').format(_selectedDateTimet!);
     final fromdate = DateFormat('yyyy-MM-dd').format(_selectedDateTimef!);
-    final String reason = _reasonController.text;
-    final String leavetype = 'Medical leave';
+    final String reason = _reasonController.text.toString();
+    final String leavetype = 'Medical Leave';
     final id = loginController.userInfo['userId'].toString();
     // final String userId = controller.retrieveUserId().toString();
     final String attachment = imageController.imageUrl.value.toString();
     final response = await http.post(
       Uri.parse(Config.createLeaveRecordRoute),
       body: {
-        'reasons': reason,
+        'reasons': reason.toString(),
         'from': fromdate,
         'to': todate,
         'leaveType': leavetype,
         'attachmentUrl': attachment,
-        'UserId': id
+        'UserId': '3'
       },
       headers: {
         'Authorization': 'Bearer ${loginController.authorization.value}',
       },
     );
-    print(reason);
+    print('reason' + reason);
     print(fromdate);
     print(todate);
     print(leavetype);
@@ -137,6 +161,9 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     print(response.statusCode);
 
     if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      count.value = data['medical'].toString();
+      print(count.value);
       isLoading.value = false;
       showDialog(
         context: context,
@@ -252,14 +279,14 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     String _leavetype = selectedValue;
     String? _fromDate = _selectedDateTimef?.toString();
     String? _toDate = _selectedDateTimet?.toString();
-    String _reason = _reasonController.text;
+    String _reason = _reasonController.text.toString();
 
     RxString _filename = imageController.fileName;
     if (_leavetype.isNotEmpty &&
         _fromDate != null &&
         _toDate != null &&
         _reason.isNotEmpty &&
-        _filename.isNotEmpty) {
+        attach.isNotEmpty) {
       return true;
     } else {
       showDialog(
@@ -285,11 +312,10 @@ class _MedicalLeaveState extends State<MedicalLeave> {
 
   @override
   Widget build(BuildContext context) {
-    final mcount = loginController.userInfo['medicalLeave'];
     MediaQueryData mediaQuery = MediaQuery.of(context);
     Size size = mediaQuery.size;
     double screenWidth = size.width;
-    double screenHeight = size.height;
+    // double screenHeight = size.height;
     return WillPopScope(
       onWillPop: () async {
         Get.off(
@@ -312,302 +338,315 @@ class _MedicalLeaveState extends State<MedicalLeave> {
           child: Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Container(
-              width: screenWidth,
+              // width: screenWidth,
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 40,
-                    ),
-                    mcount == 0
-                        ? Center(
-                            child: Text(
-                              'You have nothing attempt left',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.red,
+                child: Obx(
+                  () => Column(
+                    children: [
+                      SizedBox(
+                        height: 40,
+                      ),
+                      count.value == '0'
+                          ? Center(
+                              child: Text(
+                                'You have nothing attempt left',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.red,
+                                ),
                               ),
-                            ),
-                          )
-                        : Center(
-                            child: Text(
-                              'Remaining Medical Leave attempt : ${mcount}',
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50.0),
-                      child: Container(
-                        width: screenWidth,
-                        child: Column(
-                          children: [
-                            Container(
-                              width: screenWidth,
-                              height: screenHeight * .1,
-                              child: Center(
-                                child: Text(
-                                  'Medical Leave Form',
-                                  style: TextStyle(fontSize: 25),
+                            )
+                          : Center(
+                              child: Text(
+                                'Remaining Medical Leave attempt : ${count.value}',
+                                style: TextStyle(
+                                  fontSize: 20,
                                 ),
                               ),
                             ),
-                            SingleChildScrollView(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            width: 100,
-                                            height: 95,
-                                            child: Icon(Icons.access_time),
-                                          ),
-                                          Container(
-                                            width: 100,
-                                            height: 95,
-                                            child: Icon(Icons.library_books),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 50.0),
-                                            child: Container(
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50.0),
+                        child: Container(
+                          // color: Colors.red,
+                          // width: screenWidth,
+                          child: Column(
+                            children: [
+                              Container(
+                                width: screenWidth,
+                                // height: screenHeight * .1,
+                                child: Center(
+                                  child: Text(
+                                    'Medical Leave Form',
+                                    style: TextStyle(fontSize: 25),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 60,
+                              ),
+                              SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        child: Column(
+                                          children: [
+                                            Container(
                                               width: 100,
                                               height: 95,
-                                              child: Icon(Icons.link),
+                                              child: Icon(Icons.access_time),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 320,
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            width: 320,
-                                            height: 95,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                SizedBox(
-                                                  height: 70,
-                                                  width: 150,
-                                                  child: TextField(
-                                                    controller:
-                                                        TextEditingController(
-                                                      text: _selectedDateTimef !=
-                                                              null
-                                                          ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
-                                                          : null,
-                                                    ),
-                                                    readOnly: true,
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      labelText: 'From',
-                                                      hintText: 'From',
-                                                      suffixIcon: Icon(
-                                                        Icons.date_range,
-                                                        size: 20,
-                                                      ),
-                                                    ),
-                                                    onTap: () {
-                                                      _selectedDatef();
-                                                    },
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 70,
-                                                  width: 150,
-                                                  child: TextField(
-                                                    controller:
-                                                        TextEditingController(
-                                                      text: _selectedDateTimet !=
-                                                              null
-                                                          ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
-                                                          : null,
-                                                    ),
-                                                    readOnly: true,
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      labelText: 'to',
-                                                      hintText: 'to',
-                                                      suffixIcon: Icon(
-                                                        Icons.date_range,
-                                                        size: 20,
-                                                      ),
-                                                    ),
-                                                    onTap: () {
-                                                      _selectedDatet();
-                                                    },
-                                                  ),
-                                                ),
-                                              ],
+                                            Container(
+                                              width: 100,
+                                              height: 95,
+                                              child: Icon(Icons.library_books),
                                             ),
-                                          ),
-                                          Container(
-                                            width: 320,
-                                            height: 95,
-                                            child: Padding(
+                                            Padding(
                                               padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: TextField(
-                                                controller: _reasonController,
-                                                maxLines: null,
-                                                expands: true,
-                                                decoration: InputDecoration(
-                                                  labelText: 'Reason',
-                                                  hintText: 'Enter Reason ',
-                                                  border: OutlineInputBorder(),
-                                                ),
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 50.0),
+                                              child: Container(
+                                                width: 100,
+                                                height: 95,
+                                                child: Icon(Icons.link),
                                               ),
                                             ),
-                                          ),
-                                          Container(
-                                            height: 200,
-                                            width: 200,
-                                            child: Obx(
-                                              () => Row(
-                                                mainAxisSize: MainAxisSize.min,
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 300,
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              width: 320,
+                                              height: 95,
+                                              child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceEvenly,
                                                 children: [
-                                                  (widget.isedit.value &&
-                                                          imageController
-                                                                  .imageFile
-                                                                  .value ==
-                                                              null)
-                                                      ? Container(
-                                                          height: 150,
-                                                          width: 150,
-                                                          child: Image.network(
-                                                            attach.value,
-                                                            fit: BoxFit.cover,
-                                                            loadingBuilder:
-                                                                (BuildContext
-                                                                        context,
-                                                                    Widget
-                                                                        child,
-                                                                    ImageChunkEvent?
-                                                                        loadingProgress) {
-                                                              if (loadingProgress ==
-                                                                  null) {
-                                                                return child;
-                                                              } else {
-                                                                return Center(
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    value: loadingProgress.expectedTotalBytes !=
-                                                                            null
-                                                                        ? loadingProgress.cumulativeBytesLoaded /
-                                                                            (loadingProgress.expectedTotalBytes ??
-                                                                                1)
-                                                                        : null,
-                                                                  ),
-                                                                );
-                                                              }
-                                                            },
-                                                            errorBuilder:
-                                                                (BuildContext
-                                                                        context,
-                                                                    Object
-                                                                        error,
-                                                                    StackTrace?
-                                                                        stackTrace) {
-                                                              return Center(
-                                                                child: Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .red,
-                                                                  size: 50.0,
-                                                                ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        )
-                                                      : Obx(() {
-                                                          if (imageController
-                                                                  .imageFile
-                                                                  .value ==
-                                                              null) {
-                                                            return Text(
-                                                                'Choose image..');
-                                                          } else {
-                                                            return Container(
-                                                                height: 150,
-                                                                width: 150,
-                                                                child:
-                                                                    Image.file(
-                                                                  imageController
-                                                                      .imageFile
-                                                                      .value!,
-                                                                  fit: BoxFit
-                                                                      .contain,
-                                                                ));
-                                                          }
-                                                        }),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      imageController
-                                                          .pickImage();
-                                                    },
-                                                    icon: Icon(Icons.link),
+                                                  SizedBox(
+                                                    height: 70,
+                                                    width: 150,
+                                                    child: TextField(
+                                                      controller:
+                                                          TextEditingController(
+                                                        text: _selectedDateTimef !=
+                                                                null
+                                                            ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
+                                                            : null,
+                                                      ),
+                                                      readOnly: true,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        labelText: 'From',
+                                                        hintText: 'From',
+                                                        suffixIcon: Icon(
+                                                          Icons.date_range,
+                                                          size: 20,
+                                                        ),
+                                                      ),
+                                                      onTap: () {
+                                                        _selectedDatef();
+                                                      },
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 70,
+                                                    width: 150,
+                                                    child: TextField(
+                                                      controller:
+                                                          TextEditingController(
+                                                        text: _selectedDateTimet !=
+                                                                null
+                                                            ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
+                                                            : null,
+                                                      ),
+                                                      readOnly: true,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        labelText: 'to',
+                                                        hintText: 'to',
+                                                        suffixIcon: Icon(
+                                                          Icons.date_range,
+                                                          size: 20,
+                                                        ),
+                                                      ),
+                                                      onTap: () {
+                                                        _selectedDatet();
+                                                      },
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Obx(
-                              () => isLoading.value == true
-                                  ? CircularProgressIndicator()
-                                  : Padding(
-                                      padding: const EdgeInsets.only(top: 20.0),
-                                      child: SizedBox(
-                                        width: 130,
-                                        child: ElevatedButton(
-                                          onPressed: mcount == 0
-                                              ? null
-                                              : () async {
-                                                  widget.isedit.value == true
-                                                      ? _onUpdate()
-                                                      : _onSubmit();
-                                                },
-                                          child: Text(
-                                            'Submit',
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                              elevation: 8,
-                                              backgroundColor:
-                                                  Color(0xFFE1FF3C)),
+                                            Container(
+                                              width: 320,
+                                              height: 95,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: TextField(
+                                                  controller: _reasonController,
+                                                  maxLines: null,
+                                                  expands: true,
+                                                  decoration: InputDecoration(
+                                                    labelText: 'Reason',
+                                                    hintText: 'Enter Reason ',
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              height: 200,
+                                              width: 200,
+                                              child: Obx(
+                                                () => Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    (widget.isedit.value &&
+                                                            imageController
+                                                                    .imageFile
+                                                                    .value ==
+                                                                null)
+                                                        ? Container(
+                                                            height: 150,
+                                                            width: 150,
+                                                            child:
+                                                                Image.network(
+                                                              attach.value,
+                                                              fit: BoxFit.cover,
+                                                              loadingBuilder:
+                                                                  (BuildContext
+                                                                          context,
+                                                                      Widget
+                                                                          child,
+                                                                      ImageChunkEvent?
+                                                                          loadingProgress) {
+                                                                if (loadingProgress ==
+                                                                    null) {
+                                                                  return child;
+                                                                } else {
+                                                                  return Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      value: loadingProgress.expectedTotalBytes !=
+                                                                              null
+                                                                          ? loadingProgress.cumulativeBytesLoaded /
+                                                                              (loadingProgress.expectedTotalBytes ?? 1)
+                                                                          : null,
+                                                                    ),
+                                                                  );
+                                                                }
+                                                              },
+                                                              errorBuilder:
+                                                                  (BuildContext
+                                                                          context,
+                                                                      Object
+                                                                          error,
+                                                                      StackTrace?
+                                                                          stackTrace) {
+                                                                return Center(
+                                                                  child: Icon(
+                                                                    Icons.error,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    size: 50.0,
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          )
+                                                        : Obx(() {
+                                                            if (imageController
+                                                                    .imageFile
+                                                                    .value ==
+                                                                null) {
+                                                              return Text(
+                                                                  'Choose image..');
+                                                            } else {
+                                                              return Container(
+                                                                  height: 150,
+                                                                  width: 150,
+                                                                  child: Image
+                                                                      .file(
+                                                                    imageController
+                                                                        .imageFile
+                                                                        .value!,
+                                                                    fit: BoxFit
+                                                                        .contain,
+                                                                  ));
+                                                            }
+                                                          }),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        imageController
+                                                            .pickImage();
+                                                      },
+                                                      icon: Icon(Icons.link),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                            ),
-                          ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Obx(
+                                () => isLoading.value == true
+                                    ? CircularProgressIndicator()
+                                    : Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 20.0),
+                                        child: SizedBox(
+                                          width: 130,
+                                          child: ElevatedButton(
+                                            onPressed: count.value == '0'
+                                                ? null
+                                                : () async {
+                                                    widget.isedit.value == true
+                                                        ? _onUpdate()
+                                                        : _onSubmit();
+                                                  },
+                                            child: Text(
+                                              'Submit',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                                elevation: 8,
+                                                backgroundColor:
+                                                    Color(0xFFE1FF3C)),
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

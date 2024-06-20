@@ -121,6 +121,7 @@ class _HomePageState extends State<HomePage> {
         final response = await http
             .get(Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Yangon'));
         if (response.statusCode == 200) {
+          print(response.body);
           final data = jsonDecode(response.body);
           final dateTimeString = data['datetime'];
           final dateTime = DateTime.parse(dateTimeString)
@@ -134,7 +135,7 @@ class _HomePageState extends State<HomePage> {
         yield DateTime.now().toUtc().add(Duration(
             hours: 6, minutes: 30)); // Default to UTC +6:30 if there's an error
       }
-      await Future.delayed(Duration(seconds: 10));
+      await Future.delayed(Duration(seconds: 1));
     }
   }
 
@@ -314,7 +315,6 @@ class _HomePageState extends State<HomePage> {
                                 final dateTime = snapshot.data!;
                                 int hour = dateTime.hour;
 
-                                final period = hour >= 12 ? 'PM' : 'AM';
                                 hour = hour % 12;
                                 hour = hour == 0
                                     ? 12
@@ -415,24 +415,28 @@ class _HomePageState extends State<HomePage> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 80.0),
                             child: SingleChildScrollView(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    formattedDateMonth + ', ',
-                                    style: TextStyle(
-                                        fontSize: 23, fontFamily: 'Epilogue'),
-                                  ),
-                                  Text(
-                                    formattedDateDay + ', ',
-                                    style: TextStyle(
-                                        fontSize: 23, fontFamily: 'Epilogue'),
-                                  ),
-                                  Text(
-                                    formattedDateYear,
-                                    style: TextStyle(
-                                        fontSize: 23, fontFamily: 'Epilogue'),
-                                  ),
-                                ],
+                              scrollDirection: Axis.horizontal,
+                              child: Container(
+                                width: 400,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      formattedDateMonth + ', ',
+                                      style: TextStyle(
+                                          fontSize: 20, fontFamily: 'Epilogue'),
+                                    ),
+                                    Text(
+                                      formattedDateDay + ', ',
+                                      style: TextStyle(
+                                          fontSize: 20, fontFamily: 'Epilogue'),
+                                    ),
+                                    Text(
+                                      formattedDateYear,
+                                      style: TextStyle(
+                                          fontSize: 20, fontFamily: 'Epilogue'),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

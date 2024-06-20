@@ -1,5 +1,5 @@
 class Config {
-  static const String baseUrl = 'http://10.103.0.142:8000/api/v1';
+  static const String baseUrl = 'http://10.103.1.147:8000/api/v1';
 
   static const String createAttendanceRoute = '$baseUrl/attendance/click';
 
@@ -9,7 +9,7 @@ class Config {
       '$baseUrl/attendanceRequest/createRequest';
 
   static const String getAttendanceRequestByIdRoute =
-      '$baseUrl/attendanceRequest';
+      '$baseUrl/attendanceRequest/getAttendance';
 
   static const String fcmSendRoute = '$baseUrl/fcm/send';
 
@@ -46,5 +46,6 @@ class Config {
 
   static const String RangeRoute = '$baseUrl/location/getLoc';
 
-  static const String testRoute = '$baseUrl//test/'; // testing route
+  static const String testRoute = '$baseUrl//test/';
+  static const String count = '$baseUrl/userCount'; // testing route
 }

@@ -1,127 +1,91 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
-class TimeDisplayScreen extends StatefulWidget {
-  @override
-  _TimeDisplayScreenState createState() => _TimeDisplayScreenState();
+void main() {
+  runApp(const MyApp());
 }
 
-class _TimeDisplayScreenState extends State<TimeDisplayScreen> {
-  late Stream<DateTime> _timeStream;
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool isConnectedToInternet = false;
+
+  StreamSubscription? _internetConnectionStreamSubscription;
 
   @override
   void initState() {
     super.initState();
-    _timeStream = _getTimeStream();
+    _internetConnectionStreamSubscription =
+        InternetConnection().onStatusChange.listen((event) {
+      switch (event) {
+        case InternetStatus.connected:
+          setState(() {
+            isConnectedToInternet = true;
+          });
+          break;
+        case InternetStatus.disconnected:
+          setState(() {
+            isConnectedToInternet = false;
+          });
+          break;
+        default:
+          setState(() {
+            isConnectedToInternet = false;
+          });
+          break;
+      }
+    });
   }
 
-  Stream<DateTime> _getTimeStream() async* {
-    while (true) {
-      try {
-        final response = await http.get(
-          Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Yangon'),
-        );
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          final dateTimeString = data['datetime'];
-          final dateTime = DateTime.parse(dateTimeString)
-              .toUtc()
-              .add(Duration(hours: 6, minutes: 30)); // Adjust to UTC +6:30
-          yield dateTime;
-        } else {
-          throw Exception('Failed to load time');
-        }
-      } catch (e) {
-        yield DateTime.now().toUtc().add(Duration(
-            hours: 6, minutes: 30)); // Default to UTC +6:30 if there's an error
-      }
-      await Future.delayed(Duration(seconds: 1));
-    }
+  @override
+  void dispose() {
+    _internetConnectionStreamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Myanmar Time Display'),
-      ),
-      body: Center(
-        child: StreamBuilder<DateTime>(
-          stream: _timeStream,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              final dateTime = snapshot.data!;
-
-              int hour = dateTime.hour;
-              final period = hour >= 12 ? 'PM' : 'AM';
-              hour = hour % 12;
-              hour = hour == 0 ? 12 : hour;
-
-              final hourString = hour.toString().padLeft(2, '0');
-
-              final minute = dateTime.minute.toString().padLeft(2, '0');
-              final second = dateTime.second.toString().padLeft(2, '0');
-
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '$hourString:',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.1,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                  Text(
-                    '$minute:',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.1,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                  Text(
-                    '$second ',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.1,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                  Text(
-                    period,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.1,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return SizedBox(
-                height: 50,
-                width: 130,
-                child: Center(
-                  child: Text(
-                    'Loading....',
-                    style: TextStyle(
-                      fontFamily: 'Epilogue',
-                    ),
-                  ),
-                ),
-              );
-            }
-          },
+      body: SizedBox(
+        width: MediaQuery.sizeOf(context).width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              isConnectedToInternet ? Icons.wifi : Icons.wifi_off,
+              size: 50,
+              color: isConnectedToInternet ? Colors.green : Colors.red,
+            ),
+            Text(
+              isConnectedToInternet
+                  ? "You are connected to the internet."
+                  : "You are not connected to the internet.",
+            ),
+          ],
         ),
       ),
     );

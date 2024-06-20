@@ -41,6 +41,15 @@ class RequestHistoryPage extends StatelessWidget {
     return PagedListView<int, dynamic>(
       pagingController: controller.pagingController,
       builderDelegate: PagedChildBuilderDelegate<dynamic>(
+        noItemsFoundIndicatorBuilder: (context) => Center(
+          child: Text(
+            'Empty attendance request record',
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'Epilogue',
+            ),
+          ),
+        ),
         itemBuilder: (context, item, index) => Column(
           children: [
             GestureDetector(

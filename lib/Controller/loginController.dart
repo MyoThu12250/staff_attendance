@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:CheckMate/config_route.dart';
+import 'package:CheckMate/pages/leave.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
-
-import '../pages/homepage.dart';
 
 class LoginController extends GetxController {
   var obscureText = true.obs;
@@ -58,7 +57,7 @@ class LoginController extends GetxController {
         authorization.value = json.decode(response.body)['accessToken'];
 
         print('hi');
-        Get.off(HomePage(
+        Get.off(Leave(
           leaveDetail: {},
         ));
         userInfo.value = jsonDecode(response.body)['userData'];
@@ -95,7 +94,7 @@ class LoginController extends GetxController {
         'token': deviceid.value,
       },
     );
-
+    print(DateTime.now());
     print(response.statusCode);
     print('this is sending token');
   }

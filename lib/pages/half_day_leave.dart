@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:CheckMate/pages/leave.dart';
 import 'package:CheckMate/pages/session_expire.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,8 @@ class HalfDayLeave extends StatefulWidget {
 }
 
 class _HalfDayLeaveState extends State<HalfDayLeave> {
+  RxString count = ''.obs;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -31,6 +35,7 @@ class _HalfDayLeaveState extends State<HalfDayLeave> {
       _reasonController.text = widget.leaveDetail['reason'];
       _date = DateTime.parse(widget.leaveDetail['from']);
     }
+    fetchLeaveCount();
   }
 
   DateTime? _date;
@@ -181,9 +186,25 @@ class _HalfDayLeaveState extends State<HalfDayLeave> {
     }
   }
 
+  Future<void> fetchLeaveCount() async {
+    final response = await http.get(
+      Uri.parse('${Config.count}/${loginController.userInfo['userId']}'),
+      headers: {
+        'Authorization': 'Bearer ${loginController.authorization.value}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      count.value = data['medicalLeave'].toString();
+    } else {
+      // Handle error
+      print('Failed to fetch leave count: ${response.statusCode}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Rcount = loginController.userInfo['attendanceLeave'];
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -199,149 +220,151 @@ class _HalfDayLeaveState extends State<HalfDayLeave> {
           ),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Rcount != 0
-                  ? Text(
-                      'You have $Rcount attempt to request',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    )
-                  : Text(
-                      'You have nothing attempts to request',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.red,
-                      ),
-                    ),
-              SizedBox(
-                height: 80,
-              ),
-              Center(
-                child: Text(
-                  'Half Day Leave Form',
-                  style: TextStyle(fontSize: 25),
+          child: Obx(
+            () => Column(
+              children: [
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 90.0),
-                        child: Icon(Icons.my_library_books),
+                count.value != '0'
+                    ? Text(
+                        'You have ${count.value} attempt to request',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      )
+                    : Text(
+                        'You have nothing attempts to request',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.red,
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Icon(Icons.access_time),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 90.0),
-                        child: Icon(Icons.library_books),
-                      ),
-                    ],
+                SizedBox(
+                  height: 80,
+                ),
+                Center(
+                  child: Text(
+                    'Half Day Leave Form',
+                    style: TextStyle(fontSize: 25),
                   ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 60.0),
-                        child: SizedBox(
-                          width: 250,
-                          child: Obx(() {
-                            return DropdownButton<String>(
-                              value: dropdownValue.value,
-                              onChanged: (String? newValue) {
-                                dropdownValue.value = newValue!;
-                              },
-                              items: <String>[
-                                'Morning Leave',
-                                'Evening Leave'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            );
-                          }),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 90.0),
+                          child: Icon(Icons.my_library_books),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Container(
-                          width: 300,
-                          child: TextField(
-                            onTap: () {
-                              _selectedDatef();
-                            },
-                            controller: TextEditingController(
-                              text: _date != null
-                                  ? '${_date!.day}/${_date!.month}/${_date!.year}'
-                                  : null,
-                            ),
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              hintText: 'Selecte date',
-                              labelText: 'Date',
-                              suffixIcon: Icon(Icons.calendar_month),
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Icon(Icons.access_time),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 70.0),
-                        child: Container(
-                          width: 300,
-                          child: TextField(
-                            maxLines: null,
-                            controller: _reasonController,
-                            decoration: InputDecoration(
-                              hintText: 'Reason',
-                              border: OutlineInputBorder(),
-                              label: Text('Reason'),
-                            ),
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 90.0),
+                          child: Icon(Icons.library_books),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              widget.isedit == true
-                  ? ElevatedButton(
-                      onPressed: () {
-                        _validate() ? Update() : print("error");
-                      },
-                      child: Text(
-                        'Update',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
-                    )
-                  : ElevatedButton(
-                      onPressed: Rcount == 0
-                          ? null
-                          : () {
-                              _validate() ? _sendData() : print("error");
-                            },
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
+                      ],
                     ),
-            ],
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 60.0),
+                          child: SizedBox(
+                            width: 250,
+                            child: Obx(() {
+                              return DropdownButton<String>(
+                                value: dropdownValue.value,
+                                onChanged: (String? newValue) {
+                                  dropdownValue.value = newValue!;
+                                },
+                                items: <String>[
+                                  'Morning Leave',
+                                  'Evening Leave'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              );
+                            }),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Container(
+                            width: 300,
+                            child: TextField(
+                              onTap: () {
+                                _selectedDatef();
+                              },
+                              controller: TextEditingController(
+                                text: _date != null
+                                    ? '${_date!.day}/${_date!.month}/${_date!.year}'
+                                    : null,
+                              ),
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                hintText: 'Selecte date',
+                                labelText: 'Date',
+                                suffixIcon: Icon(Icons.calendar_month),
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 70.0),
+                          child: Container(
+                            width: 300,
+                            child: TextField(
+                              maxLines: null,
+                              controller: _reasonController,
+                              decoration: InputDecoration(
+                                hintText: 'Reason',
+                                border: OutlineInputBorder(),
+                                label: Text('Reason'),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                widget.isedit == true
+                    ? ElevatedButton(
+                        onPressed: () {
+                          _validate() ? Update() : print("error");
+                        },
+                        child: Text(
+                          'Update',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
+                      )
+                    : ElevatedButton(
+                        onPressed: count.value == '0'
+                            ? null
+                            : () {
+                                _validate() ? _sendData() : print("error");
+                              },
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            elevation: 8, backgroundColor: Color(0xFFE1FF3C)),
+                      ),
+              ],
+            ),
           ),
         ),
       ),

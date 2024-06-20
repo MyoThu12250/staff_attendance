@@ -32,7 +32,7 @@ class RangeController extends GetxController {
     print(response.statusCode);
     print('hi');
     if (response.statusCode == 200) {
-      print('object');
+      print(response.body);
       final data = jsonDecode(response.body);
       final location = data['location'][0];
       lat.value = double.parse(location['lat']);

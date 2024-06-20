@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../alert_dialog.dart';
+import 'alert_dialog.dart';
 
 class ConnectionError extends StatelessWidget {
   const ConnectionError({super.key});
