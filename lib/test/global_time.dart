@@ -1,93 +1,113 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:open_settings_plus/open_settings_plus.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  bool isConnectedToInternet = false;
-
-  StreamSubscription? _internetConnectionStreamSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    _internetConnectionStreamSubscription =
-        InternetConnection().onStatusChange.listen((event) {
-      switch (event) {
-        case InternetStatus.connected:
-          setState(() {
-            isConnectedToInternet = true;
-          });
-          break;
-        case InternetStatus.disconnected:
-          setState(() {
-            isConnectedToInternet = false;
-          });
-          break;
-        default:
-          setState(() {
-            isConnectedToInternet = false;
-          });
-          break;
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _internetConnectionStreamSubscription?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-        width: MediaQuery.sizeOf(context).width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              isConnectedToInternet ? Icons.wifi : Icons.wifi_off,
-              size: 50,
-              color: isConnectedToInternet ? Colors.green : Colors.red,
-            ),
-            Text(
-              isConnectedToInternet
-                  ? "You are connected to the internet."
-                  : "You are not connected to the internet.",
-            ),
-          ],
+void main() =>
+    runApp(MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              switch (OpenSettingsPlus.shared {
+                OpenSettingsPlusAndroid settings => settings.wifi(),
+                OpenSettingsPlusIOS settings => settings.wifi(),
+                _ => throw Exception('Platform not supported'),
+              }
+            },
+            child: Text('Wi-Fi Settings'),
+          ),
         ),
       ),
+    )
     );
-  }
-}
+
+// import 'dart:async';
+//
+// import 'package:app_settings/app_settings.dart';
+// import 'package:flutter/material.dart';
+// import 'package:internet_connection_checker/internet_connection_checker.dart';
+// import 'package:url_launcher/url_launcher.dart';
+//
+// void main() {
+//   runApp(MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: HomeScreen(),
+//     );
+//   }
+// }
+//
+// class HomeScreen extends StatefulWidget {
+//   @override
+//   _HomeScreenState createState() => _HomeScreenState();
+// }
+//
+// class _HomeScreenState extends State<HomeScreen> {
+//   late StreamSubscription<InternetConnectionStatus> _subscription;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _subscription = InternetConnectionChecker().onStatusChange.listen((status) {
+//       switch (status) {
+//         case InternetConnectionStatus.connected:
+//           // Internet is connected
+//           break;
+//         case InternetConnectionStatus.disconnected:
+//           // Internet is disconnected
+//           _showNoInternetDialog();
+//           break;
+//       }
+//     });
+//   }
+//
+//   @override
+//   void dispose() {
+//     _subscription.cancel();
+//     super.dispose();
+//   }
+//
+//   void _showNoInternetDialog() {
+//     showDialog(
+//       context: context,
+//       barrierDismissible: false, // Make dialog non-dismissible
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text("No Internet Connection"),
+//           content: Text(
+//               "This app requires an internet connection. Please check your settings."),
+//           actions: <Widget>[
+//             TextButton(
+//               child: Text("OK"),
+//               onPressed: () {
+//                 AppSettings.openAppSettings(type: AppSettingsType.wifi);
+//               },
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+//
+//   Future<void> _openSettings() async {
+//     const url = 'app-settings:';
+//     if (!await launchUrl(Uri.parse(url))) {
+//       throw 'Could not launch settings';
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Internet Connectivity Check"),
+//       ),
+//       body: Center(
+//         child: Text("Home Screen"),
+//       ),
+//     );
+//   }
+// }
