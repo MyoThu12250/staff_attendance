@@ -79,7 +79,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.back(); // Close the dialog.
@@ -106,7 +106,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.back(); // Close the dialog.
@@ -131,7 +131,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.back(); // Close the dialog.
@@ -168,7 +168,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.back(); // Close the dialog.
@@ -194,7 +194,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.back(); // Close the dialog.
@@ -249,7 +249,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              const EdgeInsets.symmetric(vertical: 10.0),
                               child: SizedBox(
                                 width: 280,
                                 child: TextField(
@@ -264,7 +264,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              const EdgeInsets.symmetric(vertical: 20.0),
                               child: SizedBox(
                                 width: 280,
                                 child: TextField(
@@ -280,7 +280,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              const EdgeInsets.symmetric(vertical: 10.0),
                               child: SizedBox(
                                 width: 280,
                                 child: TextField(
@@ -296,7 +296,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              const EdgeInsets.symmetric(vertical: 20.0),
                               child: SizedBox(
                                 width: 280,
                                 child: TextField(
@@ -312,7 +312,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15.0),
+                              const EdgeInsets.symmetric(horizontal: 15.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -330,7 +330,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 30.0),
+                              const EdgeInsets.symmetric(vertical: 30.0),
                               child: ElevatedButton(
                                 onPressed: () {
                                   validate() ? password() : print('object');

@@ -83,8 +83,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 400,
                               child: _controller.url.value.isEmpty
                                   ? Image.asset(
-                                      fit: BoxFit.fitWidth,
+                                      fit: BoxFit.contain,
                                       'assets/images/default_profile.jpg')
+
                                   : Image.network(
                                       _controller.url.value,
                                       fit: BoxFit.fitWidth,

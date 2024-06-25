@@ -39,7 +39,7 @@ class _AttendancePageState extends State<RequestPage> {
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            leadingWidth: 60,
+            leadingWidth: 90,
             title: Text('Attendance History'),
             leading: Padding(
               padding: const EdgeInsets.only(left: 12.0),
@@ -70,7 +70,7 @@ class _AttendancePageState extends State<RequestPage> {
                 child: TabBarView(
                   children: [
                     Obx(
-                      () {
+                          () {
                         if (addController.attendanceData.isEmpty &&
                             addController.isLoading) {
                           return Center(child: CircularProgressIndicator());
@@ -79,7 +79,7 @@ class _AttendancePageState extends State<RequestPage> {
                         return NotificationListener<ScrollNotification>(
                           onNotification: (ScrollNotification scrollInfo) {
                             if (scrollInfo.metrics.pixels ==
-                                    scrollInfo.metrics.maxScrollExtent &&
+                                scrollInfo.metrics.maxScrollExtent &&
                                 addController.hasMoreData &&
                                 !addController.isLoading) {
                               addController.fetchAttendanceHistory(context);
@@ -90,55 +90,55 @@ class _AttendancePageState extends State<RequestPage> {
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: addController.attendanceData.isEmpty
                                 ? Center(
-                                    child: Text(
-                                    'Empty Attendance Data',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: 'Epilogue',
-                                    ),
-                                  ))
+                                child: Text(
+                                  'Empty Attendance Data',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'Epilogue',
+                                  ),
+                                ))
                                 : ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    separatorBuilder: (context, index) {
-                                      return const Divider(
-                                        thickness: 0.5,
-                                        color: Colors.black,
-                                      );
-                                    },
-                                    itemCount:
-                                        addController.attendanceData.length,
-                                    itemBuilder: (context, index) {
-                                      final item =
-                                          addController.attendanceData[index];
-                                      return GestureDetector(
-                                        child: ListTile(
-                                          leading: item['in_time'] != null &&
-                                                  item['in_time'].isNotEmpty &&
-                                                  item['out_time'] != null &&
-                                                  item['out_time'].isNotEmpty
-                                              ? CircleAvatar(
-                                                  backgroundColor:
-                                                      Colors.greenAccent,
-                                                  child: Icon(Icons.done),
-                                                )
-                                              : CircleAvatar(
-                                                  backgroundColor: Colors.pink,
-                                                  child: Icon(Icons.close),
-                                                ),
-                                          title: Text('Date: ${item['date']}'),
-                                          subtitle: Text(
-                                              'In Time: ${item['in_time'] ?? 'N/A'}\nOut Time: ${item['out_time'] ?? 'N/A'}'),
-                                          onTap: () {
-                                            Get.to(
-                                              () => AttendanceDetailPage(
-                                                  attendanceDetail: item),
-                                            );
-                                          },
-                                        ),
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              separatorBuilder: (context, index) {
+                                return const Divider(
+                                  thickness: 0.5,
+                                  color: Colors.black,
+                                );
+                              },
+                              itemCount:
+                              addController.attendanceData.length,
+                              itemBuilder: (context, index) {
+                                final item =
+                                addController.attendanceData[index];
+                                return GestureDetector(
+                                  child: ListTile(
+                                    leading: item['in_time'] != null &&
+                                        item['in_time'].isNotEmpty &&
+                                        item['out_time'] != null &&
+                                        item['out_time'].isNotEmpty
+                                        ? CircleAvatar(
+                                      backgroundColor:
+                                      Colors.greenAccent,
+                                      child: Icon(Icons.done),
+                                    )
+                                        : CircleAvatar(
+                                      backgroundColor: Colors.pink,
+                                      child: Icon(Icons.close),
+                                    ),
+                                    title: Text('Date: ${item['date']}'),
+                                    subtitle: Text(
+                                        'In Time: ${item['in_time'] ?? 'N/A'}\nOut Time: ${item['out_time'] ?? 'N/A'}'),
+                                    onTap: () {
+                                      Get.to(
+                                            () => AttendanceDetailPage(
+                                            attendanceDetail: item),
                                       );
                                     },
                                   ),
+                                );
+                              },
+                            ),
                           ),
                         );
                       },

@@ -117,7 +117,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
   RxBool isLoading = false.obs;
 
   final ImageUploadController imageController =
-      Get.put(ImageUploadController());
+  Get.put(ImageUploadController());
   final DateTimeController timecontroller = Get.put(DateTimeController());
   final LoginController loginController = Get.find();
   DateTime? _selectedDateTimef;
@@ -146,7 +146,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
         'to': todate,
         'leaveType': leavetype,
         'attachmentUrl': attachment,
-        'UserId': '3'
+        'UserId': id
       },
       headers: {
         'Authorization': 'Bearer ${loginController.authorization.value}',
@@ -187,6 +187,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
         },
       );
     } else if (response.statusCode == 400) {
+      print(response.body);
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -197,13 +198,16 @@ class _MedicalLeaveState extends State<MedicalLeave> {
             content: Container(
               width: 300,
               height: 60,
-              child: Text("You already Created Leave Record For this day"),
+              child: Text(
+                jsonDecode(response.body)['message'],
+                style: TextStyle(fontSize: 16),
+              ),
             ),
             actions: <Widget>[
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.offAllNamed('/leave'); // Close the dialog.
@@ -226,7 +230,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.offAll(Leave(
@@ -244,7 +248,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
   }
 
   void _onUpdate() async {
-    if (_validate()) {
+    if (_validateu()) {
       isLoading.value = true;
       await imageController.uploadImage();
 
@@ -260,7 +264,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
   }
 
   void _onSubmit() async {
-    if (_validate()) {
+    if (_validates()) {
       isLoading.value = true;
       await imageController.uploadImage();
 
@@ -275,7 +279,42 @@ class _MedicalLeaveState extends State<MedicalLeave> {
     }
   }
 
-  bool _validate() {
+  bool _validates() {
+    String _leavetype = selectedValue;
+    String? _fromDate = _selectedDateTimef?.toString();
+    String? _toDate = _selectedDateTimet?.toString();
+    String _reason = _reasonController.text.toString();
+
+    RxString _filename = imageController.fileName;
+    if (_leavetype.isNotEmpty &&
+        _fromDate != null &&
+        _toDate != null &&
+        _reason.isNotEmpty &&
+        _filename.isNotEmpty) {
+      return true;
+    } else {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Required'),
+              content: Text('Please Enter All Required Data'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Ok'),
+                ),
+              ],
+            );
+          });
+    }
+    return false;
+  }
+
+  bool _validateu() {
     String _leavetype = selectedValue;
     String? _fromDate = _selectedDateTimef?.toString();
     String? _toDate = _selectedDateTimet?.toString();
@@ -341,29 +380,29 @@ class _MedicalLeaveState extends State<MedicalLeave> {
               // width: screenWidth,
               child: SingleChildScrollView(
                 child: Obx(
-                  () => Column(
+                      () => Column(
                     children: [
                       SizedBox(
                         height: 40,
                       ),
                       count.value == '0'
                           ? Center(
-                              child: Text(
-                                'You have nothing attempt left',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            )
+                        child: Text(
+                          'You have nothing attempt left',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.red,
+                          ),
+                        ),
+                      )
                           : Center(
-                              child: Text(
-                                'Remaining Medical Leave attempt : ${count.value}',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
+                        child: Text(
+                          'Remaining Medical Leave attempt : ${count.value}',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 50.0),
                         child: Container(
@@ -390,7 +429,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                       vertical: 10.0),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Container(
                                         width: 50,
@@ -408,8 +447,8 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                             ),
                                             Padding(
                                               padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 50.0),
+                                              const EdgeInsets.symmetric(
+                                                  vertical: 50.0),
                                               child: Container(
                                                 width: 100,
                                                 height: 95,
@@ -428,25 +467,25 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                               height: 95,
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
+                                                MainAxisAlignment
+                                                    .spaceEvenly,
                                                 children: [
                                                   SizedBox(
                                                     height: 70,
                                                     width: 150,
                                                     child: TextField(
                                                       controller:
-                                                          TextEditingController(
+                                                      TextEditingController(
                                                         text: _selectedDateTimef !=
-                                                                null
+                                                            null
                                                             ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
                                                             : null,
                                                       ),
                                                       readOnly: true,
                                                       decoration:
-                                                          InputDecoration(
+                                                      InputDecoration(
                                                         border:
-                                                            OutlineInputBorder(),
+                                                        OutlineInputBorder(),
                                                         labelText: 'From',
                                                         hintText: 'From',
                                                         suffixIcon: Icon(
@@ -464,17 +503,17 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                                     width: 150,
                                                     child: TextField(
                                                       controller:
-                                                          TextEditingController(
+                                                      TextEditingController(
                                                         text: _selectedDateTimet !=
-                                                                null
+                                                            null
                                                             ? '${_selectedDateTimet!.day}/${_selectedDateTimet!.month}/${_selectedDateTimet!.year}'
                                                             : null,
                                                       ),
                                                       readOnly: true,
                                                       decoration:
-                                                          InputDecoration(
+                                                      InputDecoration(
                                                         border:
-                                                            OutlineInputBorder(),
+                                                        OutlineInputBorder(),
                                                         labelText: 'to',
                                                         hintText: 'to',
                                                         suffixIcon: Icon(
@@ -495,7 +534,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                               height: 95,
                                               child: Padding(
                                                 padding:
-                                                    const EdgeInsets.all(8.0),
+                                                const EdgeInsets.all(8.0),
                                                 child: TextField(
                                                   controller: _reasonController,
                                                   maxLines: null,
@@ -504,7 +543,7 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                                     labelText: 'Reason',
                                                     hintText: 'Enter Reason ',
                                                     border:
-                                                        OutlineInputBorder(),
+                                                    OutlineInputBorder(),
                                                   ),
                                                 ),
                                               ),
@@ -513,87 +552,87 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                               height: 200,
                                               width: 200,
                                               child: Obx(
-                                                () => Row(
+                                                    () => Row(
                                                   mainAxisSize:
-                                                      MainAxisSize.min,
+                                                  MainAxisSize.min,
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
+                                                  MainAxisAlignment
+                                                      .spaceEvenly,
                                                   children: [
                                                     (widget.isedit.value &&
-                                                            imageController
-                                                                    .imageFile
-                                                                    .value ==
-                                                                null)
+                                                        imageController
+                                                            .imageFile
+                                                            .value ==
+                                                            null)
                                                         ? Container(
+                                                      height: 150,
+                                                      width: 150,
+                                                      child:
+                                                      Image.network(
+                                                        attach.value,
+                                                        fit: BoxFit.cover,
+                                                        loadingBuilder:
+                                                            (BuildContext
+                                                        context,
+                                                            Widget
+                                                            child,
+                                                            ImageChunkEvent?
+                                                            loadingProgress) {
+                                                          if (loadingProgress ==
+                                                              null) {
+                                                            return child;
+                                                          } else {
+                                                            return Center(
+                                                              child:
+                                                              CircularProgressIndicator(
+                                                                value: loadingProgress.expectedTotalBytes !=
+                                                                    null
+                                                                    ? loadingProgress.cumulativeBytesLoaded /
+                                                                    (loadingProgress.expectedTotalBytes ?? 1)
+                                                                    : null,
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                        errorBuilder:
+                                                            (BuildContext
+                                                        context,
+                                                            Object
+                                                            error,
+                                                            StackTrace?
+                                                            stackTrace) {
+                                                          return Center(
+                                                            child: Icon(
+                                                              Icons.error,
+                                                              color: Colors
+                                                                  .red,
+                                                              size: 50.0,
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
+                                                        : Obx(() {
+                                                      if (imageController
+                                                          .imageFile
+                                                          .value ==
+                                                          null) {
+                                                        return Text(
+                                                            'Choose image..');
+                                                      } else {
+                                                        return Container(
                                                             height: 150,
                                                             width: 150,
-                                                            child:
-                                                                Image.network(
-                                                              attach.value,
-                                                              fit: BoxFit.cover,
-                                                              loadingBuilder:
-                                                                  (BuildContext
-                                                                          context,
-                                                                      Widget
-                                                                          child,
-                                                                      ImageChunkEvent?
-                                                                          loadingProgress) {
-                                                                if (loadingProgress ==
-                                                                    null) {
-                                                                  return child;
-                                                                } else {
-                                                                  return Center(
-                                                                    child:
-                                                                        CircularProgressIndicator(
-                                                                      value: loadingProgress.expectedTotalBytes !=
-                                                                              null
-                                                                          ? loadingProgress.cumulativeBytesLoaded /
-                                                                              (loadingProgress.expectedTotalBytes ?? 1)
-                                                                          : null,
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              },
-                                                              errorBuilder:
-                                                                  (BuildContext
-                                                                          context,
-                                                                      Object
-                                                                          error,
-                                                                      StackTrace?
-                                                                          stackTrace) {
-                                                                return Center(
-                                                                  child: Icon(
-                                                                    Icons.error,
-                                                                    color: Colors
-                                                                        .red,
-                                                                    size: 50.0,
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                          )
-                                                        : Obx(() {
-                                                            if (imageController
-                                                                    .imageFile
-                                                                    .value ==
-                                                                null) {
-                                                              return Text(
-                                                                  'Choose image..');
-                                                            } else {
-                                                              return Container(
-                                                                  height: 150,
-                                                                  width: 150,
-                                                                  child: Image
-                                                                      .file(
-                                                                    imageController
-                                                                        .imageFile
-                                                                        .value!,
-                                                                    fit: BoxFit
-                                                                        .contain,
-                                                                  ));
-                                                            }
-                                                          }),
+                                                            child: Image
+                                                                .file(
+                                                              imageController
+                                                                  .imageFile
+                                                                  .value!,
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                            ));
+                                                      }
+                                                    }),
                                                     IconButton(
                                                       onPressed: () {
                                                         imageController
@@ -613,33 +652,33 @@ class _MedicalLeaveState extends State<MedicalLeave> {
                                 ),
                               ),
                               Obx(
-                                () => isLoading.value == true
+                                    () => isLoading.value == true
                                     ? CircularProgressIndicator()
                                     : Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 20.0),
-                                        child: SizedBox(
-                                          width: 130,
-                                          child: ElevatedButton(
-                                            onPressed: count.value == '0'
-                                                ? null
-                                                : () async {
-                                                    widget.isedit.value == true
-                                                        ? _onUpdate()
-                                                        : _onSubmit();
-                                                  },
-                                            child: Text(
-                                              'Submit',
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                                elevation: 8,
-                                                backgroundColor:
-                                                    Color(0xFFE1FF3C)),
-                                          ),
-                                        ),
+                                  padding:
+                                  const EdgeInsets.only(top: 20.0),
+                                  child: SizedBox(
+                                    width: 130,
+                                    child: ElevatedButton(
+                                      onPressed: count.value == '0'
+                                          ? null
+                                          : () async {
+                                        widget.isedit.value == true
+                                            ? _onUpdate()
+                                            : _onSubmit();
+                                      },
+                                      child: Text(
+                                        'Submit',
+                                        style: TextStyle(
+                                            color: Colors.black),
                                       ),
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 8,
+                                          backgroundColor:
+                                          Color(0xFFE1FF3C)),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),

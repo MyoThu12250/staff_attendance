@@ -82,7 +82,7 @@ class _LeaveState extends State<Leave> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          leadingWidth: 60,
+          leadingWidth: 90,
           title: Text('Leave History'),
           leading: Padding(
             padding: const EdgeInsets.only(left: 12.0),
@@ -94,47 +94,47 @@ class _LeaveState extends State<Leave> {
         body: _controller.isloading == true
             ? Center(child: CircularProgressIndicator())
             : Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 60,
-                          color: Colors.lightGreenAccent,
-                          child: TabBar(
-                            tabs: [
-                              Tab(text: 'All'),
-                              Tab(text: 'Pending'),
-                              Tab(text: 'Approved'),
-                              Tab(text: 'Rejected'),
-                            ],
-                            controller: _controller.tabController,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _controller.tabController,
-                      children: [
-                        LeaveListView(
-                            pagingController: _controller.pagingController,
-                            leaves: _controller.allLeaves),
-                        LeaveListView(
-                          leaves: _controller.Plist,
-                        ),
-                        LeaveListView(
-                          leaves: _controller.Alist,
-                        ),
-                        LeaveListView(
-                          leaves: _controller.Rlist,
-                        ),
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 60,
+                    color: Colors.lightGreenAccent,
+                    child: TabBar(
+                      tabs: [
+                        Tab(text: 'All'),
+                        Tab(text: 'Pending'),
+                        Tab(text: 'Approved'),
+                        Tab(text: 'Rejected'),
                       ],
+                      controller: _controller.tabController,
                     ),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _controller.tabController,
+                children: [
+                  LeaveListView(
+                      pagingController: _controller.pagingController,
+                      leaves: _controller.allLeaves),
+                  LeaveListView(
+                    leaves: _controller.Plist,
+                  ),
+                  LeaveListView(
+                    leaves: _controller.Alist,
+                  ),
+                  LeaveListView(
+                    leaves: _controller.Rlist,
                   ),
                 ],
               ),
+            ),
+          ],
+        ),
         floatingActionButton: SpeedDial(
           child: Icon(Icons.add),
           activeIcon: Icons.close,
@@ -303,50 +303,50 @@ class LeaveListView extends StatelessWidget {
       );
     } else {
       return Obx(
-        () {
+            () {
           return leaves.isEmpty
               ? Center(
-                  child: Text(
-                    'Empty leave record',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'Epilogue',
+            child: Text(
+              'Empty leave record',
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'Epilogue',
+              ),
+            ),
+          )
+              : ListView.separated(
+            itemCount: leaves.length,
+            itemBuilder: (context, index) {
+              final item = leaves[index];
+              return GestureDetector(
+                onTap: () {
+                  Get.to(LeaveDetailPage(leaveDetail: item));
+                },
+                child: ListTile(
+                  title: Text(item['leaveType']),
+                  subtitle: Text(
+                    DateFormat('yyyy-MM-dd').format(
+                      DateTime.parse(
+                        item['from'],
+                      ),
                     ),
                   ),
-                )
-              : ListView.separated(
-                  itemCount: leaves.length,
-                  itemBuilder: (context, index) {
-                    final item = leaves[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(LeaveDetailPage(leaveDetail: item));
-                      },
-                      child: ListTile(
-                        title: Text(item['leaveType']),
-                        subtitle: Text(
-                          DateFormat('yyyy-MM-dd').format(
-                            DateTime.parse(
-                              item['from'],
-                            ),
-                          ),
-                        ),
-                        trailing: Icon(
-                          getIcon(item['status']),
-                          color: getColor(
-                            item['status'],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Divider(
-                      color: Colors.black,
-                      thickness: 0.5,
-                    );
-                  },
-                );
+                  trailing: Icon(
+                    getIcon(item['status']),
+                    color: getColor(
+                      item['status'],
+                    ),
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Divider(
+                color: Colors.black,
+                thickness: 0.5,
+              );
+            },
+          );
         },
       );
     }

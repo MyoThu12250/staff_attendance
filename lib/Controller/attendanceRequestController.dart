@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:CheckMate/config_route.dart';
 import 'package:CheckMate/pages/session_expire.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -10,12 +9,12 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'loginController.dart';
 
 class RequestHistoryController extends GetxController {
-  static const _pageSize = 10;
-
+  // static const _pageSize = 10;
+  var _pageSize = 0.obs;
   LoginController loginController = Get.find();
 
   final PagingController<int, dynamic> pagingController =
-      PagingController(firstPageKey: 0);
+  PagingController(firstPageKey: 0);
 
   RequestHistoryController() {
     pagingController.addPageRequestListener((pageKey) {
@@ -38,9 +37,10 @@ class RequestHistoryController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        _pageSize.value = data['totalPage'];
         final newItems = data['message'];
 
-        final isLastPage = newItems.length < _pageSize;
+        final isLastPage = newItems.length < _pageSize.value;
         if (isLastPage) {
           pagingController.appendLastPage(newItems);
         } else {
@@ -49,8 +49,8 @@ class RequestHistoryController extends GetxController {
         }
       } else if (response.statusCode == 401) {
         showSessionExpiredDialog();
-      } else if (response.statusCode == 404) {
-        Center(child: Text('No History'));
+      } else {
+        pagingController.appendLastPage([]);
       }
     } catch (error) {
       pagingController.error = error;

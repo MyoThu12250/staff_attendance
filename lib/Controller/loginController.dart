@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:CheckMate/config_route.dart';
+import 'package:CheckMate/pages/homepage.dart';
 import 'package:CheckMate/pages/leave.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -57,7 +58,7 @@ class LoginController extends GetxController {
         authorization.value = json.decode(response.body)['accessToken'];
 
         print('hi');
-        Get.off(Leave(
+        Get.off(HomePage(
           leaveDetail: {},
         ));
         userInfo.value = jsonDecode(response.body)['userData'];
@@ -150,7 +151,7 @@ class LoginController extends GetxController {
     if (timeToAccessTokenExpiry > 0 && timeToRefreshTokenExpiry > 0) {
       _refreshTimer?.cancel();
       final refreshTime =
-          timeToAccessTokenExpiry > 9 ? timeToAccessTokenExpiry - 5 : 0;
+      timeToAccessTokenExpiry > 9 ? timeToAccessTokenExpiry - 5 : 0;
       _refreshTimer = Timer(Duration(seconds: refreshTime), refreshToken);
     } else {
       logout();

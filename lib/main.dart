@@ -1,3 +1,4 @@
+import 'package:CheckMate/Controller/attendanceController.dart';
 import 'package:CheckMate/pages/attdanceHistory.dart';
 import 'package:CheckMate/pages/homepage.dart';
 import 'package:CheckMate/pages/leave.dart';
@@ -22,6 +23,7 @@ void main() async {
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
+
   final LoginController controller = Get.put(LoginController());
 
   @override

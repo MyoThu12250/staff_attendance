@@ -8,7 +8,7 @@ import 'attendanceRequestDetail.dart';
 
 class RequestHistoryPage extends StatelessWidget {
   final RequestHistoryController controller =
-      Get.put(RequestHistoryController());
+  Get.put(RequestHistoryController());
 
   IconData getIcon(String status) {
     switch (status.toLowerCase()) {

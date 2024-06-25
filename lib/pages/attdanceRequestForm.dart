@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:CheckMate/pages/attdanceHistory.dart';
 import 'package:CheckMate/pages/session_expire.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +54,9 @@ class _RequestPageFormState extends State<RequestPageForm> {
     } else if (response.statusCode == 401) {
       showSessionExpiredDialog();
     } else if (response.statusCode == 400) {
-      _showDialog('Unsuccessful',
-          'You already Created Attendance Request For this day', Colors.red);
+      print(response.body);
+      _showDialog('Unsuccessful', '${jsonDecode(response.body)['message']}',
+          Colors.red);
     } else {
       _showDialog(
           'Unsuccessful', 'Check Your Connection and Try Again', Colors.red);
@@ -153,18 +156,18 @@ class _RequestPageFormState extends State<RequestPageForm> {
               ),
               Rcount != 0
                   ? Text(
-                      'You have $Rcount attempt to request',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    )
+                'You have $Rcount attempt to request',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              )
                   : Text(
-                      'You have nothing attempts to request',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.red,
-                      ),
-                    ),
+                'You have nothing attempts to request',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.red,
+                ),
+              ),
               SizedBox(
                 height: 80,
               ),
@@ -225,7 +228,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
                         child: SizedBox(
                           width: 250,
                           child: Obx(
-                            () => DropdownButton<String>(
+                                () => DropdownButton<String>(
                               value: dropdownValue.value,
                               onChanged: (String? newValue) {
                                 dropdownValue.value = newValue!;
@@ -273,10 +276,10 @@ class _RequestPageFormState extends State<RequestPageForm> {
                 onPressed: Rcount == 0
                     ? null
                     : () {
-                        if (_validate()) {
-                          _sendData();
-                        }
-                      },
+                  if (_validate()) {
+                    _sendData();
+                  }
+                },
               ),
             ],
           ),

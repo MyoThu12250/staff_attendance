@@ -19,7 +19,7 @@ class LeaveController extends GetxController with SingleGetTickerProviderMixin {
   final mcount = loginController.userInfo['medicalLeave'];
 
   final PagingController<int, dynamic> pagingController =
-      PagingController(firstPageKey: 0);
+  PagingController(firstPageKey: 0);
 
   var Rlist = <dynamic>[].obs;
   var Alist = <dynamic>[].obs;

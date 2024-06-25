@@ -9,7 +9,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="Check Mate">
+        android:label="Staff Attendance">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAp4cBwBvvAoIWz0AT-rOSARNdqJzjOhpc" />

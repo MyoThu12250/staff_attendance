@@ -23,7 +23,7 @@ class AddController extends GetxController {
     try {
       isLoading = true;
       if (isRefresh) {
-        currentPage = 1;
+        currentPage = 0;
         attendanceData.clear();
         hasMoreData = true;
       }
@@ -49,28 +49,20 @@ class AddController extends GetxController {
       } else if (response.statusCode == 401) {
         showSessionExpiredDialog();
       } else {
-        Get.snackbar(
-          'Connection Error',
-          'Failed to get Attendance History',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-          duration: Duration(seconds: 3),
-          margin: EdgeInsets.all(10),
-          borderRadius: 10,
-        );
+        attendanceData.value = [];
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'An unexpected error occurred',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(10),
-        borderRadius: 10,
-      );
+      attendanceData.value=[];
+      // Get.snackbar(
+      //   'Error',
+      //   'An unexpected error occurred',
+      //   backgroundColor: Colors.red,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.TOP,
+      //   duration: Duration(seconds: 3),
+      //   margin: EdgeInsets.all(10),
+      //   borderRadius: 10,
+      // );
     } finally {
       isLoading = false;
     }
@@ -103,7 +95,7 @@ class _AttendancePageState extends State<AttendancePage> {
         return NotificationListener<ScrollNotification>(
           onNotification: (ScrollNotification scrollInfo) {
             if (scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent &&
+                scrollInfo.metrics.maxScrollExtent &&
                 addController.hasMoreData &&
                 !addController.isLoading) {
               addController.fetchAttendanceHistory(context);

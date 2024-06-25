@@ -121,6 +121,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
     } else if (response.statusCode == 401) {
       showSessionExpiredDialog();
     } else if (response.statusCode == 400) {
+
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -131,13 +132,13 @@ class _AnnualLeaveState extends State<AnnualLeave> {
             content: Container(
               width: 300,
               height: 60,
-              child: Text("You already Created Leave Record For this day"),
+              child:  Text(jsonDecode(response.body)['message'],style: TextStyle(fontSize: 16),) ,
             ),
             actions: <Widget>[
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.off(
@@ -169,7 +170,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
               TextButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red)),
+                    MaterialStateProperty.all<Color>(Colors.red)),
                 child: Text('Ok'),
                 onPressed: () {
                   Get.off(
@@ -284,30 +285,30 @@ class _AnnualLeaveState extends State<AnnualLeave> {
         body: MediaQuery(
           data: MediaQuery.of(context),
           child: Container(
-            width: screenWidth,
-            height: screenHeight * 0.7,
+            // width: screenWidth,
+            // height: screenHeight * 0.7,
             child: SingleChildScrollView(
               child: Obx(
-                () => Column(
+                    () => Column(
                   children: [
                     SizedBox(
                       height: 40,
                     ),
                     count.value == '0'
                         ? Center(
-                            child: Text(
-                              'You have nothing attempt left',
-                              style: TextStyle(color: Colors.red, fontSize: 20),
-                            ),
-                          )
+                      child: Text(
+                        'You have nothing attempt left',
+                        style: TextStyle(color: Colors.red, fontSize: 20),
+                      ),
+                    )
                         : Center(
-                            child: Text(
-                              'Remaining Annual Leave : ${count.value}',
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
+                      child: Text(
+                        'Remaining Annual Leave : ${count.value}',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 90.0),
                       child: Center(
@@ -321,38 +322,39 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Row(
                         children: [
-                          Container(
-                            width: 70,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: screenHeight * .15,
-                                  width: screenWidth * .29,
-                                  child: Icon(Icons.access_time),
-                                ),
-                                Container(
-                                  height: screenHeight * .15,
-                                  width: screenWidth * .29,
-                                  child: Icon(Icons.library_books),
-                                ),
-                              ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Container(
+
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                                    child: Icon(Icons.access_time),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 50.0),
+                                    child: Icon(Icons.library_books),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Container(
-                            width: 320,
+                            // width: 320,
                             child: Column(
                               children: [
                                 Container(
-                                  height: screenHeight * .15,
-                                  width: screenWidth * .8,
+                                  // height: screenHeight * .15,
+                                  // width: screenWidth * .8,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -362,9 +364,9 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                                               width: 140,
                                               child: TextField(
                                                 controller:
-                                                    TextEditingController(
+                                                TextEditingController(
                                                   text: _selectedDateTimef !=
-                                                          null
+                                                      null
                                                       ? '${_selectedDateTimef!.day}/${_selectedDateTimef!.month}/${_selectedDateTimef!.year}'
                                                       : null,
                                                 ),
@@ -418,7 +420,7 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                                 ),
                                 Container(
                                   height: screenHeight * .15,
-                                  width: screenWidth * .8,
+                                  width: screenWidth * .85,
                                   child: Container(
                                     width: 290,
                                     height: 95,
@@ -447,40 +449,40 @@ class _AnnualLeaveState extends State<AnnualLeave> {
                       height: 40,
                     ),
                     Obx(
-                      () => isLoading.value == true
+                          () => isLoading.value == true
                           ? CircularProgressIndicator()
                           : SizedBox(
-                              width: 130,
-                              child: widget.isedit == true
-                                  ? ElevatedButton(
-                                      onPressed: () {
-                                        _validate() ? Update() : print("error");
-                                      },
-                                      child: Text(
-                                        'Update',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                          elevation: 8,
-                                          backgroundColor: Color(0xFFE1FF3C)),
-                                    )
-                                  : ElevatedButton(
-                                      onPressed: count.value == '0'
-                                          ? null
-                                          : () {
-                                              _validate()
-                                                  ? _sendData()
-                                                  : print("error");
-                                            },
-                                      child: Text(
-                                        'Submit',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                          elevation: 8,
-                                          backgroundColor: Color(0xFFE1FF3C)),
-                                    ),
-                            ),
+                        width: 130,
+                        child: widget.isedit == true
+                            ? ElevatedButton(
+                          onPressed: () {
+                            _validate() ? Update() : print("error");
+                          },
+                          child: Text(
+                            'Update',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              elevation: 8,
+                              backgroundColor: Color(0xFFE1FF3C)),
+                        )
+                            : ElevatedButton(
+                          onPressed: count.value == '0'
+                              ? null
+                              : () {
+                            _validate()
+                                ? _sendData()
+                                : print("error");
+                          },
+                          child: Text(
+                            'Submit',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              elevation: 8,
+                              backgroundColor: Color(0xFFE1FF3C)),
+                        ),
+                      ),
                     ),
                   ],
                 ),

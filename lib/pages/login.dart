@@ -1,10 +1,45 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
+ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../Controller/loginController.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final LoginController controller = Get.put(LoginController());
+
+  late StreamSubscription<InternetConnectionStatus> _subscription;
+  bool _isNoInternetDialogShown = false; // To track the dialog state
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = InternetConnectionChecker().onStatusChange.listen((status) {
+      switch (status) {
+        case InternetConnectionStatus.connected:
+        // Internet is connected
+          break;
+        case InternetConnectionStatus.disconnected:
+        // Internet is disconnected
+          _showNoInternetDialog();
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // _subscription.cancel(); // Cancel the subscription when the widget is disposed
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +75,19 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Obx(
-                  () => TextField(
+                      () => TextField(
                     onChanged: (value) => controller.password.value = value,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.https_outlined),
                       suffixIcon: IconButton(
                         onPressed: () {
                           controller.obscureText.value =
-                              !controller.obscureText.value;
+                          !controller.obscureText.value;
                         },
                         icon: Icon(
                           controller.obscureText.value
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                       ),
                       filled: true,
@@ -67,23 +102,23 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Obx(
-                  () => controller.isLoading.value
+                      () => controller.isLoading.value
                       ? CircularProgressIndicator()
                       : ElevatedButton(
-                          onPressed: controller.login,
-                          child: Text('Login'),
-                          style: ElevatedButton.styleFrom(
-                            elevation: 8,
-                            foregroundColor: Colors.black,
-                            backgroundColor: Color(0xFFE1FF3C),
-                            textStyle: TextStyle(fontSize: 18),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
+                    onPressed: controller.login,
+                    child: Text('Login'),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 8,
+                      foregroundColor: Colors.black,
+                      backgroundColor: Color(0xFFE1FF3C),
+                      textStyle: TextStyle(fontSize: 18),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -91,5 +126,30 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _showNoInternetDialog() {
+    if (_isNoInternetDialogShown)
+      return; // Prevent showing the dialog multiple times
+
+    _isNoInternetDialogShown = true;
+
+    Get.dialog(
+      AlertDialog(
+        title: Text("No Internet Connection"),
+        content: Text(
+            "This app requires an internet connection. Please check your settings."),
+        actions: <Widget>[
+          TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                SystemNavigator.pop();
+              }),
+        ],
+      ),
+      barrierDismissible: false, // Make dialog non-dismissible
+    ).then((_) {
+      _isNoInternetDialogShown = false; // Reset the dialog state when closed
+    });
   }
 }

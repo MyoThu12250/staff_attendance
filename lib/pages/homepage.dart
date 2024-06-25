@@ -4,9 +4,11 @@ import 'dart:convert';
 import 'package:CheckMate/pages/attdanceHistory.dart';
 import 'package:CheckMate/pages/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 
 import '../Controller/circleController.dart';
@@ -30,31 +32,52 @@ class _HomePageState extends State<HomePage> {
   late Stream<DateTime> _timeStream;
   final Completer<GoogleMapController> _controller = Completer();
   final PermissionController permissionController =
-      Get.put(PermissionController());
+  Get.put(PermissionController());
   final LoginController controller = Get.put(LoginController());
   final RangeController rangeController = Get.put(RangeController());
   final DateTimeController dateTimeController = Get.put(DateTimeController());
   final LocationController locationController = Get.put(LocationController());
 
-  // var disablein = (DateTime.now().hour >= 7 && DateTime.now().hour <= 13).obs;
-  // var disableout = (DateTime.now().hour >= 14 && DateTime.now().hour <= 17).obs;
+  late StreamSubscription<InternetConnectionStatus> _subscription;
 
   @override
   void initState() {
     super.initState();
+    _subscription = InternetConnectionChecker().onStatusChange.listen((status) {
+      switch (status) {
+        case InternetConnectionStatus.connected:
+          // Internet is connected
+          break;
+        case InternetConnectionStatus.disconnected:
+          // Internet is disconnected
+          _showNoInternetDialog();
+          break;
+      }
+    });
+
     _timeStream = _getTimeStream();
     controller.loadProfileData();
     rangeController.fetchLocationData();
     permissionController.handleLocationPermission(context);
-    //*** stable time ***//
-    // _currentTime = DateTime.now();
-    // _timeStream =
-    //     Stream<DateTime>.periodic(Duration(seconds: 1), (_) => DateTime.now());
-    // _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-    //   if (mounted) {
-    //     setState(() {});
-    //   }
-    // });
+  }
+
+  void _showNoInternetDialog() {
+    Get.dialog(
+      AlertDialog(
+        title: Text("No Internet Connection"),
+        content: Text(
+            "This app requires an internet connection. Please check your settings."),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              SystemNavigator.pop(); // Exit the app
+            },
+          ),
+        ],
+      ),
+      barrierDismissible: false, // Make dialog non-dismissible
+    );
   }
 
   @override
@@ -77,41 +100,41 @@ class _HomePageState extends State<HomePage> {
 
   Future<bool> _onWillPop(BuildContext context) async {
     return await showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => AlertDialog(
-            elevation: 20,
-            shadowColor: Colors.red,
-            title: Text(
-              'Confirm Exit',
-              style: TextStyle(
-                fontFamily: 'Epilogue',
-              ),
-            ),
-            content: Text(
-              'Do you really want to exit the app?',
-              style: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Epilogue',
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text('No'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text(
-                  'Yes',
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            ],
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        elevation: 20,
+        shadowColor: Colors.red,
+        title: Text(
+          'Confirm Exit',
+          style: TextStyle(
+            fontFamily: 'Epilogue',
           ),
-        ) ??
+        ),
+        content: Text(
+          'Do you really want to exit the app?',
+          style: TextStyle(
+            fontSize: 16,
+            fontFamily: 'Epilogue',
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(
+              'Yes',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ) ??
         false;
   }
 
@@ -121,7 +144,6 @@ class _HomePageState extends State<HomePage> {
         final response = await http
             .get(Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Yangon'));
         if (response.statusCode == 200) {
-          print(response.body);
           final data = jsonDecode(response.body);
           final dateTimeString = data['datetime'];
           final dateTime = DateTime.parse(dateTimeString)
@@ -156,14 +178,14 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          leadingWidth: 60,
+          leadingWidth: 90,
           leading: Padding(
             padding: const EdgeInsets.only(left: 12.0),
             child: Image.asset(
               'assets/icons/appIcon.png',
             ),
           ),
-          title: Text('Check Mate'),
+          title: Text('Staff Attendance'),
           actions: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -184,52 +206,12 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //   child: CircleAvatar(
-            //     backgroundColor: Colors.black.withOpacity(0.095),
-            //     radius: 20,
-            //     child: Stack(
-            //       children: [
-            //         IconButton(
-            //           onPressed: () {
-            //             Get.to(NotiPage(
-            //               title: 'hi',
-            //               body: 'hi',
-            //             ));
-            //           },
-            //           icon: const Icon(
-            //             Icons.notifications,
-            //             size: 25,
-            //           ),
-            //         ),
-            //         Positioned(
-            //           left: 22,
-            //           // right: 0,
-            //           bottom: 25,
-            //           // top: 0,
-            //           child: CircleAvatar(
-            //             radius: 10,
-            //             backgroundColor: Colors.transparent,
-            //             child: Text(
-            //               '2', // noti count
-            //               style: TextStyle(
-            //                 fontSize: 12,
-            //                 color: Colors.black,
-            //               ),
-            //             ),
-            //           ),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
         ),
         body: Stack(
           children: [
             Obx(
-              () => GoogleMap(
+                  () => GoogleMap(
                 myLocationEnabled: true,
                 myLocationButtonEnabled: true,
                 onMapCreated: (GoogleMapController controller) {
@@ -277,13 +259,13 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       String name = controller.userInfo['username'].toString();
                       String displayName =
-                          name.length > 5 ? name.substring(0, 5) + '...' : name;
+                      name.length > 5 ? name.substring(0, 5) + '...' : name;
                       String firstName = displayName.split(' ')[0];
                       // Assuming the first name is the first word in displayName
                       String nameToDisplay =
-                          displayName.length > 5 ? firstName : displayName;
+                      displayName.length > 5 ? firstName : displayName;
                       String dateType =
-                          DateTime.now().hour < 12 ? 'Morning' : 'Afternoon';
+                      DateTime.now().hour < 12 ? 'Morning' : 'Afternoon';
                       return Column(
                         children: [
                           SizedBox(
@@ -320,78 +302,93 @@ class _HomePageState extends State<HomePage> {
                                     ? 12
                                     : hour; // Convert '0' hour to '12' for 12 AM and 12 PM
                                 final hourString =
-                                    hour.toString().padLeft(2, '0');
+                                hour.toString().padLeft(2, '0');
 
                                 final minute =
-                                    dateTime.minute.toString().padLeft(2, '0');
+                                dateTime.minute.toString().padLeft(2, '0');
+                                final second =
+                                dateTime.second.toString().padLeft(2, '0');
                                 // add global time
-                                return Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 80.0,
-                                            ),
-                                            child: SizedBox(
-                                              child: Text(
-                                                hourString + 'h',
-                                                style: TextStyle(
-                                                  fontSize: 50,
-                                                  // Responsive font size
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: 'Epilogue',
-                                                  color: Colors.green,
-                                                ),
-                                              ),
+                                return SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 30.0, // padding left
+                                        ),
+                                        child: Container(
+                                          child: Text(
+                                            hourString + 'h',
+                                            style: TextStyle(
+                                              fontSize: 50,
+                                              // Responsive font size
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Epilogue',
+                                              color: Colors.green,
                                             ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Text(
-                                              ':',
-                                              style: TextStyle(fontSize: 40),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            child: Text(
-                                              minute + 'm',
-                                              style: TextStyle(
-                                                fontSize: 50,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Epilogue',
-                                                color: Colors.green,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5.0, horizontal: 10),
-                                            child: Text(
-                                              snapshot.data!.hour < 12
-                                                  ? 'AM'
-                                                  : 'PM',
-                                              style: TextStyle(
-                                                fontSize: 40,
-                                                // Responsive font size
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Epilogue',
-                                                color: Colors.green,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    )
-                                  ],
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Text(
+                                          ':',
+                                          style: TextStyle(fontSize: 40),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          minute + 'm',
+                                          style: TextStyle(
+                                            fontSize: 50,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Epilogue',
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Text(
+                                          ':',
+                                          style: TextStyle(fontSize: 40),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          second + 's',
+                                          style: TextStyle(
+                                            fontSize: 50,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Epilogue',
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5.0, horizontal: 10),
+                                        child: Text(
+                                          snapshot.data!.hour < 12
+                                              ? 'AM'
+                                              : 'PM',
+                                          style: TextStyle(
+                                            fontSize: 40,
+                                            // Responsive font size
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Epilogue',
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               } else if (snapshot.hasError) {
                                 return Text('Error : ${snapshot.error}');
@@ -413,7 +410,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 80.0),
+                            const EdgeInsets.symmetric(horizontal: 90.0),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Container(
@@ -441,78 +438,78 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Obx(
-                            () => locationController.isLoading.value == true
+                                () => locationController.isLoading.value == true
                                 ? Center(
-                                    child: SizedBox(
-                                      height: 80,
-                                      width: 80,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.red,
-                                        strokeWidth: 6,
+                              child: SizedBox(
+                                height: 80,
+                                width: 80,
+                                child: CircularProgressIndicator(
+                                  color: Colors.red,
+                                  strokeWidth: 6,
+                                ),
+                              ),
+                            )
+                                : Padding(
+                              padding: EdgeInsets.only(top: 40.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    width: 140,
+                                    height: 60,
+                                    child: ElevatedButton(
+                                      onPressed: locationController
+                                          .isLoading.value
+                                          ? null
+                                          : () {
+                                        locationController
+                                            .sendLocationToServerin(
+                                            context);
+                                      },
+                                      child: const Text(
+                                        'Check in',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Epilogue',
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 8,
+                                        backgroundColor:
+                                        Color(0xFFE1FF3C),
                                       ),
                                     ),
-                                  )
-                                : Padding(
-                                    padding: EdgeInsets.only(top: 40.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SizedBox(
-                                          width: 140,
-                                          height: 60,
-                                          child: ElevatedButton(
-                                            onPressed: locationController
-                                                    .isLoading.value
-                                                ? null
-                                                : () {
-                                                    locationController
-                                                        .sendLocationToServerin(
-                                                            context);
-                                                  },
-                                            child: const Text(
-                                              'Check in',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Epilogue',
-                                              ),
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              elevation: 8,
-                                              backgroundColor:
-                                                  Color(0xFFE1FF3C),
-                                            ),
-                                          ),
+                                  ),
+                                  SizedBox(
+                                    width: 140,
+                                    height: 60,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        locationController
+                                            .sendLocationToServerout(
+                                            context);
+                                      },
+                                      child: const Text(
+                                        'Check out',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Epilogue',
                                         ),
-                                        SizedBox(
-                                          width: 140,
-                                          height: 60,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              locationController
-                                                  .sendLocationToServerout(
-                                                      context);
-                                            },
-                                            child: const Text(
-                                              'Check out',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Epilogue',
-                                              ),
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              elevation: 8,
-                                              backgroundColor: Colors.pink,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 8,
+                                        backgroundColor: Colors.pink,
+                                      ),
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       );
@@ -573,20 +570,6 @@ class _HomePageState extends State<HomePage> {
                   width: 35,
                 ),
               ),
-              // IconButton(
-              //   iconSize: 35,
-              //   onPressed: () {
-              //     Get.off(
-              //         Calender(
-              //           leaveDetail: {},
-              //         ),
-              //         transition: Transition.fadeIn);
-              //   },
-              //   icon: Icon(
-              //     Icons.calendar_month,
-              //     color: Colors.black,
-              //   ),
-              // ),
             ],
           ),
         ),
