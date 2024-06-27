@@ -49,7 +49,7 @@ class LoginController extends GetxController {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         {
-          'employeeId': username.value,
+          'employeeId': username.  value,
           'password': password.value,
         },
       );
@@ -229,7 +229,7 @@ class LoginController extends GetxController {
       print('Opened a message in the background!');
     });
 
-    _firebaseMessaging.requestPermission();
+
 
     _firebaseMessaging.getToken().then((String? token) {
       assert(token != null);
