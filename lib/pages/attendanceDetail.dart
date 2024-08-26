@@ -95,49 +95,49 @@ class AttendanceDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Early Out Time',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-                Text(
-                  earlyTime.toString() + ' minutes',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Late in Time',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Text(
-                    lateTime.toString() + ' minutes',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // SizedBox(height: 20),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       'Early Out Time',
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         color: Colors.grey,
+            //       ),
+            //     ),
+            //     Text(
+            //       earlyTime.toString() + ' minutes',
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         color: Colors.grey,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // SizedBox(height: 20),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 20.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Text(
+            //         'Late in Time',
+            //         style: TextStyle(
+            //           fontSize: 16,
+            //           color: Colors.grey,
+            //         ),
+            //       ),
+            //       Text(
+            //         lateTime.toString() + ' minutes',
+            //         style: TextStyle(
+            //           fontSize: 16,
+            //           color: Colors.grey,
+            //         ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
           ],
         ),
       ),

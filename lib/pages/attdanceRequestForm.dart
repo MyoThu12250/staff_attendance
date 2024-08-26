@@ -49,7 +49,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
     print(response.statusCode);
     isLoading.value = false;
     if (response.statusCode == 200) {
-      _showDialog('Attendance Request Submitted Successfully', 'Successfully',
+      _showDialog('Successfully', 'Attendance Request Submitted Successfully',
           Colors.lightGreenAccent);
     } else if (response.statusCode == 401) {
       showSessionExpiredDialog();
@@ -156,18 +156,18 @@ class _RequestPageFormState extends State<RequestPageForm> {
               ),
               Rcount != 0
                   ? Text(
-                'You have $Rcount attempt to request',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              )
+                      'You have $Rcount attempt to request',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    )
                   : Text(
-                'You have nothing attempts to request',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.red,
-                ),
-              ),
+                      'You have nothing attempts to request',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.red,
+                      ),
+                    ),
               SizedBox(
                 height: 80,
               ),
@@ -228,7 +228,7 @@ class _RequestPageFormState extends State<RequestPageForm> {
                         child: SizedBox(
                           width: 250,
                           child: Obx(
-                                () => DropdownButton<String>(
+                            () => DropdownButton<String>(
                               value: dropdownValue.value,
                               onChanged: (String? newValue) {
                                 dropdownValue.value = newValue!;
@@ -276,10 +276,10 @@ class _RequestPageFormState extends State<RequestPageForm> {
                 onPressed: Rcount == 0
                     ? null
                     : () {
-                  if (_validate()) {
-                    _sendData();
-                  }
-                },
+                        if (_validate()) {
+                          _sendData();
+                        }
+                      },
               ),
             ],
           ),

@@ -49,15 +49,14 @@ class LoginController extends GetxController {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         {
-          'employeeId': username.  value,
+          'employeeId': username.value,
           'password': password.value,
         },
       );
-
+print(response.statusCode);
       if (response.statusCode == 200) {
         authorization.value = json.decode(response.body)['accessToken'];
 
-        print('hi');
         Get.off(HomePage(
           leaveDetail: {},
         ));
@@ -73,7 +72,13 @@ class LoginController extends GetxController {
 
         _setupFirebaseMessaging();
       } else if (response.statusCode == 401) {
+
         Get.snackbar('Login Error', 'User name or Password Wrong',
+            backgroundColor: Color(0xF44336FF));
+      }
+      else if (response.statusCode == 404) {
+
+        Get.snackbar('Login Error', 'User Not Found',
             backgroundColor: Color(0xF44336FF));
       }
     } catch (e) {

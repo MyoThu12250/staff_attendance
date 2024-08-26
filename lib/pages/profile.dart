@@ -85,7 +85,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ? Image.asset(
                                       fit: BoxFit.contain,
                                       'assets/images/default_profile.jpg')
-
                                   : Image.network(
                                       _controller.url.value,
                                       fit: BoxFit.fitWidth,
@@ -259,7 +258,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               fontSize: 21,
                               fontFamily: 'Epilogue',
                             ),
-                            'Date Of Birth : ${loginController.userInfo['DOB']}'),
+                            'Department : ${loginController.userInfo['department']}'),
                       ),
                     ),
                     SizedBox(height: 30),
@@ -273,7 +272,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               fontSize: 21,
                               fontFamily: 'Epilogue',
                             ),
-                            'Address: ${loginController.userInfo['address']}'),
+                            'Phone No : ${loginController.userInfo['phoneNumber']}'),
                       ),
                     ),
                   ],
@@ -344,7 +343,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Get.to(ChangePassword());
                       },
                       child: Text(
-                        'Reset Password',
+                        'Change Password',
                         style: TextStyle(
                           color: Colors.pink,
                           fontFamily: 'Epilogue',

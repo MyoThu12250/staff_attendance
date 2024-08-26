@@ -32,13 +32,22 @@ class _HomePageState extends State<HomePage> {
   late Stream<DateTime> _timeStream;
   final Completer<GoogleMapController> _controller = Completer();
   final PermissionController permissionController =
-  Get.put(PermissionController());
+      Get.put(PermissionController());
   final LoginController controller = Get.put(LoginController());
   final RangeController rangeController = Get.put(RangeController());
   final DateTimeController dateTimeController = Get.put(DateTimeController());
   final LocationController locationController = Get.put(LocationController());
 
   late StreamSubscription<InternetConnectionStatus> _subscription;
+  List<LatLng> polygonPoint = [
+    LatLng(16.740585, 95.649322),
+    LatLng(16.740744, 95.648861),
+    LatLng(16.741541, 95.649061),
+    LatLng(16.741458, 95.649376),
+    LatLng(16.742169, 95.649621),
+    LatLng(16.742106, 95.649847),
+    // LatLng(16.740585, 95.649322),
+  ];
 
   @override
   void initState() {
@@ -100,42 +109,50 @@ class _HomePageState extends State<HomePage> {
 
   Future<bool> _onWillPop(BuildContext context) async {
     return await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        elevation: 20,
-        shadowColor: Colors.red,
-        title: Text(
-          'Confirm Exit',
-          style: TextStyle(
-            fontFamily: 'Epilogue',
-          ),
-        ),
-        content: Text(
-          'Do you really want to exit the app?',
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Epilogue',
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('No'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(
-              'Yes',
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => AlertDialog(
+            elevation: 20,
+            shadowColor: Colors.red,
+            title: Text(
+              'Confirm Exit',
               style: TextStyle(
-                color: Colors.red,
+                fontFamily: 'Epilogue',
               ),
             ),
+            content: Text(
+              'Do you really want to exit the app?',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Epilogue',
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(
+                  'Yes',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
+  }
+
+  bool _isWithinTimeRange() {
+    final now = DateTime.now();
+    final startTime = DateTime(now.year, now.month, now.day, 8, 30); // 8:30 AM
+    final endTime = DateTime(now.year, now.month, now.day, 16, 0); // 4:00 PM
+
+    return now.isAfter(startTime) && now.isBefore(endTime);
   }
 
   Stream<DateTime> _getTimeStream() async* {
@@ -211,20 +228,22 @@ class _HomePageState extends State<HomePage> {
         body: Stack(
           children: [
             Obx(
-                  () => GoogleMap(
+              () => GoogleMap(
                 myLocationEnabled: true,
                 myLocationButtonEnabled: true,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
+                mapType: MapType.satellite,
                 markers: {
                   Marker(
-                    markerId: MarkerId('Times City'),
-                    position: LatLng(
-                        rangeController.lat.value, rangeController.lon.value),
+                    markerId: MarkerId('ကွန်ပျူတာတက္ကသိုလ်(မအူပင်)'),
+                    // position: LatLng(
+                    //     rangeController.lat.value, rangeController.lon.value),
+                    position: LatLng(16.741362193064305, 95.64942387940448),
                     infoWindow: InfoWindow(
-                      title: 'Times City',
-                      snippet: 'Office Tower',
+                      title: 'ကွန်ပျူတာတက္ကသိုလ်(မအူပင်)',
+                      snippet: 'Main Building',
                     ),
                   ),
                 },
@@ -239,13 +258,21 @@ class _HomePageState extends State<HomePage> {
                         rangeController.lat.value, rangeController.lon.value),
                   ),
                 },
+                polygons: {
+                  Polygon(
+                      polygonId: PolygonId("1"),
+                      points: polygonPoint,
+                      fillColor: Colors.lightBlue.withOpacity(0.3),
+                      strokeWidth: 1,
+                      strokeColor: Colors.lightBlue),
+                },
                 initialCameraPosition: CameraPosition(
-                    target: LatLng(16.81669722489963, 96.128601508370990),
-                    zoom: 13),
+                    target: LatLng(16.74136203283806, 95.64941205411448),
+                    zoom: 17),
               ),
             ),
             DraggableScrollableSheet(
-              initialChildSize: 0.15,
+              initialChildSize: 0.17,
               // Initial size of the sheet (fraction of parent height)
               minChildSize: 0.15,
               // Minimum size of the sheet (fraction of parent height)
@@ -259,13 +286,13 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       String name = controller.userInfo['username'].toString();
                       String displayName =
-                      name.length > 5 ? name.substring(0, 5) + '...' : name;
+                          name.length > 5 ? name.substring(0, 5) + '...' : name;
                       String firstName = displayName.split(' ')[0];
                       // Assuming the first name is the first word in displayName
                       String nameToDisplay =
-                      displayName.length > 5 ? firstName : displayName;
+                          displayName.length > 5 ? firstName : displayName;
                       String dateType =
-                      DateTime.now().hour < 12 ? 'Morning' : 'Afternoon';
+                          DateTime.now().hour < 12 ? 'Morning' : 'Afternoon';
                       return Column(
                         children: [
                           SizedBox(
@@ -302,18 +329,18 @@ class _HomePageState extends State<HomePage> {
                                     ? 12
                                     : hour; // Convert '0' hour to '12' for 12 AM and 12 PM
                                 final hourString =
-                                hour.toString().padLeft(2, '0');
+                                    hour.toString().padLeft(2, '0');
 
                                 final minute =
-                                dateTime.minute.toString().padLeft(2, '0');
+                                    dateTime.minute.toString().padLeft(2, '0');
                                 final second =
-                                dateTime.second.toString().padLeft(2, '0');
+                                    dateTime.second.toString().padLeft(2, '0');
                                 // add global time
                                 return SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Padding(
@@ -410,7 +437,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Padding(
                             padding:
-                            const EdgeInsets.symmetric(horizontal: 90.0),
+                                const EdgeInsets.symmetric(horizontal: 90.0),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Container(
@@ -438,78 +465,78 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Obx(
-                                () => locationController.isLoading.value == true
+                            () => locationController.isLoading.value == true
                                 ? Center(
-                              child: SizedBox(
-                                height: 80,
-                                width: 80,
-                                child: CircularProgressIndicator(
-                                  color: Colors.red,
-                                  strokeWidth: 6,
-                                ),
-                              ),
-                            )
+                                    child: SizedBox(
+                                      height: 80,
+                                      width: 80,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.red,
+                                        strokeWidth: 6,
+                                      ),
+                                    ),
+                                  )
                                 : Padding(
-                              padding: EdgeInsets.only(top: 40.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SizedBox(
-                                    width: 140,
-                                    height: 60,
-                                    child: ElevatedButton(
-                                      onPressed: locationController
-                                          .isLoading.value
-                                          ? null
-                                          : () {
-                                        locationController
-                                            .sendLocationToServerin(
-                                            context);
-                                      },
-                                      child: const Text(
-                                        'Check in',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Epilogue',
+                                    padding: EdgeInsets.only(top: 40.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SizedBox(
+                                          width: 140,
+                                          height: 60,
+                                          child: ElevatedButton(
+                                            onPressed: locationController
+                                                    .isLoading.value
+                                                ? null
+                                                : () {
+                                                    locationController
+                                                        .sendLocationToServerin(
+                                                            context);
+                                                  },
+                                            child: const Text(
+                                              'Check in',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Epilogue',
+                                              ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              elevation: 8,
+                                              backgroundColor:
+                                                  Color(0xFFE1FF3C),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        elevation: 8,
-                                        backgroundColor:
-                                        Color(0xFFE1FF3C),
-                                      ),
+                                        SizedBox(
+                                          width: 140,
+                                          height: 60,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              locationController
+                                                  .sendLocationToServerout(
+                                                      context);
+                                            },
+                                            child: const Text(
+                                              'Check out',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Epilogue',
+                                              ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              elevation: 8,
+                                              backgroundColor: Colors.pink,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 140,
-                                    height: 60,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        locationController
-                                            .sendLocationToServerout(
-                                            context);
-                                      },
-                                      child: const Text(
-                                        'Check out',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Epilogue',
-                                        ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        elevation: 8,
-                                        backgroundColor: Colors.pink,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
                         ],
                       );

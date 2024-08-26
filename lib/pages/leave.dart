@@ -169,20 +169,20 @@ class _LeaveState extends State<Leave> {
                 ));
               },
             ),
-            SpeedDialChild(
-              elevation: 0,
-              child: Icon(
-                Icons.access_time,
-                color: Colors.purpleAccent,
-              ),
-              labelWidget: Text('half-day leave'),
-              onTap: () {
-                Get.to(HalfDayLeave(
-                  isedit: false,
-                  leaveDetail: {},
-                ));
-              },
-            ),
+            // SpeedDialChild(
+            //   elevation: 0,
+            //   child: Icon(
+            //     Icons.access_time,
+            //     color: Colors.purpleAccent,
+            //   ),
+            //   labelWidget: Text('half-day leave'),
+            //   onTap: () {
+            //     Get.to(HalfDayLeave(
+            //       isedit: false,
+            //       leaveDetail: {},
+            //     ));
+            //   },
+            // ),
           ],
         ),
         bottomNavigationBar: Padding(

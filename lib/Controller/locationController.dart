@@ -26,7 +26,6 @@ class LocationController extends GetxController {
 
   void sendLocationToServerin(BuildContext context) async {
     isLoading.value = true;
-
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
     currentLocation.value = position;
@@ -45,11 +44,12 @@ class LocationController extends GetxController {
         },
       );
       if (response.statusCode == 200) {
+        print(response.body);
         String check = response.body;
-        bool isValid = checkIsValid(check);
-        if (isValid) {
+        bool isInside = checkIsValid(check);
+        if (isInside) {
           dateTimeController.sendDateTimeToServerin(context);
-        } else if (isValid == false) {
+        } else if (isInside == false) {
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -163,10 +163,10 @@ class LocationController extends GetxController {
       );
       if (response.statusCode == 200) {
         String check = response.body;
-        bool isValid = checkIsValid(check);
-        if (isValid) {
+        bool isInside = checkIsValid(check);
+        if (isInside) {
           dateTimeController.sendDateTimeToServerout(context);
-        } else if (isValid == false) {
+        } else if (isInside == false) {
           showDialog(
             barrierDismissible: false,
             context: context,
@@ -261,7 +261,7 @@ class LocationController extends GetxController {
 bool checkIsValid(String jsonString) {
   Map<String, dynamic> responseMap = jsonDecode(jsonString);
 
-  bool isValid = responseMap['isValid'];
+  bool isInside = responseMap['isInside'];
 
-  return isValid;
+  return isInside;
 }
